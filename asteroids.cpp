@@ -508,7 +508,6 @@ int check_keys(XEvent *e)
 			break;
 		case XK_c:
 			//this case will handle the credits of the game
-			showCredits();
 			break;
 		case XK_f:
 			break;
