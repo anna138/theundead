@@ -61,9 +61,11 @@ public:
 	int xres, yres;
 	char keys[65536];
 	Global() {
-		xres = 1250;
-		yres = 900;
-		memset(keys, 0, 65536);
+		//xres = 1250;
+		//yres = 900;
+		xres = 800;
+        yres = 800;
+        memset(keys, 0, 65536);
 	}
 } gl;
 
@@ -245,7 +247,7 @@ public:
 		XConfigureEvent xce = e->xconfigure;
 		if (xce.width != gl.xres || xce.height != gl.yres) {
 			//Window size did change.
-			reshape_window(xce.width, xce.height);
+			reshape_window(xce.width-200, xce.height-200);
 		}
 	}
 	void reshape_window(int width, int height) {
@@ -500,7 +502,7 @@ int check_keys(XEvent *e)
 	if (shift){}
 	switch (key) {
 		case XK_Escape:
-			return 1;
+            return 1;
 		case XK_f:
 			break;
 		case XK_s:
