@@ -796,7 +796,6 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
 	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
     creditManvir(r);
-	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsAnna(r);
 	//-------------------------------------------------------------------------
 	//Draw the ship
