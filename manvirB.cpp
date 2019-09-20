@@ -5,5 +5,5 @@
 
 void creditManvir(Rect r)
 {
-    ggprint8b(&r, 16, 0x00ff0000, "Manvir Bal\n");
+    ggprint8b(&r, 16, 0x00ff0000, "Manvir Bal");
 }
