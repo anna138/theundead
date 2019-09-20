@@ -310,6 +310,7 @@ void physics();
 void render();
 extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
+extern void creditsGerardo(Rect r);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -798,6 +799,8 @@ void render()
     creditManvir(r);
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsAnna(r);
+	ggprint8b(&r, 16, 0x00ffff00, "\n");
+    creditsGerardo(r);
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
