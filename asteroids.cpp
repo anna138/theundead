@@ -61,10 +61,10 @@ public:
 	int xres, yres;
 	char keys[65536];
 	Global() {
-		//xres = 1250;
-		//yres = 900;
-		xres = 800;
-        yres = 800;
+		xres = 1250;
+		yres = 900;
+		// xres = 800;
+        // yres = 800;
         memset(keys, 0, 65536);
 	}
 } gl;
@@ -202,8 +202,8 @@ public:
 			gl.yres = getWinAttr.height;
 			//When window is fullscreen, there is no client window
 			//so keystrokes are linked to the root window.
-			XGrabKeyboard(dpy, root, False,
-				GrabModeAsync, GrabModeAsync, CurrentTime);
+			//XGrabKeyboard(dpy, root, False,
+				//GrabModeAsync, GrabModeAsync, CurrentTime);
 			fullscreen=1;
 		}
 		XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
@@ -218,7 +218,7 @@ public:
 			StructureNotifyMask | SubstructureNotifyMask;
 		unsigned int winops = CWBorderPixel|CWColormap|CWEventMask;
 		if (fullscreen) {
-			winops |= CWOverrideRedirect;
+			//winops |= CWOverrideRedirect;
 			swa.override_redirect = True;
 		}
 		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
@@ -247,7 +247,7 @@ public:
 		XConfigureEvent xce = e->xconfigure;
 		if (xce.width != gl.xres || xce.height != gl.yres) {
 			//Window size did change.
-			reshape_window(xce.width-200, xce.height-200);
+			reshape_window(xce.width, xce.height);
 		}
 	}
 	void reshape_window(int width, int height) {
@@ -309,7 +309,7 @@ int check_keys(XEvent *e);
 void physics();
 void render();
 extern void writeText(Rect r);
-extern void showCredits(Rect r);
+extern void creditManvir(Rect r);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -320,7 +320,7 @@ int main()
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	x11.set_mouse_position(100,100);
+	//x11.set_mouse_position(100,100);
 	int done=0;
 	while (!done) {
 		while (x11.getXPending()) {
@@ -361,7 +361,8 @@ void init_opengl(void)
 	glDisable(GL_CULL_FACE);
 	//
 	//Clear the screen to black
-	glClearColor(0.0, 0.0, 0.0, 1.0);
+	//glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClearColor(0.1, 0.1, 0.1, 1.0);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
@@ -471,7 +472,7 @@ void check_mouse(XEvent *e)
 			g.mouseThrustOn = true;
 			clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
 		}
-		x11.set_mouse_position(100,100);
+		//x11.set_mouse_position(100,100);
 		savex=100;
 		savey=100;
 	}
@@ -483,6 +484,7 @@ int check_keys(XEvent *e)
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
 	//Log("key: %i\n", key);
+	printf("got to the end of render and this is key %d\n", key);
 	if (e->type == KeyRelease) {
 		gl.keys[key]=0;
 		if (key == XK_Shift_L || key == XK_Shift_R)
@@ -503,6 +505,11 @@ int check_keys(XEvent *e)
 	switch (key) {
 		case XK_Escape:
             return 1;
+			break;
+		case XK_c:
+			//this case will handle the credits of the game
+			showCredits();
+			break;
 		case XK_f:
 			break;
 		case XK_s:
@@ -781,14 +788,15 @@ void render()
 {
 	Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
-	//
+	
+	
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
 	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
 	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
-    showCredits(r);
+    creditManvir(r);
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
