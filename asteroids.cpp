@@ -311,6 +311,7 @@ void render();
 extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
+extern void creditsKevin(Rect r);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -801,6 +802,8 @@ void render()
     creditsAnna(r);
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsGerardo(r);
+	ggprint8b(&r, 16, 0x00ffff00, "\n");
+    creditsKevin(r);
 	//-------------------------------------------------------------------------
 	//Draw the ship
 	glColor3fv(g.ship.color);
