@@ -198,6 +198,7 @@ public:
 		gl.yres = h;
 		if (!w && !h) {
 			//Go to fullscreen.
+			//std::cout << "here" << std::endl;
 			gl.xres = getWinAttr.width;
 			gl.yres = getWinAttr.height;
 			//When window is fullscreen, there is no client window
@@ -256,7 +257,13 @@ public:
 		glViewport(0, 0, (GLint)width, (GLint)height);
 		glMatrixMode(GL_PROJECTION); glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-		glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+		
+		
+	
+		//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+		glOrtho(-4,4,-4,4, -1, 1);
+		//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+
 		set_title();
 	}
 	void setup_screen_res(const int w, const int h) {
@@ -302,12 +309,15 @@ public:
 	}
 } x11(0, 0);
 
+int credits = 0;
+
 //function prototypes
 void init_opengl(void);
 void check_mouse(XEvent *e);
 int check_keys(XEvent *e);
 void physics();
 void render();
+void renderCredits();
 extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
@@ -339,7 +349,11 @@ int main()
 			physics();
 			physicsCountdown -= physicsRate;
 		}
-		render();
+		if(!credits)
+			render();
+		else
+			renderCredits();
+		
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -355,7 +369,9 @@ void init_opengl(void)
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 	//This sets 2D mode (no perspective)
-	glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+	//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
+	glOrtho(-4,4,-4,4, -1,1);
+	//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 	//
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -486,7 +502,6 @@ int check_keys(XEvent *e)
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
 	//Log("key: %i\n", key);
-	printf("got to the end of render and this is key %d\n", key);
 	if (e->type == KeyRelease) {
 		gl.keys[key]=0;
 		if (key == XK_Shift_L || key == XK_Shift_R)
@@ -509,6 +524,7 @@ int check_keys(XEvent *e)
             return 1;
 			break;
 		case XK_c:
+			credits ^= 1;
 			//this case will handle the credits of the game
 			break;
 		case XK_f:
@@ -895,6 +911,55 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 	}
+}
+float t = -1.0f;
+float inc = 0.001;
+double xp = t; 
+double yp = t;
+void renderCredits(){
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glPushMatrix();
+		glEnable(GL_POINT_SMOOTH);
+		//glPointSize(4);
+		//glColor3f(255,255,255);
+		
+		//glVertex2i(0,0);
+		//float t = -3.0f;
+		double xp = t; 
+		double yp = t;
+		double x = xp; 
+		double y = xp;
+
+		for (int i =  0; i < 10000;i++){
+			xp = x*x - x*t + y + t;
+			yp = x*x + y*y + t*t - x*t - x + y;
+			x = xp;
+			y = yp;
+			if(i%3){
+				glPointSize(5);
+				//glColor3ub(rand()%255,rand()%255,rand()%255);
+				glColor3ub(255,255,255);
+			}
+			else{
+				glPointSize(1);
+				glColor3ub(255,255,255);
+			}
+			glBegin(GL_POINTS);
+			
+			glVertex2d(xp,yp);
+			glEnd();
+		}
+		
+	glPopMatrix();
+
+	if(t >= 1.0f){
+		inc = -inc;
+	}else if(t <= -1.0f){
+		inc = 0.001;
+	}
+	t += inc;
+	
 }
 
 
