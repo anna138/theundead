@@ -63,8 +63,6 @@ public:
 	Global() {
 		xres = 1250;
 		yres = 900;
-		// xres = 800;
-        // yres = 800;
         memset(keys, 0, 65536);
 	}
 } gl;
@@ -312,7 +310,7 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
-extern void startMenu(Rect r, char key, int y_num, int x_num, bool * started);
+extern void startMenu(Rect r, int y_num, int x_num);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -325,15 +323,15 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-	bool started = 0;
+	int started = 0;
 
-    XEvent e = x11.getXNextEvent();
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
 			x11.check_resize(&e);
 			check_mouse(&e);
 			done = check_keys(&e);
+			started = done;
 		}
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
@@ -350,12 +348,13 @@ int main()
             printf("Started!!!!");
             Rect r;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, check_keys(&e), (gl.yres)/2, (gl.xres)/2, &started);
+            startMenu(r, (gl.yres)/2, (gl.xres)/2);
             printf("The value of start %d", started);
         }
-        
-		render();
-        
+        else {
+			glClearColor(0.1, 0.1, 0.1, 1.0);
+		    render();
+        }
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -806,9 +805,7 @@ void render()
 { 
     Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
-    //XEvent e = x11.getXNextEvent();
-    //if(started||startMenu(r, check_keys(&e), (gl.yres)/2, (gl.xres)/2)){
-	
+  
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
