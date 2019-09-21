@@ -48,6 +48,7 @@ const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
 const double oobillion = 1.0 / 1e9;
+int started = 0;
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -64,6 +65,7 @@ public:
 		xres = 1250;
 		yres = 900;
         memset(keys, 0, 65536);
+
 	}
 } gl;
 
@@ -323,7 +325,6 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-	int started = 0;
 
 	while (!done) {
 		while (x11.getXPending()) {
@@ -331,7 +332,6 @@ int main()
 			x11.check_resize(&e);
 			check_mouse(&e);
 			done = check_keys(&e);
-			started = done;
 		}
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
@@ -345,11 +345,9 @@ int main()
          *Passing In Parameters
          */
         if(!started) {
-            printf("Started!!!!");
             Rect r;
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, (gl.yres)/2, (gl.xres)/2);
-            printf("The value of start %d", started);
         }
         else {
 			glClearColor(0.1, 0.1, 0.1, 1.0);
@@ -523,6 +521,9 @@ int check_keys(XEvent *e)
 		case XK_Escape:
             return 1;
 			break;
+        case XK_space:
+            started = 1;
+            break;
 		case XK_c:
 			//this case will handle the credits of the game
 			break;
@@ -537,8 +538,7 @@ int check_keys(XEvent *e)
 		case XK_minus:
 			break;
 	}
-	/*Anna: Changing to return any key integer. If not value: 0 then any key was selected.*/
-	return key;
+    return 0;
 }
 
 void deleteAsteroid(Game *g, Asteroid *node)
