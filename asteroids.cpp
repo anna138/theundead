@@ -312,6 +312,7 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
+extern void startMenu(Rect r, char key, int y_num, int x_num, bool * started);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -324,6 +325,9 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
+	bool started = 0;
+
+    XEvent e = x11.getXNextEvent();
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -339,7 +343,19 @@ int main()
 			physics();
 			physicsCountdown -= physicsRate;
 		}
+        /*Loading Starting Intro
+         *Passing In Parameters
+         */
+        if(!started) {
+            printf("Started!!!!");
+            Rect r;
+	        glClear(GL_COLOR_BUFFER_BIT);
+            startMenu(r, check_keys(&e), (gl.yres)/2, (gl.xres)/2, &started);
+            printf("The value of start %d", started);
+        }
+        
 		render();
+        
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -522,7 +538,8 @@ int check_keys(XEvent *e)
 		case XK_minus:
 			break;
 	}
-	return 0;
+	/*Anna: Changing to return any key integer. If not value: 0 then any key was selected.*/
+	return key;
 }
 
 void deleteAsteroid(Game *g, Asteroid *node)
@@ -786,10 +803,11 @@ void physics()
 }
 
 void render()
-{
-	Rect r;
+{ 
+    Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
-	
+    //XEvent e = x11.getXNextEvent();
+    //if(started||startMenu(r, check_keys(&e), (gl.yres)/2, (gl.xres)/2)){
 	
 	r.bot = gl.yres - 20;
 	r.left = 10;
@@ -895,6 +913,7 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 	}
+    
 }
 
 
