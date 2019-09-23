@@ -48,6 +48,7 @@ const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 //Setup timers
 const double physicsRate = 1.0 / 60.0;
 const double oobillion = 1.0 / 1e9;
+int started = 0;
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -63,9 +64,8 @@ public:
 	Global() {
 		xres = 1250;
 		yres = 900;
-		// xres = 800;
-        // yres = 800;
         memset(keys, 0, 65536);
+
 	}
 } gl;
 
@@ -79,8 +79,10 @@ public:
 public:
 	Ship() {
 		VecZero(dir);
-		pos[0] = (Flt)(gl.xres/2);
-		pos[1] = (Flt)(gl.yres/2);
+		// pos[0] = (Flt)(gl.xres/2);
+		// pos[1] = (Flt)(gl.yres/2);
+		pos[0] = 0.0f;
+		pos[1] = 0.0f;
 		pos[2] = 0.0f;
 		VecZero(vel);
 		angle = 0.0;
@@ -147,10 +149,10 @@ public:
 				a->vert[i][1] = cos(angle) * (r2 + rnd() * a->radius);
 				angle += inc;
 			}
-			a->pos[0] = (Flt)(rand() % gl.xres);
-			a->pos[1] = (Flt)(rand() % gl.yres);
+			a->pos[0] = (2*((float)rand() / RAND_MAX)-1)*(gl.xres/2);
+			a->pos[1] = (2*((float)rand() / RAND_MAX)-1)*(gl.yres/2);
 			a->pos[2] = 0.0f;
-			a->angle = 0.0;
+			a->angle = 0.0f;
 			a->rotate = rnd() * 4.0 - 2.0;
 			a->color[0] = 0.8;
 			a->color[1] = 0.8;
@@ -220,7 +222,7 @@ public:
 		unsigned int winops = CWBorderPixel|CWColormap|CWEventMask;
 		if (fullscreen) {
 			//winops |= CWOverrideRedirect;
-			swa.override_redirect = True;
+			//swa.override_redirect = True;
 		}
 		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 			vi->depth, InputOutput, vi->visual, winops, &swa);
@@ -261,8 +263,8 @@ public:
 		
 	
 		//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
-		glOrtho(-4,4,-4,4, -1, 1);
-		//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+		//glOrtho(-4,4,-4,4, -1, 1);
+		glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 
 		set_title();
 	}
@@ -322,6 +324,9 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
+extern void startMenu(Rect r, int y_num, int x_num);
+extern void renderCoolCredits();
+extern void popRand();
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -330,10 +335,12 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
+	popRand();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
+
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -349,11 +356,21 @@ int main()
 			physics();
 			physicsCountdown -= physicsRate;
 		}
-		if(!credits)
-			render();
-		else
-			renderCredits();
-		
+        /*Loading Starting Intro
+         *Passing In Parameters
+         */
+        if(!started) {
+            Rect r;
+	        glClear(GL_COLOR_BUFFER_BIT);
+            startMenu(r, 0, 0);
+        }
+        else {
+			if(credits){
+				renderCoolCredits();
+			}else{
+		    	render();
+			}
+        }
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -364,14 +381,15 @@ int main()
 void init_opengl(void)
 {
 	//OpenGL initialization
+	std::cout << gl.xres << " and " << gl.yres << std::endl;
 	glViewport(0, 0, gl.xres, gl.yres);
 	//Initialize matrices
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 	//This sets 2D mode (no perspective)
 	//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
-	glOrtho(-4,4,-4,4, -1,1);
-	//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+	//glOrtho(-4,4,-4,4, -1,1);
+	glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 	//
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
@@ -451,12 +469,12 @@ void check_mouse(XEvent *e)
 	//keys[XK_Up] = 0;
 	if (savex != e->xbutton.x || savey != e->xbutton.y) {
 		//Mouse moved
-		int xdiff = savex - e->xbutton.x;
-		int ydiff = savey - e->xbutton.y;
+		int xdiff = savex - ((-2*((float)e->xbutton.x/gl.xres)+1)*gl.xres/2);
+		int ydiff = savey - ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2);
 		if (++ct < 10)
 			return;		
-		//std::cout << "savex: " << savex << std::endl << std::flush;
-		//std::cout << "e->xbutton.x: " << e->xbutton.x << std::endl <<
+		// std::cout << "savex: " << savex << std::endl << std::flush;
+		// std::cout << "e->xbutton.y: " << ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2)<< std::endl;
 		//std::flush;
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
@@ -491,8 +509,8 @@ void check_mouse(XEvent *e)
 			clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
 		}
 		//x11.set_mouse_position(100,100);
-		savex=100;
-		savey=100;
+		// savex=100;
+		// savey=100;
 	}
 }
 
@@ -523,9 +541,11 @@ int check_keys(XEvent *e)
 		case XK_Escape:
             return 1;
 			break;
+        case XK_space:
+            started = 1;
+            break;
 		case XK_c:
 			credits ^= 1;
-			//this case will handle the credits of the game
 			break;
 		case XK_f:
 			break;
@@ -538,7 +558,7 @@ int check_keys(XEvent *e)
 		case XK_minus:
 			break;
 	}
-	return 0;
+    return 0;
 }
 
 void deleteAsteroid(Game *g, Asteroid *node)
@@ -601,20 +621,18 @@ void physics()
 	g.ship.pos[0] += g.ship.vel[0];
 	g.ship.pos[1] += g.ship.vel[1];
 	//Check for collision with window edges
-	if (g.ship.pos[0] < 0.0) {
+	if (g.ship.pos[0] < -gl.xres/2) {
 		g.ship.pos[0] += (float)gl.xres;
 	}
-	else if (g.ship.pos[0] > (float)gl.xres) {
+	else if (g.ship.pos[0] > (float)gl.xres/2) {
 		g.ship.pos[0] -= (float)gl.xres;
 	}
-	else if (g.ship.pos[1] < 0.0) {
+	else if (g.ship.pos[1] < -gl.yres/2) {
 		g.ship.pos[1] += (float)gl.yres;
 	}
-	else if (g.ship.pos[1] > (float)gl.yres) {
+	else if (g.ship.pos[1] > (float)gl.yres/2) {
 		g.ship.pos[1] -= (float)gl.yres;
 	}
-	//
-	//
 	//Update bullet positions
 	struct timespec bt;
 	clock_gettime(CLOCK_REALTIME, &bt);
@@ -635,16 +653,16 @@ void physics()
 		b->pos[0] += b->vel[0];
 		b->pos[1] += b->vel[1];
 		//Check for collision with window edges
-		if (b->pos[0] < 0.0) {
+		if (b->pos[0] < -gl.xres/2) {
 			b->pos[0] += (float)gl.xres;
 		}
-		else if (b->pos[0] > (float)gl.xres) {
+		else if (b->pos[0] > (float)gl.xres/2) {
 			b->pos[0] -= (float)gl.xres;
 		}
-		else if (b->pos[1] < 0.0) {
+		else if (b->pos[1] < -gl.yres/2) {
 			b->pos[1] += (float)gl.yres;
 		}
-		else if (b->pos[1] > (float)gl.yres) {
+		else if (b->pos[1] > (float)gl.yres/2) {
 			b->pos[1] -= (float)gl.yres;
 		}
 		i++;
@@ -656,17 +674,17 @@ void physics()
 		a->pos[0] += a->vel[0];
 		a->pos[1] += a->vel[1];
 		//Check for collision with window edges
-		if (a->pos[0] < -100.0) {
-			a->pos[0] += (float)gl.xres+200;
+		if (a->pos[0] < -gl.xres/2) {
+			a->pos[0] += (float)gl.xres;
 		}
-		else if (a->pos[0] > (float)gl.xres+100) {
-			a->pos[0] -= (float)gl.xres+200;
+		else if (a->pos[0] > (float)(gl.xres/2)) {
+			a->pos[0] -= (float)gl.xres;
 		}
-		else if (a->pos[1] < -100.0) {
-			a->pos[1] += (float)gl.yres+200;
+		else if (a->pos[1] < -gl.yres/2) {
+			a->pos[1] += (float)gl.yres;
 		}
-		else if (a->pos[1] > (float)gl.yres+100) {
-			a->pos[1] -= (float)gl.yres+200;
+		else if (a->pos[1] > (float)(gl.yres/2)) {
+			a->pos[1] -= (float)gl.yres;
 		}
 		a->angle += a->rotate;
 		a = a->next;
@@ -802,11 +820,10 @@ void physics()
 }
 
 void render()
-{
-	Rect r;
+{ 
+    Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
-	
-	
+  
 	r.bot = gl.yres - 20;
 	r.left = 10;
 	r.center = 0;
@@ -825,6 +842,8 @@ void render()
 	glColor3fv(g.ship.color);
 	glPushMatrix();
 	glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
+	glTranslatef(0, 0, 0);
+	
 	//float angle = atan2(ship.dir[1], ship.dir[0]);
 	glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
@@ -911,56 +930,5 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();
 	}
+    
 }
-float t = -1.0f;
-float inc = 0.001;
-double xp = t; 
-double yp = t;
-void renderCredits(){
-	glClear(GL_COLOR_BUFFER_BIT);
-
-	glPushMatrix();
-		glEnable(GL_POINT_SMOOTH);
-		//glPointSize(4);
-		//glColor3f(255,255,255);
-		
-		//glVertex2i(0,0);
-		//float t = -3.0f;
-		double xp = t; 
-		double yp = t;
-		double x = xp; 
-		double y = xp;
-
-		for (int i =  0; i < 10000;i++){
-			xp = x*x - x*t + y + t;
-			yp = x*x + y*y + t*t - x*t - x + y;
-			x = xp;
-			y = yp;
-			if(i%3){
-				glPointSize(5);
-				//glColor3ub(rand()%255,rand()%255,rand()%255);
-				glColor3ub(255,255,255);
-			}
-			else{
-				glPointSize(1);
-				glColor3ub(255,255,255);
-			}
-			glBegin(GL_POINTS);
-			
-			glVertex2d(xp,yp);
-			glEnd();
-		}
-		
-	glPopMatrix();
-
-	if(t >= 1.0f){
-		inc = -inc;
-	}else if(t <= -1.0f){
-		inc = 0.001;
-	}
-	t += inc;
-	
-}
-
-
-
