@@ -3,15 +3,26 @@
 
 #include "fonts.h"
 #include <GL/glx.h>
+extern void creditsKevin(Rect);
+extern void creditsAnna(Rect);
+extern void creditsGerardo(Rect);
+extern void creditManvir(Rect);
 
-void showCredits(Rect r)
+void showCredits()
 {
 
-    ggprint8b(&r, 16, 0x00ff0000, "Credits of this Game is By:");
-    ggprint8b(&r, 16, 0x00ff0000, "Kevin Mitra");
-    ggprint8b(&r, 16, 0x00ff0000, "Gerardo Martinez");
-    ggprint8b(&r, 16, 0x00ff0000, "Manvir Bal");
-    ggprint8b(&r, 16, 0x00ff0000, "Anna Poon");
+    Rect r;
+
+    r.bot = 0;
+    r.left = 0;
+    r.center = 0;
+    creditManvir(r);
+    ggprint8b(&r, 16, 0x00ffff00, "\n");
+    creditsAnna(r);
+    ggprint8b(&r, 16, 0x00ffff00, "\n");
+    creditsGerardo(r);
+    ggprint8b(&r, 16, 0x00ffff00, "\n");
+    creditsKevin(r);
 }
 
 float t = -3.0f;
@@ -19,16 +30,29 @@ float inc = 0.005;
 double xp = t; 
 double yp = t;
 void renderCoolCredits(){
+    glClear(GL_COLOR_BUFFER_BIT);
+
+	showCredits();
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-	
+int angle = 240;	
     glOrtho(-4,4,-4,4,-1,1);
     //glFrustum(-4,4,-4,4,1.0,10);
+<<<<<<< HEAD
 	glClear(GL_COLOR_BUFFER_BIT);
 
 
     glOrtho(-4,4,-4,4,-1,1);
+=======
+    //glClear(GL_COLOR_BUFFER_BIT);
+	//showCredits();
+>>>>>>> master
 	glPushMatrix();
+		//glVertex3d(xp,yp, -1.0);
+
+
+        //showCredits(Rect r);
+      //  glPopMatrix();//new info
 		glEnable(GL_POINT_SMOOTH);
 		//glColor3f(255,255,255);
 
