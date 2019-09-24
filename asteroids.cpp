@@ -326,7 +326,7 @@ extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num);
 extern void renderCoolCredits();
-extern void popRand();
+extern void genRand();
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -335,9 +335,9 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
-	popRand();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
+	genRand();
 	//x11.set_mouse_position(100,100);
 	int done=0;
 
@@ -367,6 +367,9 @@ int main()
         else {
 			if(credits){
 				renderCoolCredits();
+					glMatrixMode(GL_PROJECTION); glLoadIdentity();
+					glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+					glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}else{
 		    	render();
 			}
@@ -381,7 +384,7 @@ int main()
 void init_opengl(void)
 {
 	//OpenGL initialization
-	std::cout << gl.xres << " and " << gl.yres << std::endl;
+	//std::cout << gl.xres << " and " << gl.yres << std::endl;
 	glViewport(0, 0, gl.xres, gl.yres);
 	//Initialize matrices
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
