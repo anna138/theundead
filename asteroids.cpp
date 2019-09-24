@@ -91,14 +91,14 @@ public:
 		//sprintf(ts, "%s", name);
 		FILE *fpi = fopen(ppmname, "r");
 		if (fpi) {
-			char line[200];
-			fgets(line, 200, fpi);
-			fgets(line, 200, fpi);
+			char line[4000];
+			fgets(line, 4000, fpi);
+			fgets(line, 4000, fpi);
 			//skip comments and blank lines
 			while (line[0] == '#' || strlen(line) < 2)
-				fgets(line, 200, fpi);
+				fgets(line, 4000, fpi);
 			sscanf(line, "%i %i", &width, &height);
-			fgets(line, 200, fpi);
+			fgets(line, 4000, fpi);
 			//get pixel data
 			int n = width * height * 3;			
 			data = new unsigned char[n];			
@@ -113,9 +113,8 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[2] = {
-"./bigfoot.png",
-"./undead_logo.gif"
+Image img[1] = {
+"./undead_logo.png"
 };
 class Global {
 public:
@@ -486,7 +485,7 @@ void init_opengl(void)
 		
 	img_x = (int)bigfoot.pos[0];
 	img_y = (int)bigfoot.pos[1];
-	imageTexture = (int)bigfoot.pos[2];
+	imageTexture = gl.bigfootTexture;
 
 }
 

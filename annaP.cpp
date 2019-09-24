@@ -48,7 +48,7 @@ void displayLogo(int x, int y, GLuint texture)
 	
 	int width = 100;
     glPushMatrix();
-    glTranslatef(x, y, 0);
+    glTranslatef(400, 200, 0);
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_QUADS);
