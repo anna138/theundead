@@ -326,7 +326,6 @@ extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num);
 extern void renderCoolCredits();
-extern void genRand();
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -337,7 +336,6 @@ int main()
 	srand(time(NULL));
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	genRand();
 	//x11.set_mouse_position(100,100);
 	int done=0;
 
