@@ -19,13 +19,19 @@ float inc = 0.005;
 double xp = t; 
 double yp = t;
 void renderCoolCredits(){
+
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-	
+int angle = 240;	
     glOrtho(-4,4,-4,4,-1,1);
     //glFrustum(-4,4,-4,4,1.0,10);
 	glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
+		//glVertex3d(xp,yp, -1.0);
+
+
+        //showCredits(Rect r);
+      //  glPopMatrix();//new info
 		glEnable(GL_POINT_SMOOTH);
 		//glColor3f(255,255,255);
 

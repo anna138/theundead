@@ -368,6 +368,8 @@ int main()
 					glMatrixMode(GL_PROJECTION); glLoadIdentity();
 					glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 					glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+                    render();
+                    //this were the credit name pops up
 			}else{
 		    	render();
 			}
