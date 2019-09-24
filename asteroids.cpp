@@ -26,6 +26,10 @@ typedef float Flt;
 typedef float Vec[3];
 typedef Flt	Matrix[4][4];
 
+int img_x;
+int img_y;
+GLuint imageTexture;
+
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
 #define random(a) (rand()%a)
@@ -56,11 +60,70 @@ extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
-
+class Image {
+public:
+	int width, height;
+	unsigned char *data;
+	~Image() { delete [] data; }
+	Image(const char *fname) {
+		if (fname[0] == '\0')
+			return;
+		//printf("fname **%s**\n", fname);
+		int ppmFlag = 0;
+		char name[40];
+		strcpy(name, fname);
+		int slen = strlen(name);
+		char ppmname[80];
+		if (strncmp(name+(slen-4), ".ppm", 4) == 0)
+			ppmFlag = 1;
+		if (ppmFlag) {
+			strcpy(ppmname, name);
+		} else {
+			name[slen-4] = '\0';
+			//printf("name **%s**\n", name);
+			sprintf(ppmname,"%s.ppm", name);
+			//printf("ppmname **%s**\n", ppmname);
+			char ts[100];
+			//system("convert eball.jpg eball.ppm");
+			sprintf(ts, "convert %s %s", fname, ppmname);
+			system(ts);
+		}
+		//sprintf(ts, "%s", name);
+		FILE *fpi = fopen(ppmname, "r");
+		if (fpi) {
+			char line[200];
+			fgets(line, 200, fpi);
+			fgets(line, 200, fpi);
+			//skip comments and blank lines
+			while (line[0] == '#' || strlen(line) < 2)
+				fgets(line, 200, fpi);
+			sscanf(line, "%i %i", &width, &height);
+			fgets(line, 200, fpi);
+			//get pixel data
+			int n = width * height * 3;			
+			data = new unsigned char[n];			
+			for (int i=0; i<n; i++)
+				data[i] = fgetc(fpi);
+			fclose(fpi);
+		} else {
+			printf("ERROR opening image: %s\n",ppmname);
+			exit(0);
+		}
+		if (!ppmFlag)
+			unlink(ppmname);
+	}
+};
+Image img[2] = {
+"./bigfoot.png",
+"./undead_logo.gif"
+};
 class Global {
 public:
 	int xres, yres;
 	char keys[65536];
+	GLuint bigfootTexture;
+	int showBigfoot;
+
 	Global() {
 		xres = 1250;
 		yres = 900;
@@ -69,6 +132,11 @@ public:
 	}
 } gl;
 
+class Bigfoot {
+public:
+	Vec pos;
+	Vec vel;
+} bigfoot;
 class Ship {
 public:
 	Vec dir;
@@ -118,6 +186,7 @@ public:
 		next = NULL;
 	}
 };
+
 
 class Game {
 public:
@@ -324,7 +393,7 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
-extern void startMenu(Rect r, int y_num, int x_num);
+extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint imageTexture);
 extern void renderCoolCredits();
 //==========================================================================
 // M A I N
@@ -360,7 +429,7 @@ int main()
         if(!started) {
             Rect r;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, 0, 0);
+            startMenu(r, 0, 0, img_x, img_y, imageTexture);
         }
         else {
 			if(credits){
@@ -403,6 +472,22 @@ void init_opengl(void)
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
+	
+	//Images
+	glGenTextures(1, &gl.bigfootTexture);
+	int w = img[0].width;
+	int h = img[0].height;
+	glBindTexture(GL_TEXTURE_2D, gl.bigfootTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+		
+	img_x = (int)bigfoot.pos[0];
+	img_y = (int)bigfoot.pos[1];
+	imageTexture = (int)bigfoot.pos[2];
+
 }
 
 void normalize2d(Vec v)

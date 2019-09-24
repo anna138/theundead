@@ -25,6 +25,9 @@ void renderCoolCredits(){
     glOrtho(-4,4,-4,4,-1,1);
     //glFrustum(-4,4,-4,4,1.0,10);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+
+    glOrtho(-4,4,-4,4,-1,1);
 	glPushMatrix();
 		glEnable(GL_POINT_SMOOTH);
 		//glColor3f(255,255,255);
