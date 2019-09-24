@@ -47,18 +47,21 @@ void displayLogo(int x, int y, GLuint texture)
 {
 	
 	int width = 100;
+	x = 100;
+	y = 100;
     glPushMatrix();
     glTranslatef(400, 200, 0);
+	
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_QUADS);
-        glTexCoord2f(x, y+.5);
+        glTexCoord2f(x, y+.85f);
         glVertex2i(-width,-width);
         glTexCoord2f(x, y);
         glVertex2i(-width,width);
-        glTexCoord2f(x+.125, y);
+        glTexCoord2f(x+.85f, y);
         glVertex2i(width, width);
-        glTexCoord2f(x+.125, y+.5);
+        glTexCoord2f(x+.85f, y+.85f);
         glVertex2i(width,-width);
     glEnd();
     glPopMatrix();

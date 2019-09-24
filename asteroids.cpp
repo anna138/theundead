@@ -91,14 +91,14 @@ public:
 		//sprintf(ts, "%s", name);
 		FILE *fpi = fopen(ppmname, "r");
 		if (fpi) {
-			char line[4000];
-			fgets(line, 4000, fpi);
-			fgets(line, 4000, fpi);
+			char line[200];
+			fgets(line, 200, fpi);
+			fgets(line, 200, fpi);
 			//skip comments and blank lines
 			while (line[0] == '#' || strlen(line) < 2)
-				fgets(line, 4000, fpi);
+				fgets(line, 200, fpi);
 			sscanf(line, "%i %i", &width, &height);
-			fgets(line, 4000, fpi);
+			fgets(line, 200, fpi);
 			//get pixel data
 			int n = width * height * 3;			
 			data = new unsigned char[n];			
@@ -121,9 +121,10 @@ public:
 	int xres, yres;
 	char keys[65536];
 	GLuint bigfootTexture;
-	int showBigfoot;
+
 
 	Global() {
+		
 		xres = 1250;
 		yres = 900;
         memset(keys, 0, 65536);
@@ -482,9 +483,12 @@ void init_opengl(void)
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
-		
+	bigfoot.pos[0] = 0.0f;
+	bigfoot.pos[1] = 0.0f;
+	bigfoot.pos[0] = -250.0;
 	img_x = (int)bigfoot.pos[0];
 	img_y = (int)bigfoot.pos[1];
+
 	imageTexture = gl.bigfootTexture;
 
 }
