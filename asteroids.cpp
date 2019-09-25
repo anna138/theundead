@@ -432,18 +432,20 @@ int main()
             startMenu(r, 0, 0, img_x, img_y, imageTexture);
         }
         else {
-            if(credits){
-                renderCoolCredits();
-                //this were the credit name pops up
-            }else{
-                render();
-            }
+			if(credits){
+				renderCoolCredits();
+					glMatrixMode(GL_PROJECTION); glLoadIdentity();
+					glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+					glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+			}else{
+		    	render();
+			}
         }
-        x11.swapBuffers();
-    }
-    cleanup_fonts();
-    logClose();
-    return 0;
+		x11.swapBuffers();
+	}
+	cleanup_fonts();
+	logClose();
+	return 0;
 }
 
 void init_opengl(void)
@@ -471,21 +473,21 @@ void init_opengl(void)
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
 	
-	// //Images
-	// glGenTextures(1, &gl.bigfootTexture);
-	// int w = img[0].width;
-	// int h = img[0].height;
-	// glBindTexture(GL_TEXTURE_2D, gl.bigfootTexture);
-	// //
-	// glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	// glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	// glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
-	// 	GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
+	//Images
+	glGenTextures(1, &gl.bigfootTexture);
+	int w = img[0].width;
+	int h = img[0].height;
+	glBindTexture(GL_TEXTURE_2D, gl.bigfootTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 
-	// img_x = (int)bigfoot.pos[0];
-	// img_y = (int)bigfoot.pos[1];
+	img_x = (int)bigfoot.pos[0];
+	img_y = (int)bigfoot.pos[1];
 
-	// imageTexture = gl.bigfootTexture;
+	imageTexture = gl.bigfootTexture;
 
 }
 
