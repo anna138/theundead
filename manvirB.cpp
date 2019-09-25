@@ -18,10 +18,10 @@ double xp = t;
 double yp = t;
 int angle = 5;
 void chaos_equations(){
-	glClear(GL_COLOR_BUFFER_BIT);
+	//glClear(GL_COLOR_BUFFER_BIT);
 	glPushMatrix();
 		//glRotatef(angle, 0,0,1);
-		glScalef(10,6,1);
+		glScalef(1000,500,1);
 		glEnable(GL_POINT_SMOOTH);
 		xp = t;
 		yp = t;
@@ -37,11 +37,11 @@ void chaos_equations(){
 			// sleep(1);
 
 			glPointSize(5);
-			//glColor3ub(rand()%255,rand()%255,rand()%255);
-			glColor3ub(255,255,255);
+			glColor3ub(rand()%255,rand()%255,rand()%255);
+			//glColor3ub(255,255,255);
 			glBegin(GL_POINTS);
 				//glVertex2d(xp,yp);
-				glVertex3d(xp,yp, -1.1);
+				glVertex3d(xp,yp, 0);
 			glEnd();
 
 		}

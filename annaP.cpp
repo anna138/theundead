@@ -13,6 +13,10 @@ void startMenu(Rect r, int y, int x)
     r.left = x;
     r.center = 0;
     ggprint16(&r, 16, 0x00ff0000, "Press Any Space to Continue");
+
+
+    
+
 /*
     if(key) {
             *start = true;
