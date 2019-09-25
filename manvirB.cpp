@@ -6,7 +6,20 @@
 #include <iostream>
 #include <unistd.h>
 
-
+struct Vec
+{
+	float x, y, z;
+	Vec(){ z = (0), y = (0), x = (0);}
+	Vec(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+	void setPoints(float x1, float y1, float z1)
+	{
+		x = x1;
+		y = y1;
+		z = z1;
+	}
+};
+const int MAX_PARTICLES = 10000;
+Vec particles[MAX_PARTICLES];
 
 void creditManvir(Rect r)
 {
@@ -19,15 +32,36 @@ void randomColor(){
 		colorArray[i] = rand()%255;
 	}
 }
+void makeParticles(int w, int h)
+{
+	for (int i = 0; i < MAX_PARTICLES; i++)
+	{
+		particles[i].x = ((float)(rand() % w)) - (w / 2);
+		particles[i].y = ((float)(rand() % h)) - (h / 2);
+		particles[i].z = ((float)rand() / RAND_MAX) * -100;
+		//printf("z: %f\n", particles[i].z);
+	}
+}
 
 float t = 0.05f;
 float inc = 0.00005;
 double xp = t; 
 double yp = t;
 int angle = 5;
+float z = 0;
 void chaos_equations(){
 	//glClear(GL_COLOR_BUFFER_BIT);
-	
+	//draw dots
+	glTranslatef(0,0,z);
+	glPushMatrix();
+		glPointSize(3);
+		glBegin(GL_POINTS);
+			for(int i = 0; i < MAX_PARTICLES; i++){
+				glVertex3f(particles[i].x, particles[i].y, particles[i].z);
+			}
+		glEnd();
+	glPopMatrix();
+
 	glPushMatrix();
 		//glRotatef(angle, 0,0,1);
 		glScalef(1000,500,1);
@@ -45,7 +79,7 @@ void chaos_equations(){
 			glPointSize(5);
 			glColor3ub(colorArray[i%100], colorArray[(i+1)%100], colorArray[(i+2)%100]);
 			glBegin(GL_POINTS);
-				glVertex3d(xp,yp, 0);
+				glVertex3d(xp,yp,-1.1);
 			glEnd();
 
 		}
@@ -58,4 +92,9 @@ void chaos_equations(){
 	angle = (angle + 1)%360;
 
 	glPopMatrix();
+	if(z < 50)
+		z += 0.01;
+	else
+		z -= 0.01;
+	
 }

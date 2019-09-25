@@ -395,7 +395,8 @@ extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint imageTexture);
 extern void randomColor();
-extern void renderCoolCredits(int img_x, int img_y, GLuint imageTexture);
+extern void renderCoolCredits(int w, int h, int img_x, int img_y, GLuint imageTexture);
+extern void makeParticles(int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -405,6 +406,7 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
+	makeParticles(gl.xres, gl.yres);
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
@@ -431,14 +433,14 @@ int main()
         if(!started) {
             Rect r;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, 0, 0, img_x, img_y, imageTexture);
+            startMenu(r, gl.yres, gl.xres, img_x, img_y, imageTexture);
         }
         else {
 			if(credits){
-				renderCoolCredits(img_x, img_y, imageTexture);
-					glMatrixMode(GL_PROJECTION); glLoadIdentity();
-					glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-					glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				renderCoolCredits(gl.xres, gl.yres, img_x, img_y, imageTexture);
+				glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}else{
 		    	render();
 			}

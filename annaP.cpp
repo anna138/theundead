@@ -24,7 +24,7 @@
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
-void displayLogo(int x, int y, GLuint texture);
+void displayLogo(int w, int h, int x, int y, GLuint texture);
 void creditsAnna(Rect r);
 
 
@@ -32,23 +32,23 @@ void creditsAnna(Rect r);
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture)
 {
-    r.bot = y-150;
-    r.left = x-200;
+    r.bot = 0;
+    r.left = 0-200;
     r.center = 0;
     ggprint16(&r, 16, 0x00ff0000, "Press Space to Continue");
     ggprint16(&r, 16, 0x00ff0000, 
             "Press Space + C for Credits During Gameplay");
-	displayLogo(img_x, img_y, imageTexture);
+	displayLogo(x, y, img_x, img_y, imageTexture);
 }
 
-void displayLogo(int x, int y, GLuint texture)
+void displayLogo(int w, int h, int x, int y, GLuint texture)
 {
 	
 	int width = 50;
 	x = 0;
 	y = 0;
     glPushMatrix();
-    glTranslatef(-550, 260, 0);
+    glTranslatef((w/2)-50, (h/2)-50, 0);
 	
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);
