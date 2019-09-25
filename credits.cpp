@@ -7,6 +7,7 @@
 #include <cstdlib>
 
 extern void chaos_equations();
+extern void displayLogo(int img_x, int img_y, GLuint imageTexture);
 extern void creditsKevin(Rect);
 extern void creditsAnna(Rect);
 extern void creditsGerardo(Rect);
@@ -32,9 +33,10 @@ void showCredits()
     
 }
 
-void renderCoolCredits(){
+void renderCoolCredits(int img_x, int img_y, GLuint imageTexture){
     glClear(GL_COLOR_BUFFER_BIT);
 	showCredits();
+	displayLogo(img_x, img_y, imageTexture);
 	//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
     //glOrtho(-4,4,-4,4,-1,1);
