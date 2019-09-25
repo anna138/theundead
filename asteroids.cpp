@@ -395,6 +395,7 @@ extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint imageTexture);
 extern void renderCoolCredits();
+extern void randomColor();
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -403,6 +404,7 @@ int main()
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
+	randomColor();
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);

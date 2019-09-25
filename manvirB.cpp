@@ -11,7 +11,15 @@
 void creditManvir(Rect r)
 {
     ggprint8b(&r, 16, 0x00ff0000, "Manvir Bal");
+	
 }
+int colorArray[100];
+void randomColor(){
+	for(int i = 0; i < 100; i++){
+		colorArray[i] = rand()%255;
+	}
+}
+
 float t = 0.05f;
 float inc = 0.00005;
 double xp = t; 
@@ -19,6 +27,7 @@ double yp = t;
 int angle = 5;
 void chaos_equations(){
 	//glClear(GL_COLOR_BUFFER_BIT);
+	
 	glPushMatrix();
 		//glRotatef(angle, 0,0,1);
 		glScalef(1000,500,1);
@@ -33,14 +42,9 @@ void chaos_equations(){
 			yp = x*x + y*y + t*t - x*t - x + y;
 			x = xp;
 			y = yp;
-			// std::cout << "this is x: " << xp << " and this is yp:" << yp << std::endl;
-			// sleep(1);
-
 			glPointSize(5);
-			glColor3ub(rand()%255,rand()%255,rand()%255);
-			//glColor3ub(255,255,255);
+			glColor3ub(colorArray[i%100], colorArray[(i+1)%100], colorArray[(i+2)%100]);
 			glBegin(GL_POINTS);
-				//glVertex2d(xp,yp);
 				glVertex3d(xp,yp, 0);
 			glEnd();
 
