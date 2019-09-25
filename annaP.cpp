@@ -32,23 +32,23 @@ void creditsAnna(Rect r);
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture)
 {
-    r.bot = y;
-    r.left = x;
+    r.bot = y-150;
+    r.left = x-200;
     r.center = 0;
-    ggprint16(&r, 16, 0x00ff0000, "Press Any Space to Continue");
+    ggprint16(&r, 16, 0x00ff0000, "Press Space to Continue");
     ggprint16(&r, 16, 0x00ff0000, 
-            "Toggle C for Credits During Gameplay");
+            "Press Space + C for Credits During Gameplay");
 	displayLogo(img_x, img_y, imageTexture);
 }
 
 void displayLogo(int x, int y, GLuint texture)
 {
 	
-	int width = 80;
+	int width = 50;
 	x = 0;
 	y = 0;
     glPushMatrix();
-    glTranslatef(400, 200, 0);
+    glTranslatef(-550, 260, 0);
 	
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);

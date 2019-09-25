@@ -394,7 +394,7 @@ extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint imageTexture);
-extern void renderCoolCredits();
+extern void renderCoolCredits(int img_x, int img_y, GLuint imageTexture);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -433,7 +433,7 @@ int main()
         }
         else {
 			if(credits){
-				renderCoolCredits();
+				renderCoolCredits(img_x, img_y, imageTexture);
 					glMatrixMode(GL_PROJECTION); glLoadIdentity();
 					glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 					glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
