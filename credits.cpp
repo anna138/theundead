@@ -40,7 +40,7 @@ void renderCoolCredits(int w, int h, int img_x, int img_y, GLuint imageTexture){
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
 	glMatrixMode(GL_MODELVIEW); glLoadIdentity();
     // glOrtho(-4,4,-4,4,-1,1);
-	glFrustum(-w/2,w/2,-h/2,h/2, 1.0,10);
+	glFrustum(-w/2,w/2,-h/2,h/2, 1.0,5);
     chaos_equations();
 
 }
