@@ -113,8 +113,9 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[1] = {
-"./undead_logo.png"
+Image img[2] = {
+	"./background.png",
+	"./undead_logo.png"
 };
 class Global {
 public:
