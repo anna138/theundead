@@ -13,13 +13,13 @@ extern void creditsAnna(Rect);
 extern void creditsGerardo(Rect);
 extern void creditManvir(Rect);
 
-
+int move = 0;
 void showCredits(int w, int h)
 {
 
     Rect r;
     r.bot = h/2-25;
-    r.left = -w/2+25;
+    r.left = -w/2+25+move;
     r.center = 0;
     creditManvir(r);
     ggprint8b(&r, 16, 0x00004C00, "\n");
@@ -30,7 +30,7 @@ void showCredits(int w, int h)
     creditsKevin(r);
     ggprint8b(&r, 16, 0x00ffffff, "\n");
 
-    
+    move = (move + 1)%w;
 }
 
 void renderCoolCredits(int w, int h, int img_x, int img_y, GLuint imageTexture){

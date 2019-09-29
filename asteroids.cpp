@@ -330,10 +330,6 @@ public:
 		glMatrixMode(GL_PROJECTION); glLoadIdentity();
 		glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 		
-		
-	
-		//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
-		//glOrtho(-4,4,-4,4, -1, 1);
 		glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 
 		set_title();
@@ -482,11 +478,14 @@ void init_opengl(void)
 	glGenTextures(1, &gl.bigfootTexture);
 	int w = img[0].width;
 	int h = img[0].height;
+
 	glBindTexture(GL_TEXTURE_2D, gl.bigfootTexture);
 	//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, 3, w, h, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 
 	img_x = (int)bigfoot.pos[0];
