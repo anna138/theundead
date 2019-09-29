@@ -46,13 +46,12 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture)
 void displayLogo(int w, int h, int x, int y, GLuint texture)
 {
 	
-	int width = 790;
-	int height = 350;
+	int width = w;
+	int height = h;
 	x = 0;
 	y = 0;
     glPushMatrix();
-    glTranslatef((w/2)-800, (h/2)-350, 0);
-	
+	glTranslatef(-400,0,0);
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_QUADS);
