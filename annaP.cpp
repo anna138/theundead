@@ -24,7 +24,7 @@
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
-void displayLogo(int w, int h, int x, int y, GLuint texture);
+void displayLogo(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
 
 
@@ -43,13 +43,11 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture)
             "Press Space + C for Credits During Gameplay");
 }
 
-void displayLogo(int w, int h, int x, int y, GLuint texture)
+void displayLogo(int w, int h, GLuint texture)
 {
-	
 	int width = w/2;
 	int height = h/2;
     	glPushMatrix();
-	//glTranslatef(,0,0);
     	glColor3f(1.0,1.0,1.0);
     	glBindTexture(GL_TEXTURE_2D, texture);
     	glBegin(GL_QUADS);
