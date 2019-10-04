@@ -28,8 +28,10 @@ typedef Flt	Matrix[4][4];
 
 int img_x;
 int img_y;
-GLuint imageTexture;
-
+//image for background
+GLuint imageTexture; 
+//image for background
+GLuint startMenuTexture; 
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
 #define random(a) (rand()%a)
@@ -113,16 +115,17 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[2] = {
+Image img[3] = {
 	"./background.png",
+	"./zombie_start.png",
 	"./undead_logo.png"
 };
 class Global {
 public:
 	int xres, yres;
 	char keys[65536];
-	GLuint bigfootTexture;
-
+	GLuint backgroundTexture;
+	GLuint startTexture;
 
 	Global() {
 		
@@ -390,7 +393,7 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
-extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint imageTexture);
+extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint startMenuTexture);
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
@@ -430,9 +433,10 @@ int main()
         if(!started) {
             Rect r;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, gl.yres, gl.xres, img_x, img_y, imageTexture);
+            startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
         }
         else {
+			
 			if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
@@ -468,18 +472,18 @@ void init_opengl(void)
 	glDisable(GL_CULL_FACE);
 	//
 	//Clear the screen to black
-	//glClearColor(0.0, 0.0, 0.0, 1.0);
-	glClearColor(0.1, 0.1, 0.1, 1.0);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	//glClearColor(0.1, 0.1, 0.1, 1.0);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
 	
-	//Images
-	glGenTextures(1, &gl.bigfootTexture);
+	//Image - Background
+	glGenTextures(1, &gl.backgroundTexture);
 	int w = img[0].width;
 	int h = img[0].height;
 
-	glBindTexture(GL_TEXTURE_2D, gl.bigfootTexture);
+	glBindTexture(GL_TEXTURE_2D, gl.backgroundTexture);
 	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -491,8 +495,24 @@ void init_opengl(void)
 	img_x = (int)bigfoot.pos[0];
 	img_y = (int)bigfoot.pos[1];
 
-	imageTexture = gl.bigfootTexture;
+	imageTexture = gl.backgroundTexture;
 
+	//Image - Start Menu Zombie
+	
+	glGenTextures(1, &gl.startTexture);
+	int w2 = img[1].width;
+	int h2 = img[1].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.startTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
+
+	startMenuTexture = gl.startTexture;
 }
 
 void normalize2d(Vec v)
