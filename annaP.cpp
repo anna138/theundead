@@ -34,7 +34,7 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTextu
 
 	/*img_x = img_y + startMenuTexture;*/
 	img_y = 0 + img_x;
-	displayImage(img_y/2,img_y/2, 50, startMenuTexture);
+	displayImage(img_y/2,img_y/2, 0, 50, startMenuTexture);
     	r.bot = 0-(y/3);
     	r.left = 0-(x/7);
     	r.center = 0;
@@ -44,8 +44,8 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTextu
 }
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture)
 {
-	int width = location_x/2;
-	int height = location_y/2;
+	int width = width_x/2;
+	int height = height_y/2;
     glPushMatrix();
     glColor3f(1.0,1.0,1.0);
     glBindTexture(GL_TEXTURE_2D, texture);
