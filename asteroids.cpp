@@ -55,6 +55,8 @@ const Flt MINIMUM_ASTEROID_SIZE = 60.0;
 const double physicsRate = 1.0 / 60.0;
 const double oobillion = 1.0 / 1e9;
 int started = 0;
+int doneStart = 0;
+int changeColor=0;
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -397,6 +399,9 @@ extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
+extern void makeButton(Rect r, int y, int x, int img_x, int img_y);
+
+extern void changeButtonColor(Rect r, int y, int x, int img_x, int img_y, int &doneStart);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -432,17 +437,31 @@ int main()
          */
         if(!started) {
             Rect r;
+            int x =200;
+            int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
+            
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
+            makeButton(r, x, y, img_x, img_y);
+            std::cout << "Does this Work?" << doneStart << std::endl;
         }
         else {
-			
+		    	
+            std::cout << "This is else:" << doneStart << std::endl;
 			if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
-			}else{
+			}
+            if(doneStart == 1){
+                Rect r;
+                int x=200;
+                int y=200;
+                std::cout << "This is the doneStart loop" << std:: endl;
+                changeButtonColor( r,  y, x, img_x, img_y, doneStart);
+            }
+            else{
 		    	render();
 			}
         }
@@ -654,6 +673,7 @@ int check_keys(XEvent *e)
 			break;
         case XK_space:
             started = 1;
+            doneStart = 1;
             break;
 		case XK_c:
 			credits ^= 1;
