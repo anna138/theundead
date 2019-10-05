@@ -22,6 +22,8 @@
 	Display Background is a function to display the background in fullscreen.
 */
 
+typedef float Vec[3];
+
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture);
@@ -48,6 +50,7 @@ void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint 
 	int height = height_y/2;
     glPushMatrix();
     glColor3f(1.0,1.0,1.0);
+	
     glBindTexture(GL_TEXTURE_2D, texture);
     glBegin(GL_QUADS);
        
@@ -65,6 +68,35 @@ void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint 
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 }
+
+void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, GLuint texture)
+{
+	int width = width_x/2;
+	int height = height_y/2;
+    glPushMatrix();
+    glColor3f(1.0,1.0,1.0);
+	/*Adding Code for the Trooper*/
+	glTranslatef(img_pos[0], img_pos[1], img_pos[2]);
+	glTranslatef(0, 0, 0);
+	glRotatef(img_angle, 0.0f, 0.0f, 1.0f);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBegin(GL_QUADS);
+       
+        glTexCoord2f(1, 1);
+        glVertex2i(width, -height);
+        glTexCoord2f(1,0);
+        glVertex2i(width, height);
+		glTexCoord2f(0, 0);
+        glVertex2i(-width,height);
+        glTexCoord2f(0, 1);
+        glVertex2i(-width,-height);
+
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+
 void displayBackground(int w, int h, GLuint texture)
 {
 	int width = w/2;

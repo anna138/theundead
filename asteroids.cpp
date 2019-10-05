@@ -30,8 +30,13 @@ int img_x;
 int img_y;
 //image for background
 GLuint imageTexture; 
-//image for background
+//image for zombie
 GLuint startMenuTexture; 
+//image for trooper
+GLuint trooperImageTexture; 
+//image for asteroid
+GLuint villainImageTexture; 
+
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
 #define random(a) (rand()%a)
@@ -115,9 +120,11 @@ public:
 			unlink(ppmname);
 	}
 };
-Image img[3] = {
+Image img[5] = {
 	"./background.png",
 	"./zombie_start.png",
+	"./trooper.PNG",
+	"./villain.PNG",
 	"./undead_logo.png"
 };
 class Global {
@@ -126,7 +133,8 @@ public:
 	char keys[65536];
 	GLuint backgroundTexture;
 	GLuint startTexture;
-
+	GLuint trooperTexture;
+	GLuint villainTexture;
 	Global() {
 		
 		xres = 1250;
@@ -141,7 +149,7 @@ public:
 	Vec pos;
 	Vec vel;
 } bigfoot;
-class Ship {
+class Trooper {
 public:
 	Vec dir;
 	Vec pos;
@@ -149,7 +157,7 @@ public:
 	float angle;
 	float color[3];
 public:
-	Ship() {
+	Trooper() {
 		VecZero(dir);
 		// pos[0] = (Flt)(gl.xres/2);
 		// pos[1] = (Flt)(gl.yres/2);
@@ -194,8 +202,8 @@ public:
 
 class Game {
 public:
-	Ship ship;
-	Asteroid *ahead;
+	Trooper trooper;
+	Asteroid *asteroid;
 	Bullet *barr;
 	int nasteroids;
 	int nbullets;
@@ -204,7 +212,7 @@ public:
 	bool mouseThrustOn;
 public:
 	Game() {
-		ahead = NULL;
+		asteroid = NULL;
 		barr = new Bullet[MAX_BULLETS];
 		nasteroids = 0;
 		nbullets = 0;
@@ -234,10 +242,10 @@ public:
 			a->vel[1] = (Flt)(rnd()*2.0-1.0);
 			//std::cout << "asteroid" << std::endl;
 			//add to front of linked list
-			a->next = ahead;
-			if (ahead != NULL)
-				ahead->prev = a;
-			ahead = a;
+			a->next = asteroid;
+			if (asteroid != NULL)
+				asteroid->prev = a;
+			asteroid = a;
 			++nasteroids;
 		}
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
@@ -394,6 +402,7 @@ extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
 extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint startMenuTexture);
+extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, GLuint texture);
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
@@ -513,6 +522,40 @@ void init_opengl(void)
 		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 
 	startMenuTexture = gl.startTexture;
+	
+	//Image - Trooper
+	
+	glGenTextures(1, &gl.trooperTexture);
+	int w3 = img[2].width;
+	int h3 = img[2].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.trooperTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w3, h3, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
+
+	trooperImageTexture = gl.trooperTexture;
+	
+	//Image - Asteroid
+	
+	glGenTextures(1, &gl.villainTexture);
+	int w4 = img[3].width;
+	int h4 = img[3].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.villainTexture);
+	//
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w4, h4, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
+
+	villainImageTexture = gl.villainTexture;
 }
 
 void normalize2d(Vec v)
@@ -553,12 +596,12 @@ void check_mouse(XEvent *e)
 				if (g.nbullets < MAX_BULLETS) {
 					Bullet *b = &g.barr[g.nbullets];
 					timeCopy(&b->time, &bt);
-					b->pos[0] = g.ship.pos[0];
-					b->pos[1] = g.ship.pos[1];
-					b->vel[0] = g.ship.vel[0];
-					b->vel[1] = g.ship.vel[1];
-					//convert ship angle to radians
-					Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+					b->pos[0] = g.trooper.pos[0];
+					b->pos[1] = g.trooper.pos[1];
+					b->vel[0] = g.trooper.vel[0];
+					b->vel[1] = g.trooper.vel[1];
+					//convert trooper angle to radians
+					Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 					//convert angle to a vector
 					Flt xdir = cos(rad);
 					Flt ydir = sin(rad);
@@ -589,32 +632,32 @@ void check_mouse(XEvent *e)
 		//std::flush;
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-			g.ship.angle += 0.05f * (float)xdiff;
-			if (g.ship.angle >= 360.0f)
-				g.ship.angle -= 360.0f;
+			g.trooper.angle += 0.05f * (float)xdiff;
+			if (g.trooper.angle >= 360.0f)
+				g.trooper.angle -= 360.0f;
 		}
 		else if (xdiff < 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
-			g.ship.angle += 0.05f * (float)xdiff;
-			if (g.ship.angle < 0.0f)
-				g.ship.angle += 360.0f;
+			g.trooper.angle += 0.05f * (float)xdiff;
+			if (g.trooper.angle < 0.0f)
+				g.trooper.angle += 360.0f;
 		}
 		if (ydiff > 0) {
 			//apply thrust
-			//convert ship angle to radians
-			Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+			//convert trooper angle to radians
+			Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 			//convert angle to a vector
 			Flt xdir = cos(rad);
 			Flt ydir = sin(rad);
-			g.ship.vel[0] += xdir * (float)ydiff * 0.01f;
-			g.ship.vel[1] += ydir * (float)ydiff * 0.01f;
-			Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
-					g.ship.vel[1]*g.ship.vel[1]);
+			g.trooper.vel[0] += xdir * (float)ydiff * 0.01f;
+			g.trooper.vel[1] += ydir * (float)ydiff * 0.01f;
+			Flt speed = sqrt(g.trooper.vel[0]*g.trooper.vel[0]+
+					g.trooper.vel[1]*g.trooper.vel[1]);
 			if (speed > 10.0f) {
 				speed = 10.0f;
-				normalize2d(g.ship.vel);
-				g.ship.vel[0] *= speed;
-				g.ship.vel[1] *= speed;
+				normalize2d(g.trooper.vel);
+				g.trooper.vel[0] *= speed;
+				g.trooper.vel[1] *= speed;
 			}
 			g.mouseThrustOn = true;
 			clock_gettime(CLOCK_REALTIME, &g.mouseThrustTimer);
@@ -679,11 +722,11 @@ void deleteAsteroid(Game *g, Asteroid *node)
 	if (node->prev == NULL) {
 		if (node->next == NULL) {
 			//only 1 item in list.
-			g->ahead = NULL;
+			g->asteroid = NULL;
 		} else {
 			//at beginning of list.
 			node->next->prev = NULL;
-			g->ahead = node->next;
+			g->asteroid = node->next;
 		}
 	} else {
 		if (node->next == NULL) {
@@ -728,21 +771,21 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 void physics()
 {
 	Flt d0,d1,dist;
-	//Update ship position
-	g.ship.pos[0] += g.ship.vel[0];
-	g.ship.pos[1] += g.ship.vel[1];
+	//Update trooper position
+	g.trooper.pos[0] += g.trooper.vel[0];
+	g.trooper.pos[1] += g.trooper.vel[1];
 	//Check for collision with window edges
-	if (g.ship.pos[0] < -gl.xres/2) {
-		g.ship.pos[0] += (float)gl.xres;
+	if (g.trooper.pos[0] < -gl.xres/2) {
+		g.trooper.pos[0] += (float)gl.xres;
 	}
-	else if (g.ship.pos[0] > (float)gl.xres/2) {
-		g.ship.pos[0] -= (float)gl.xres;
+	else if (g.trooper.pos[0] > (float)gl.xres/2) {
+		g.trooper.pos[0] -= (float)gl.xres;
 	}
-	else if (g.ship.pos[1] < -gl.yres/2) {
-		g.ship.pos[1] += (float)gl.yres;
+	else if (g.trooper.pos[1] < -gl.yres/2) {
+		g.trooper.pos[1] += (float)gl.yres;
 	}
-	else if (g.ship.pos[1] > (float)gl.yres/2) {
-		g.ship.pos[1] -= (float)gl.yres;
+	else if (g.trooper.pos[1] > (float)gl.yres/2) {
+		g.trooper.pos[1] -= (float)gl.yres;
 	}
 	//Update bullet positions
 	struct timespec bt;
@@ -780,7 +823,7 @@ void physics()
 	}
 	//
 	//Update asteroid positions
-	Asteroid *a = g.ahead;
+	Asteroid *a = g.asteroid;
 	while (a) {
 		a->pos[0] += a->vel[0];
 		a->pos[1] += a->vel[1];
@@ -806,7 +849,7 @@ void physics()
 	//     1. delete the bullet
 	//     2. break the asteroid into pieces
 	//        if asteroid small, delete it
-	a = g.ahead;
+	a = g.asteroid;
 	while (a) {
 		//is there a bullet within its radius?
 		int i=0;
@@ -828,10 +871,10 @@ void physics()
 						Asteroid *ta = new Asteroid;
 						buildAsteroidFragment(ta, a);
 						//add to front of asteroid linked list
-						ta->next = g.ahead;
-						if (g.ahead != NULL)
-							g.ahead->prev = ta;
-						g.ahead = ta;
+						ta->next = g.asteroid;
+						if (g.asteroid != NULL)
+							g.asteroid->prev = ta;
+						g.asteroid = ta;
 						g.nasteroids++;
 					}
 				} else {
@@ -860,31 +903,31 @@ void physics()
 	//---------------------------------------------------
 	//check keys pressed now
 	if (gl.keys[XK_Left]) {
-		g.ship.angle += 4.0;
-		if (g.ship.angle >= 360.0f)
-			g.ship.angle -= 360.0f;
+		g.trooper.angle += 4.0;
+		if (g.trooper.angle >= 360.0f)
+			g.trooper.angle -= 360.0f;
 	}
 	if (gl.keys[XK_Right]) {
-		g.ship.angle -= 4.0;
-		if (g.ship.angle < 0.0f)
-			g.ship.angle += 360.0f;
+		g.trooper.angle -= 4.0;
+		if (g.trooper.angle < 0.0f)
+			g.trooper.angle += 360.0f;
 	}
 	if (gl.keys[XK_Up]) {
 		//apply thrust
-		//convert ship angle to radians
-		Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+		//convert trooper angle to radians
+		Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 		//convert angle to a vector
 		Flt xdir = cos(rad);
 		Flt ydir = sin(rad);
-		g.ship.vel[0] += xdir*0.02f;
-		g.ship.vel[1] += ydir*0.02f;
-		Flt speed = sqrt(g.ship.vel[0]*g.ship.vel[0]+
-				g.ship.vel[1]*g.ship.vel[1]);
+		g.trooper.vel[0] += xdir*0.02f;
+		g.trooper.vel[1] += ydir*0.02f;
+		Flt speed = sqrt(g.trooper.vel[0]*g.trooper.vel[0]+
+				g.trooper.vel[1]*g.trooper.vel[1]);
 		if (speed > 10.0f) {
 			speed = 10.0f;
-			normalize2d(g.ship.vel);
-			g.ship.vel[0] *= speed;
-			g.ship.vel[1] *= speed;
+			normalize2d(g.trooper.vel);
+			g.trooper.vel[0] *= speed;
+			g.trooper.vel[1] *= speed;
 		}
 	}
 	if (gl.keys[XK_space]) {
@@ -899,12 +942,12 @@ void physics()
 				//Bullet *b = new Bullet;
 				Bullet *b = &g.barr[g.nbullets];
 				timeCopy(&b->time, &bt);
-				b->pos[0] = g.ship.pos[0];
-				b->pos[1] = g.ship.pos[1];
-				b->vel[0] = g.ship.vel[0];
-				b->vel[1] = g.ship.vel[1];
-				//convert ship angle to radians
-				Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+				b->pos[0] = g.trooper.pos[0];
+				b->pos[1] = g.trooper.pos[1];
+				b->vel[0] = g.trooper.vel[0];
+				b->vel[1] = g.trooper.vel[1];
+				//convert trooper angle to radians
+				Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 				//convert angle to a vector
 				Flt xdir = cos(rad);
 				Flt ydir = sin(rad);
@@ -949,14 +992,14 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
 	//-------------------------------------------------------------------------
-	//Draw the ship
-	glColor3fv(g.ship.color);
+	//Draw the trooper
+	/*glColor3fv(g.trooper.color);
 	glPushMatrix();
-	glTranslatef(g.ship.pos[0], g.ship.pos[1], g.ship.pos[2]);
+	glTranslatef(g.trooper.pos[0], g.trooper.pos[1], g.trooper.pos[2]);
 	glTranslatef(0, 0, 0);
 	
-	//float angle = atan2(ship.dir[1], ship.dir[0]);
-	glRotatef(g.ship.angle, 0.0f, 0.0f, 1.0f);
+	//float angle = atan2(trooper.dir[1], trooper.dir[0]);
+	glRotatef(g.trooper.angle, 0.0f, 0.0f, 1.0f);
 	glBegin(GL_TRIANGLES);
 	//glVertex2f(-10.0f, -10.0f);
 	//glVertex2f(  0.0f, 20.0f);
@@ -972,11 +1015,13 @@ void render()
 	glBegin(GL_POINTS);
 	glVertex2f(0.0f, 0.0f);
 	glEnd();
-	glPopMatrix();
+	glPopMatrix();*/
+	movingImages(30, 30, g.trooper.pos, g.trooper.angle, trooperImageTexture);
+	
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
 		//draw thrust
-		Flt rad = ((g.ship.angle+90.0) / 360.0f) * PI * 2.0;
+		Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 		//convert angle to a vector
 		Flt xdir = cos(rad);
 		Flt ydir = sin(rad);
@@ -989,16 +1034,17 @@ void render()
 			xe = -xdir * r + rnd() * 18.0 - 9.0;
 			ye = -ydir * r + rnd() * 18.0 - 9.0;
 			glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
-			glVertex2f(g.ship.pos[0]+xs,g.ship.pos[1]+ys);
-			glVertex2f(g.ship.pos[0]+xe,g.ship.pos[1]+ye);
+			glVertex2f(g.trooper.pos[0]+xs,g.trooper.pos[1]+ys);
+			glVertex2f(g.trooper.pos[0]+xe,g.trooper.pos[1]+ye);
 		}
 		glEnd();
 	}
 	//-------------------------------------------------------------------------
 	//Draw the asteroids
 	{
-		Asteroid *a = g.ahead;
+		Asteroid *a = g.asteroid;
 		while (a) {
+			
 			//Log("draw asteroid...\n");
 			glColor3fv(a->color);
 			glPushMatrix();
@@ -1020,6 +1066,10 @@ void render()
 			glVertex2f(a->pos[0], a->pos[1]);
 			glEnd();
 			a = a->next;
+			
+			/*
+			movingImages(30, 30, a->pos, a->angle, villainImageTexture);
+			*/
 		}
 	}
 	//-------------------------------------------------------------------------
