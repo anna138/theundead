@@ -20,11 +20,11 @@ void creditsGerardo(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Gerardo Martinez Flores");
 }
-void makeButton(Rect r, int y, int x, int img_x , int img_y)
+void makeButton()
 {
         float theta;
-        int width = x/2;
-        int height = y/2;
+       // int width = x/2;
+        //int height = y/2;
         glPushMatrix();
       //glBegin(GL_LINE_LOOP);
          glBegin(GL_POLYGON);
@@ -53,7 +53,7 @@ void makeButton(Rect r, int y, int x, int img_x , int img_y)
 
 }
 
-void changeButtonColor(Rect r, int y, int x , int img_x, int img_y, int &doneStart) {
+void changeButtonColor( int y, int x , int &doneStart) {
 
             int width = x/2;
             int height = y/2;

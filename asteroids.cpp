@@ -408,9 +408,9 @@ extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
-extern void makeButton(Rect r, int y, int x, int img_x, int img_y);
+extern void makeButton();
 
-extern void changeButtonColor(Rect r, int y, int x, int img_x, int img_y, int &doneStart);
+extern void changeButtonColor( int y, int x, int &doneStart);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -446,17 +446,15 @@ int main()
          */
         if(!started) {
             Rect r;
-            int x =200;
-            int y=200;
+            //int x =200;
+            //int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
             
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
-            makeButton(r, x, y, img_x, img_y);
-            std::cout << "Does this Work?" << doneStart << std::endl;
+            makeButton();
         }
         else {
 		    	
-            std::cout << "This is else:" << doneStart << std::endl;
 			if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
@@ -464,11 +462,10 @@ int main()
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}
             if(doneStart == 1){
-                Rect r;
+                //Rect r;
                 int x=200;
                 int y=200;
-                std::cout << "This is the doneStart loop" << std:: endl;
-                changeButtonColor( r,  y, x, img_x, img_y, doneStart);
+                changeButtonColor( y, x, doneStart);
             }
             else{
 		    	render();
