@@ -20,22 +20,23 @@ void creditsGerardo(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Gerardo Martinez Flores");
 }
-void makeButton()
+void makeButton(int x, int y)
 {
-        float theta;
-       // int width = x/2;
-        //int height = y/2;
+       // float theta;
+        int width = x/2;
+        int height = y/2;
+  //      float angle=240;
         glPushMatrix();
-      //glBegin(GL_LINE_LOOP);
-         glBegin(GL_POLYGON);
+        glBegin(GL_LINE_LOOP);
+        // glBegin(GL_POLYGON);
 
       //  glBegin(GL_QUADS);
         for(int i=0;i<360;i++) {
-           //float rad = i*DEG2RAD;
-            theta =i*3.142/180;
-            glVertex2f(100*cos(theta),100*sin(theta));
-           // glVertex2f(cos(rad)*width,sin(rad)*height);
-
+           // theta =i*3.142/180;
+           float rad = i*DEG2RAD;
+           //glVertex2f(100*cos(theta)*width,100*sin(theta)*height);
+            glVertex2f(cos(rad+200)*width,sin(rad)*height);
+            glRotatef(100.0f,200.0,0,0.0f);
         }
 
 
@@ -44,7 +45,7 @@ void makeButton()
         glVertex2i(-width, height);
         glVertex2i(-width, -height);*/
         glEnd();
-       glFlush();
+      // glFlush();
         glPopMatrix();
 
         //*(doneStart) = 1;

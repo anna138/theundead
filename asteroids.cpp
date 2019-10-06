@@ -408,7 +408,7 @@ extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
-extern void makeButton();
+extern void makeButton(int x, int y);
 
 extern void changeButtonColor( int y, int x, int &doneStart);
 //==========================================================================
@@ -446,12 +446,12 @@ int main()
          */
         if(!started) {
             Rect r;
-            //int x =200;
-            //int y=200;
+            int x =200;
+            int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
             
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
-            makeButton();
+            makeButton(x,y);
         }
         else {
 		    	
