@@ -13,13 +13,18 @@
 #include <ctime>
 #include <cmath>
 #include <X11/Xlib.h>
-//#include <X11/Xutil.h>
-//#include <GL/gl.h>
-//#include <GL/glu.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+
+//Include Files for Classes
+#include "Image.h"
+#include "Global.h"
+#include "Trooper.h"
+#include "Villain.h"
+#include "Bullet.h"
+
 
 //defined types
 typedef float Flt;
@@ -69,118 +74,23 @@ extern double timeSpan;
 extern double timeDiff(struct timespec *start, struct timespec *end);
 extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
-class Image {
-public:
-	int width, height;
-	unsigned char *data;
-	~Image() { delete [] data; }
-	Image(const char *fname) {
-		if (fname[0] == '\0')
-			return;
-		//printf("fname **%s**\n", fname);
-		int ppmFlag = 0;
-		char name[40];
-		strcpy(name, fname);
-		int slen = strlen(name);
-		char ppmname[80];
-		if (strncmp(name+(slen-4), ".ppm", 4) == 0)
-			ppmFlag = 1;
-		if (ppmFlag) {
-			strcpy(ppmname, name);
-		} else {
-			name[slen-4] = '\0';
-			//printf("name **%s**\n", name);
-			sprintf(ppmname,"%s.ppm", name);
-			//printf("ppmname **%s**\n", ppmname);
-			char ts[100];
-			//system("convert eball.jpg eball.ppm");
-			sprintf(ts, "convert %s %s", fname, ppmname);
-			system(ts);
-		}
-		//sprintf(ts, "%s", name);
-		FILE *fpi = fopen(ppmname, "r");
-		if (fpi) {
-			char line[200];
-			fgets(line, 200, fpi);
-			fgets(line, 200, fpi);
-			//skip comments and blank lines
-			while (line[0] == '#' || strlen(line) < 2)
-				fgets(line, 200, fpi);
-			sscanf(line, "%i %i", &width, &height);
-			fgets(line, 200, fpi);
-			//get pixel data
-			int n = width * height * 3;			
-			data = new unsigned char[n];			
-			for (int i=0; i<n; i++)
-				data[i] = fgetc(fpi);
-			fclose(fpi);
-		} else {
-			printf("ERROR opening image: %s\n",ppmname);
-			exit(0);
-		}
-		if (!ppmFlag)
-			unlink(ppmname);
-	}
-};
+// Set Up Images
+Global gl;
 Image img[5] = {
-	"./background.png",
-	"./zombie_start.png",
-	"./trooper.PNG",
-	"./villain.PNG",
-	"./undead_logo.png"
+		"./images/background.png",
+		"./images/zombie_start.png",
+		"./images/trooper.PNG",
+		"./images/villain.PNG",
+		"./images/undead_logo.png"
 };
-class Global {
-public:
-	int xres, yres;
-	char keys[65536];
-	GLuint backgroundTexture;
-	GLuint startTexture;
-	GLuint trooperTexture;
-	GLuint villainTexture;
-	Global() {
-		
-		xres = 1250;
-		yres = 900;
-        memset(keys, 0, 65536);
 
-	}
-} gl;
 
-class Bigfoot {
+
+class Position {
 public:
 	Vec pos;
 	Vec vel;
-} bigfoot;
-class Trooper {
-public:
-	Vec dir;
-	Vec pos;
-	Vec vel;
-	float angle;
-	float color[3];
-public:
-	Trooper() {
-		VecZero(dir);
-		// pos[0] = (Flt)(gl.xres/2);
-		// pos[1] = (Flt)(gl.yres/2);
-		pos[0] = 0.0f;
-		pos[1] = 0.0f;
-		pos[2] = 0.0f;
-		VecZero(vel);
-		angle = 0.0;
-		color[0] = color[1] = color[2] = 1.0;
-	}
-};
-
-class Bullet {
-public:
-	Vec pos;
-	Vec vel;
-	float color[3];
-	struct timespec time;
-public:
-	Bullet() { }
-};
+} position;
 
 class Asteroid {
 public:
@@ -414,6 +324,8 @@ extern void changeButtonColor( int y, int x, int &doneStart);
 //==========================================================================
 // M A I N
 //==========================================================================
+
+
 int main()
 {
 	logOpen();
@@ -517,8 +429,8 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w, h, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[0].data);
 
-	img_x = (int)bigfoot.pos[0];
-	img_y = (int)bigfoot.pos[1];
+	img_x = (int)position.pos[0];
+	img_y = (int)position.pos[1];
 
 	imageTexture = gl.backgroundTexture;
 
