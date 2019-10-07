@@ -79,8 +79,8 @@ Global gl;
 Image img[5] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
-		"./images/trooper.PNG",
-		"./images/villain.PNG",
+		"./images/trooper.png",
+		"./images/villain.png",
 		"./images/undead_logo.png"
 };
 
