@@ -17,6 +17,8 @@
 #include <GL/glx.h>
 #include "log.h"
 #include "fonts.h"
+#include <fstream>
+#include <cstring>
 
 //Include Files for Classes
 #include "Image.h"
@@ -41,6 +43,8 @@ GLuint startMenuTexture;
 GLuint trooperImageTexture; 
 //image for asteroid
 GLuint villainImageTexture; 
+//File for Reading In HighScore
+char filename[] = "highscores.txt";
 
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
@@ -67,6 +71,7 @@ const double oobillion = 1.0 / 1e9;
 int started = 0;
 int doneStart = 0;
 int changeColor=0;
+int grabHighScores=0;
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -83,8 +88,6 @@ Image img[5] = {
 		"./images/villain.png",
 		"./images/undead_logo.png"
 };
-
-
 
 class Position {
 public:
@@ -301,6 +304,7 @@ public:
 } x11(0, 0);
 
 int credits = 0;
+int highScore = 0;
 
 //function prototypes
 void init_opengl(void);
@@ -318,8 +322,9 @@ extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
+extern void getScores(char*, int &);
 extern void makeButton(int x, int y);
-
+extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 extern void changeButtonColor( int y, int x, int &doneStart);
 //==========================================================================
 // M A I N
@@ -353,27 +358,34 @@ int main()
 			physics();
 			physicsCountdown -= physicsRate;
 		}
-        /*Loading Starting Intro
+		if(!grabHighScores){
+			getScores(filename,grabHighScores);
+		}
+		/*Loading Starting Intro
          *Passing In Parameters
          */
+		
         if(!started) {
             Rect r;
             int x =200;
             int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
             makeButton(x,y);
         }
         else {
-		    	
 			if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}
-            if(doneStart == 1){
+			else if(highScore){
+				Rect r2;
+				getScores(filename, grabHighScores);
+				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+			}
+            else if(doneStart == 1){
                 //Rect r;
                 int x=200;
                 int y=200;
@@ -630,7 +642,8 @@ int check_keys(XEvent *e)
 		case XK_c:
 			credits ^= 1;
 			break;
-		case XK_f:
+		case XK_h:
+			highScore ^= 1;
 			break;
 		case XK_s:
 			break;
