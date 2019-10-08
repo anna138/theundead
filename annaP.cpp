@@ -24,6 +24,10 @@
 */
 
 typedef float Vec[3];
+std::string scores[100];
+std::string names[100];
+char pagename[256] = "~gmartinezflo/3350/lab7/test.txt";
+
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
@@ -31,7 +35,7 @@ void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture);
 void displayBackground(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
-
+extern void readScores(char*);
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTexture)
 {
@@ -59,11 +63,19 @@ void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
     r2.center = 0;
     ggprint16(&r2, 16, 0x00ff0000, 
         "HighScores");
+
+    for(int i = 14; i < 20; i++){
+        r2.left = -100;
+        r2.bot -= 50;
+        ggprint16(&r2, 16, 0x00ff0000,  names[i].c_str());
+        r2.left = 100;
+        ggprint16(&r2, 16, 0x00ff0000,  scores[i].c_str());
+    }
 } 
 
 void getScores(char*filename, int &grabHighScores){
     std::ifstream highscore;
-    char line[80];
+    readScores(pagename);
     try{
         highscore.open(filename);
     }
@@ -71,9 +83,9 @@ void getScores(char*filename, int &grabHighScores){
         std::cout << "An exception has occurred" << std::endl;
         exit(1);
     }
-    while(!highscore.eof()){
-        highscore >> line;
-        std::cout << line << std::endl;
+    int i = 0;
+    while(highscore >> names[i] >> scores[i]){
+        i++;
     }
     grabHighScores = 1;
 }

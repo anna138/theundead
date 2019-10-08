@@ -44,7 +44,7 @@ GLuint trooperImageTexture;
 //image for asteroid
 GLuint villainImageTexture; 
 //File for Reading In HighScore
-char filename[] = "highscores.txt";
+char filename[] = "scores.txt";
 
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
@@ -382,7 +382,7 @@ int main()
 			}
 			else if(highScore){
 				Rect r2;
-				getScores(filename, grabHighScores);
+				//getScores(filename, grabHighScores);
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
 			}
             else if(doneStart == 1){
