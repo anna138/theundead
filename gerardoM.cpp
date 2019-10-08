@@ -16,6 +16,10 @@
 #include "fonts.h"
 #include <math.h>
 #define DEG2RAD 3.14159/180.0
+
+
+
+extern void postScores(char*);
 void creditsGerardo(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Gerardo Martinez Flores");
@@ -73,8 +77,12 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.bot=h-h;
     r.left=w-w-25;
     r.center=0;
+    int temp = rand();
     ggprint16(&r, 16, 0x003B8B68, "Game Over\n");
-    ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
+    ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", temp);
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
+    char pn [100];
+    sprintf(pn, "~gmartinezflo/3350/lab7/lab7.php?name=Tom%d&age=%d", rand(),temp); 
+    postScores(pn);
 }

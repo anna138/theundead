@@ -44,7 +44,7 @@ GLuint trooperImageTexture;
 //image for asteroid
 GLuint villainImageTexture; 
 //File for Reading In HighScore
-char filename[] = "highscores.txt";
+char filename[] = "scores.txt";
 int currentHighestScore = 9000;
 int yourCurrentScore =0;
 //These are Flags for the game.
