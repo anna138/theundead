@@ -47,6 +47,10 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTextu
     ggprint16(&r, 16, 0x00ff0000, "Press Space to Continue");
     ggprint16(&r, 16, 0x00ff0000, 
             "Press Space + C for Credits During Gameplay");
+    ggprint16(&r, 16, 0x00ff0000, 
+        "Press Space + G for GameOver Screen During Gameplay");
+    ggprint16(&r, 16, 0x00ff0000, 
+        "Press Space + H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -71,21 +75,7 @@ void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int curren
     r2.center = 0;
     ggprint16(&r2, 16, 0x00ff0000, 
         "Press H for HighScores Screen");
-
     displaycurrentscore(r2, h, w, currentHighScore, currentScore);
-    /*
-    r2.bot = h/2-100;
-    r2.left = 0-25;
-    r2.center = 0;
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Game Over");
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Your Score:%d", currentScore);
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Best Score:%s", currentHighScore);
-    ggprint16(&r2, 16, 0x00ff0000, 
-        "Press C to go back to game");*/
-    
 } 
 
 void getScores(char*filename, int &grabHighScores){
