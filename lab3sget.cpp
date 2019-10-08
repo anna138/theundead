@@ -271,7 +271,7 @@ void postScores(char *pagename)
     nerrs = 0;
 
     while (bytes >= 0 && nerrs < MAX_READ_ERRORS) {
-        //write(STDOUT_FILENO, buf, bytes);
+        write(STDOUT_FILENO, buf, bytes);
         memset(buf, '\0', sizeof(buf));
         ++nreads;
         bytes = SSL_read(ssl, buf, sizeof(buf));

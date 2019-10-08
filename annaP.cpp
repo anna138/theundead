@@ -17,6 +17,7 @@
 #include "fonts.h"
 #include <cstring>
 #include <fstream>
+
 /*Summary of Source File
 	Start Menu Function is used to display the start menu at the start of game.
 	Display Image is a function used to display any image in game at any location of the screen
@@ -36,6 +37,8 @@ void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint 
 void displayBackground(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
 extern void readScores(char*);
+void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighScore, int currentScore, int &gameOver);
+extern void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore);
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTexture)
 {
@@ -71,6 +74,31 @@ void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
         r2.left = 100;
         ggprint16(&r2, 16, 0x00ff0000,  scores[i].c_str());
     }
+} 
+
+void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighScore, int currentScore){
+    glClear(GL_COLOR_BUFFER_BIT);
+    displayBackground(w, h, imageTexture);
+    r2.bot = h/2-25;
+    r2.left = -w/2+25;
+    r2.center = 0;
+    ggprint16(&r2, 16, 0x00ff0000, 
+        "Press H for HighScores Screen");
+
+    displaycurrentscore(r2, h, w, currentHighScore, currentScore);
+    /*
+    r2.bot = h/2-100;
+    r2.left = 0-25;
+    r2.center = 0;
+    ggprint16(&r2, 16, 0x003B8B68, 
+        "Game Over");
+    ggprint16(&r2, 16, 0x003B8B68, 
+        "Your Score:%d", currentScore);
+    ggprint16(&r2, 16, 0x003B8B68, 
+        "Best Score:%s", currentHighScore);
+    ggprint16(&r2, 16, 0x00ff0000, 
+        "Press C to go back to game");*/
+    
 } 
 
 void getScores(char*filename, int &grabHighScores){
