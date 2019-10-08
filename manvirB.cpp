@@ -23,7 +23,7 @@ Vec particles[MAX_PARTICLES];
 
 void creditManvir(Rect r)
 {
-    ggprint8b(&r, 16, 0x00ff0000, "Manvir Bal");
+    ggprint8b(&r, 16, 0x00004C00, "Manvir Bal");
 }
 int colorArray[100];
 void randomColor(){
@@ -65,7 +65,7 @@ void chaos_equations(){
 	glPushMatrix();
 		//glRotatef(angle, 0,0,1);
 		glScalef(1000,500,1);
-		glTranslatef(0,0,-(z+1));
+		glTranslatef(0,.18,-(z+1));
 		glEnable(GL_POINT_SMOOTH);
 		xp = t;
 		yp = t;
@@ -78,6 +78,7 @@ void chaos_equations(){
 			x = xp;
 			y = yp;
 			glPointSize(5);
+			/*glColor3ub(255,255,255);*/
 			glColor3ub(colorArray[i%100], colorArray[(i+1)%100], colorArray[(i+2)%100]);
 			glBegin(GL_POINTS);
 				glVertex3d(xp,yp,-1.1);
