@@ -26,6 +26,7 @@ typedef float Vec[3];
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
+void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture);
 void displayBackground(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
@@ -44,6 +45,15 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTextu
     ggprint16(&r, 16, 0x00ff0000, 
             "Press Space + C for Credits During Gameplay");
 }
+void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
+    glClear(GL_COLOR_BUFFER_BIT);
+    displayBackground(w, h, imageTexture);
+    r2.bot = h/2-25;
+    r2.left = -w/2+25;
+    r2.center = 0;
+    ggprint16(&r2, 16, 0x00ff0000, 
+        "Press H to Toggle back to Gameplay");
+} 
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture)
 {
 	int width = width_x/2;

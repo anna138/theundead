@@ -301,6 +301,7 @@ public:
 } x11(0, 0);
 
 int credits = 0;
+int highScore = 0;
 
 //function prototypes
 void init_opengl(void);
@@ -319,7 +320,7 @@ extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
 extern void makeButton(int x, int y);
-
+extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 extern void changeButtonColor( int y, int x, int &doneStart);
 //==========================================================================
 // M A I N
@@ -366,14 +367,17 @@ int main()
             makeButton(x,y);
         }
         else {
-		    	
 			if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}
-            if(doneStart == 1){
+			else if(highScore){
+				Rect r2;
+				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+			}
+            else if(doneStart == 1){
                 //Rect r;
                 int x=200;
                 int y=200;
@@ -630,7 +634,8 @@ int check_keys(XEvent *e)
 		case XK_c:
 			credits ^= 1;
 			break;
-		case XK_f:
+		case XK_h:
+			highScore ^= 1;
 			break;
 		case XK_s:
 			break;
