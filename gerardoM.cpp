@@ -69,3 +69,12 @@ void changeButtonColor( int y, int x , int &doneStart) {
             glPopMatrix();
         doneStart = 0;
 }
+void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
+    r.bot=h-h;
+    r.left=w-w-25;
+    r.center=0;
+    ggprint16(&r, 16, 0x003B8B68, "Game Over\n");
+    ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
+    ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
+    ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
+}

@@ -45,6 +45,12 @@ GLuint trooperImageTexture;
 GLuint villainImageTexture; 
 //File for Reading In HighScore
 char filename[] = "highscores.txt";
+int currentHighestScore = 9000;
+int yourCurrentScore =0;
+//These are Flags for the game.
+int credits = 0;
+int highScore = 0;
+int gameOver = 0;
 
 //macros
 #define rnd() (((Flt)rand())/(Flt)RAND_MAX)
@@ -303,8 +309,7 @@ public:
 	}
 } x11(0, 0);
 
-int credits = 0;
-int highScore = 0;
+
 
 //function prototypes
 void init_opengl(void);
@@ -326,6 +331,7 @@ extern void getScores(char*, int &);
 extern void makeButton(int x, int y);
 extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 extern void changeButtonColor( int y, int x, int &doneStart);
+extern void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighestScore, int yourCurrentScore);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -374,7 +380,11 @@ int main()
             makeButton(x,y);
         }
         else {
-			if(credits){
+			if(gameOver){
+				Rect r3;
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, currentHighestScore, yourCurrentScore);
+			}
+			else if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
@@ -382,7 +392,7 @@ int main()
 			}
 			else if(highScore){
 				Rect r2;
-				getScores(filename, grabHighScores);
+				//getScores(filename, grabHighScores);
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
 			}
             else if(doneStart == 1){
@@ -645,7 +655,8 @@ int check_keys(XEvent *e)
 		case XK_h:
 			highScore ^= 1;
 			break;
-		case XK_s:
+		case XK_g:
+			gameOver ^= 1;
 			break;
 		case XK_Down:
 			break;
