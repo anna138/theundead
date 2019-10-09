@@ -13,7 +13,7 @@
  */
     
 
-extern void postScores(char*)
+extern void postScores(char*);
 void creditsKevin(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Kevin Mitra");
