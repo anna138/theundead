@@ -1,5 +1,10 @@
 //author:Gerardo martinez
-
+/*Four steps of Debugging
+ *1)Recognize that a bug exists
+ *2)Isolate the source of the bug
+ *3)Identify the cause of the bug
+ * 4)Determine a fix for the bug
+ */
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
@@ -16,7 +21,6 @@
 #include "fonts.h"
 #include <math.h>
 #define DEG2RAD 3.14159/180.0
-
 
 
 extern void postScores(char*);
