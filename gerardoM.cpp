@@ -73,6 +73,7 @@ void changeButtonColor( int y, int x , int &doneStart) {
             glPopMatrix();
         doneStart = 0;
 }
+bool posted = false;
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.bot=h-h;
     r.left=w-w-25;
@@ -83,6 +84,10 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
-    sprintf(pn, "~gmartinezflo/3350/lab7/lab7.php?name=Tom%d&age=%d", yourScore,temp); 
-    postScores(pn);
+    
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=Tom%d&score=%d", yourScore,temp); 
+    if(!posted){
+      posted = True;
+      postScores(pn);
+    }
 }

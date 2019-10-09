@@ -1,10 +1,25 @@
 HTTP/1.1 200 OK
-Date: Tue, 08 Oct 2019 20:04:16 GMT
+Date: Wed, 09 Oct 2019 16:12:00 GMT
 Server: Apache/2.4.25 (Debian)
-Last-Modified: Tue, 08 Oct 2019 19:28:55 GMT
-ETag: "9-5946b2dde11a1"
+Last-Modified: Wed, 09 Oct 2019 08:49:50 GMT
+ETag: "46-594765e23ced8"
 Accept-Ranges: bytes
-Content-Length: 9
+Content-Length: 70
+Vary: Accept-Encoding
 Content-Type: text/plain
 
-cbdgd 87
+Start
+Kevin 100000
+Anna 1000
+Manvir 0
+Gerardo -1000
+Gordon -10000
+End
+ -1000
+End: CMPS-3350
+
+
+Manvir 100
+fsj 10
+Gerardo -1000
+End

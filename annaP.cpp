@@ -25,10 +25,10 @@
 */
 
 typedef float Vec[3];
-std::string scores[100];
-std::string names[100];
-char pagename[256] = "~gmartinezflo/3350/lab7/test.txt";
-
+int scores[5];
+std::string names[5];
+char pagename[256] = "~mbal/3350/lab7/scores.txt";
+const float DEG2RAD = 3.14159/180;
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
@@ -36,22 +36,36 @@ void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture);
 void displayBackground(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
-extern void readScores(char*);
+void movingEyes(int *, int *);
 void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighScore, int currentScore, int &gameOver);
 extern void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore);
+extern void readScores(char*);
 /*Function Definitions*/
+
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTexture)
 {
+    int eyeLeft[2] = {15, 15};
+    int eyeRight[2] = {-15, 15};
+    int leftLocation[2] = {32, 50};
+	int rightLocation[2] = {-47, 50};
+    
+    img_y = 0 + img_x;
 
-	/*img_x = img_y + startMenuTexture;*/
-	img_y = 0 + img_x;
 	displayImage(img_y/2,img_y/2, 0, 50, startMenuTexture);
-    	r.bot = 0-(y/3);
-    	r.left = 0-(x/7);
-    	r.center = 0;
+
+    movingEyes(eyeLeft, leftLocation);
+    movingEyes(eyeRight, rightLocation);
+    
+    r.bot = 0-(y/3);
+    r.left = 0-(x/7);
+    r.center = 0;
     ggprint16(&r, 16, 0x00ff0000, "Press Space to Continue");
     ggprint16(&r, 16, 0x00ff0000, 
-            "Press Space + C for Credits During Gameplay");
+        "Press Space + C for Credits During Gameplay");
+    ggprint16(&r, 16, 0x00ff0000, 
+        "Press Space + G for GameOver Screen During Gameplay");
+    ggprint16(&r, 16, 0x00ff0000, 
+        "Press Space + H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -64,19 +78,26 @@ void highScoreBoard(Rect r2, int w, int h, GLuint imageTexture){
     r2.bot = h/2-100;
     r2.left = 0-25;
     r2.center = 0;
-    ggprint16(&r2, 16, 0x00ff0000, 
+    ggprint16(&r2, 100, 0x00ff0000, 
         "HighScores");
+    r2.left = -300;
+    ggprint16(&r2, 0, 0x00ff0000, 
+        "USERNAMES");
+    r2.left = 300;
+    ggprint16(&r2, 100, 0x00ff0000, 
+        "Scores");
 
-    for(int i = 14; i < 20; i++){
-        r2.left = -100;
-        r2.bot -= 50;
-        ggprint16(&r2, 16, 0x00ff0000,  names[i].c_str());
-        r2.left = 100;
-        ggprint16(&r2, 16, 0x00ff0000,  scores[i].c_str());
+    for(int i = 0; i < 5; i++){
+        r2.left = -300;
+        ggprint16(&r2, 0, 0x00ff0000,  names[i].c_str());
+        r2.left = 300;
+        char buf[20];
+        sprintf(buf, "%d", scores[i]);
+        ggprint16(&r2, 50, 0x00ff0000, buf);
     }
 } 
 
-void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighScore, int currentScore){
+void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentScore){
     glClear(GL_COLOR_BUFFER_BIT);
     displayBackground(w, h, imageTexture);
     r2.bot = h/2-25;
@@ -84,21 +105,7 @@ void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int curren
     r2.center = 0;
     ggprint16(&r2, 16, 0x00ff0000, 
         "Press H for HighScores Screen");
-
-    displaycurrentscore(r2, h, w, currentHighScore, currentScore);
-    /*
-    r2.bot = h/2-100;
-    r2.left = 0-25;
-    r2.center = 0;
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Game Over");
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Your Score:%d", currentScore);
-    ggprint16(&r2, 16, 0x003B8B68, 
-        "Best Score:%s", currentHighScore);
-    ggprint16(&r2, 16, 0x00ff0000, 
-        "Press C to go back to game");*/
-    
+    displaycurrentscore(r2, h, w, scores[0], currentScore);
 } 
 
 void getScores(char*filename, int &grabHighScores){
@@ -111,9 +118,14 @@ void getScores(char*filename, int &grabHighScores){
         std::cout << "An exception has occurred" << std::endl;
         exit(1);
     }
-    int i = 0;
-    while(highscore >> names[i] >> scores[i]){
-        i++;
+    //first we need to ignore the extra info in the file
+    std::string temp;
+    while(getline(highscore, temp)){
+        if(temp == "Start"){
+           for(int i = 0; i < 5;i++){
+                highscore >> names[i] >> scores[i];
+           }
+        }
     }
     grabHighScores = 1;
 }
@@ -174,10 +186,10 @@ void displayBackground(int w, int h, GLuint texture)
 {
 	int width = w/2;
 	int height = h/2;
-    	glPushMatrix();
-    	glColor3f(1.0,1.0,1.0);
-    	glBindTexture(GL_TEXTURE_2D, texture);
-    	glBegin(GL_QUADS);
+    glPushMatrix();
+    glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
         glVertex2i(-width,-height);
         glTexCoord2f(0, 1);
@@ -186,11 +198,29 @@ void displayBackground(int w, int h, GLuint texture)
         glVertex2i(width, height);
         glTexCoord2f(1,0);
         glVertex2i(width,-height);
-    	glEnd();
-    	glPopMatrix();
-    	glBindTexture(GL_TEXTURE_2D, 0);
-    	glDisable(GL_ALPHA_TEST);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
     
+}
+
+void movingEyes(int* eye, int * location)
+{
+    int width = eye[0];//, height = eye[1];
+    int offset_x = location[0], offset_y = location[1];
+    glPushMatrix();
+    glColor3f(1.0,0.0,0.0);
+    glTranslatef(0.0,0.0,1);
+    glBegin(GL_LINE_LOOP);
+    
+    for (int i = 0; i < 360; i++) {
+        float degInRad = i*DEG2RAD;
+        glVertex2f(cos(degInRad)*(width/2)+offset_x, sin(degInRad)*(width/2)+offset_y);
+    }
+ 
+    glEnd();
+    glPopMatrix();
 }
 
 void creditsAnna(Rect r)

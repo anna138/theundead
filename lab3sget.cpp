@@ -78,7 +78,7 @@ void readScores(char *pagename)
     int req_len;
     int port = PORT;
     int bytes, nreads, nerrs;
-    char buf[256];
+    char buf[1024];
     int ret;
     //Get any command-line arguments.
     // if (argc > 1) {
@@ -145,7 +145,7 @@ void readScores(char *pagename)
     memset(buf, '\0', sizeof(buf));
     while (bytes <= 0) {
         bytes = SSL_read(ssl, buf, sizeof(buf));
-        write(STDOUT_FILENO, buf, bytes);
+        //write(STDOUT_FILENO, buf, bytes);
         fout << buf;
         //A slight pause can cause fewer reads to be needed.
         usleep(10000);
@@ -161,7 +161,7 @@ void readScores(char *pagename)
         memset(buf, '\0', sizeof(buf));
         ++nreads;
         bytes = SSL_read(ssl, buf, sizeof(buf));
-        
+        fout << buf;
         if (bytes == 0) ++nerrs; else nerrs = 0;
         //A slight pause can cause fewer reads to be needed.
         usleep(20000);
@@ -260,7 +260,7 @@ void postScores(char *pagename)
     memset(buf, '\0', sizeof(buf));
     while (bytes <= 0) {
         bytes = SSL_read(ssl, buf, sizeof(buf));
-        write(STDOUT_FILENO, buf, bytes);
+        //write(STDOUT_FILENO, buf, bytes);
         //A slight pause can cause fewer reads to be needed.
         usleep(10000);
     }
@@ -271,7 +271,7 @@ void postScores(char *pagename)
     nerrs = 0;
 
     while (bytes >= 0 && nerrs < MAX_READ_ERRORS) {
-        write(STDOUT_FILENO, buf, bytes);
+        //write(STDOUT_FILENO, buf, bytes);
         memset(buf, '\0', sizeof(buf));
         ++nreads;
         bytes = SSL_read(ssl, buf, sizeof(buf));

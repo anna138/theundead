@@ -45,7 +45,7 @@ GLuint trooperImageTexture;
 GLuint villainImageTexture; 
 //File for Reading In HighScore
 char filename[] = "scores.txt";
-int currentHighestScore = 9000;
+
 int yourCurrentScore =0;
 //These are Flags for the game.
 int credits = 0;
@@ -331,7 +331,7 @@ extern void getScores(char*, int &);
 extern void makeButton(int x, int y);
 extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 extern void changeButtonColor( int y, int x, int &doneStart);
-extern void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighestScore, int yourCurrentScore);
+extern void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int yourCurrentScore);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -373,16 +373,14 @@ int main()
 		
         if(!started) {
             Rect r;
-            int x =200;
-            int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
-            makeButton(x,y);
+
         }
         else {
 			if(gameOver){
 				Rect r3;
-				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, currentHighestScore, yourCurrentScore);
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, yourCurrentScore);
 			}
 			else if(credits){
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
