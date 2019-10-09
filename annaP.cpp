@@ -24,6 +24,15 @@
 	Display Background is a function to display the background in fullscreen.
 */
 
+
+/*Debugging Four Steps
+ *
+ * Isolate
+ * Identify
+ * Determine a fix
+ * Apply and Test
+*/
+
 typedef float Vec[3];
 int scores[5];
 std::string names[5];
@@ -227,3 +236,12 @@ void creditsAnna(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Anna Poon");
 }
+
+
+/*Debugging Four Steps
+ *
+ * Isolate
+ * Identify
+ * Determine a fix
+ * Apply and Test
+ */
