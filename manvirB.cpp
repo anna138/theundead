@@ -1,6 +1,10 @@
 //Author: Manvir Bal
 //created on: 9/17/2019
-//
+//Four steps of debugging are:
+//identify problem
+//isolate problem
+//fix problem
+//review problem
 #include "fonts.h"
 #include <GL/glx.h>
 #include <iostream>
