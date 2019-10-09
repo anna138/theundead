@@ -79,7 +79,7 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.center=0;
     int temp = rand();
     ggprint16(&r, 16, 0x003B8B68, "Game Over\n");
-    ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", temp);
+    ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];

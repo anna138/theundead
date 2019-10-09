@@ -28,7 +28,7 @@ typedef float Vec[3];
 std::string scores[100];
 std::string names[100];
 char pagename[256] = "~gmartinezflo/3350/lab7/test.txt";
-
+const float DEG2RAD = 3.14159/180;
 
 /*Prototype Functions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint imageTexture);
@@ -36,22 +36,32 @@ void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
 void displayImage(int width_x, int height_y, int offset_x, int offset_y, GLuint texture);
 void displayBackground(int w, int h, GLuint texture);
 void creditsAnna(Rect r);
-extern void readScores(char*);
+void movingEyes(int *, int *);
 void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int currentHighScore, int currentScore, int &gameOver);
 extern void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore);
+extern void readScores(char*);
 /*Function Definitions*/
+
 void startMenu(Rect r, int y, int x, int img_x, int img_y, GLuint startMenuTexture)
 {
+    int eyeLeft[2] = {15, 15};
+    int eyeRight[2] = {-15, 15};
+    int leftLocation[2] = {32, 50};
+	int rightLocation[2] = {-47, 50};
+    
+    img_y = 0 + img_x;
 
-	/*img_x = img_y + startMenuTexture;*/
-	img_y = 0 + img_x;
 	displayImage(img_y/2,img_y/2, 0, 50, startMenuTexture);
-    	r.bot = 0-(y/3);
-    	r.left = 0-(x/7);
-    	r.center = 0;
+
+    movingEyes(eyeLeft, leftLocation);
+    movingEyes(eyeRight, rightLocation);
+    
+    r.bot = 0-(y/3);
+    r.left = 0-(x/7);
+    r.center = 0;
     ggprint16(&r, 16, 0x00ff0000, "Press Space to Continue");
     ggprint16(&r, 16, 0x00ff0000, 
-            "Press Space + C for Credits During Gameplay");
+        "Press Space + C for Credits During Gameplay");
     ggprint16(&r, 16, 0x00ff0000, 
         "Press Space + G for GameOver Screen During Gameplay");
     ggprint16(&r, 16, 0x00ff0000, 
@@ -164,10 +174,10 @@ void displayBackground(int w, int h, GLuint texture)
 {
 	int width = w/2;
 	int height = h/2;
-    	glPushMatrix();
-    	glColor3f(1.0,1.0,1.0);
-    	glBindTexture(GL_TEXTURE_2D, texture);
-    	glBegin(GL_QUADS);
+    glPushMatrix();
+    glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
         glVertex2i(-width,-height);
         glTexCoord2f(0, 1);
@@ -176,11 +186,29 @@ void displayBackground(int w, int h, GLuint texture)
         glVertex2i(width, height);
         glTexCoord2f(1,0);
         glVertex2i(width,-height);
-    	glEnd();
-    	glPopMatrix();
-    	glBindTexture(GL_TEXTURE_2D, 0);
-    	glDisable(GL_ALPHA_TEST);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
     
+}
+
+void movingEyes(int* eye, int * location)
+{
+    int width = eye[0], height = eye[1];
+    int offset_x = location[0], offset_y = location[1];
+    glPushMatrix();
+    glColor3f(1.0,0.0,0.0);
+    glTranslatef(0.0,0.0,1);
+    glBegin(GL_LINE_LOOP);
+    
+    for (int i = 0; i < 360; i++) {
+        float degInRad = i*DEG2RAD;
+        glVertex2f(cos(degInRad)*(width/2)+offset_x, sin(degInRad)*(width/2)+offset_y);
+    }
+ 
+    glEnd();
+    glPopMatrix();
 }
 
 void creditsAnna(Rect r)

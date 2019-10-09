@@ -377,7 +377,7 @@ int main()
             int y=200;
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
-            makeButton(x,y);
+            //makeButton(x,y);
         }
         else {
 			if(gameOver){
