@@ -260,7 +260,7 @@ void postScores(char *pagename)
     memset(buf, '\0', sizeof(buf));
     while (bytes <= 0) {
         bytes = SSL_read(ssl, buf, sizeof(buf));
-        //write(STDOUT_FILENO, buf, bytes);
+        write(STDOUT_FILENO, buf, bytes);
         //A slight pause can cause fewer reads to be needed.
         usleep(10000);
     }
