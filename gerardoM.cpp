@@ -21,61 +21,46 @@
 #include "fonts.h"
 #include <math.h>
 #define DEG2RAD 3.14159/180.0
-
-
+void drawSquare (int width, int height, int dirX, int dirY, int choice);
+void boxText(Rect r);
 extern void postScores(char*);
 void creditsGerardo(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Gerardo Martinez Flores");
 }
-void makeButton(int x, int y)
+void makeButton(int x, int y, int dirX, int dirY)
 {
-       // float theta;
-        int width = x/2;
-        int height = y/2;
-  //      float angle=240;
-        glPushMatrix();
-        glBegin(GL_LINE_LOOP);
-        // glBegin(GL_POLYGON);
-
-      //  glBegin(GL_QUADS);
-        for(int i=0;i<360;i++) {
-           // theta =i*3.142/180;
-           float rad = i*DEG2RAD;
-           //glVertex2f(100*cos(theta)*width,100*sin(theta)*height);
-            glVertex2f(cos(rad+200)*width,sin(rad)*height);
-            glRotatef(100.0f,200.0,0,0.0f);
-        }
-
-
-       /* glVertex2i(width, -height);
-        glVertex2i(width, height);
-        glVertex2i(-width, height);
-        glVertex2i(-width, -height);*/
-        glEnd();
-      // glFlush();
-        glPopMatrix();
-
-        //*(doneStart) = 1;
-
-        //std::cout << *(doneStart) << std::endl;
-
+    int width = x/2;
+    int height = y/6;
+    int choice=3;
+    int posx[3]={-300,0,300};
+    int posy[3]={-150,-150,-150};
+    glPushMatrix();
+    glBegin(GL_QUADS);
+    glColor3f(1.0,0.0,0.0);
+    for(int i=0;i<3;i++) {
+        dirX = posx[i];
+        dirY = posy[i];
+        drawSquare(width, height, dirX, dirY, choice);
+    }
+    glEnd();
+    glPopMatrix();
 }
 
-void changeButtonColor( int y, int x , int &doneStart) {
+void changeButtonColor( int y, int x ,int dirX, int dirY, int &doneStart) {
 
-            int width = x/2;
-            int height = y/2;
-            glPushMatrix();
-            glColor3f(0.0,1.0,1.0);
-            glBegin(GL_QUADS);
-            glVertex2i(width, -height);
-            glVertex2i(width, height);
-            glVertex2i(-width, height);
-            glVertex2i(-width, -height);
-            glEnd();
-            glPopMatrix();
-        doneStart = 0;
+    int width = x/2;
+    int height = y/6;
+    int choice=3;
+    int posx[3]={-300,0,300};
+    int posy[3]={-150,-150,-150};
+    for(int i=0;i<3;i++) {
+        dirX=posx[i];
+        dirY=posy[i];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width,height,dirX,dirY,choice);
+    }
+    doneStart = 0;
 }
 bool posted = false;
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -88,10 +73,38 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
-    
+
     sprintf(pn, "~mbal/3350/lab7/scores.php?name=Tom%d&score=%d", yourScore,temp); 
     if(!posted){
-      posted = True;
-      postScores(pn);
+        posted = True;
+        postScores(pn);
     }
+}
+void boxText(Rect r) {
+    std::string boxText[3]={"Start Game","Characters","Credits"};
+    int posx[3]={0,-300,290};
+    int posy[3]={-150,-150,-150};
+    for(int i=0;i<3;i++) {
+    r.left=posx[i];
+    r.bot=posy[i];
+    r.center=0;
+    ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
+    }
+
+}
+void drawSquare(int x, int y, int dirX, int dirY, int choice) {
+    int w=x;
+    int h=y;
+    if(choice==3) {
+        glBegin(GL_QUADS);
+        glVertex2i(w+dirX, -h+dirY);
+        glPushMatrix();
+
+        glVertex2i(w+dirX, h+dirY);
+        glVertex2i(-w+dirX, h+dirY);
+        glVertex2i(-w+dirX, -h+dirY);
+        glEnd();
+        glPopMatrix();
+    }
+
 }

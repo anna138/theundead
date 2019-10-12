@@ -328,9 +328,10 @@ extern void randomColor();
 extern void renderCoolCredits(int w, int h, GLuint imageTexture);
 extern void makeParticles(int, int);
 extern void getScores(char*, int &);
-extern void makeButton(int x, int y);
+extern void makeButton(int x, int y, int dirX, int dirY);
 extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
-extern void changeButtonColor( int y, int x, int &doneStart);
+extern void boxText(Rect r);
+extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
 extern void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int yourCurrentScore);
 //==========================================================================
 // M A I N
@@ -373,9 +374,14 @@ int main()
 		
         if(!started) {
             Rect r;
+            int x=200;
+            int y=200;
+            int dirX=0;
+            int dirY=0;
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
-
+            makeButton(x,y,dirX,dirY);
+            boxText(r);
         }
         else {
 			if(gameOver){
@@ -395,9 +401,11 @@ int main()
 			}
             else if(doneStart == 1){
                 //Rect r;
+                int dirX=0;
+                int dirY=0;
                 int x=200;
                 int y=200;
-                changeButtonColor( y, x, doneStart);
+                changeButtonColor( y, x, dirX,dirY, doneStart);
             }
             else{
 		    	render();
