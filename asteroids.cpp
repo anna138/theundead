@@ -400,6 +400,7 @@ int main()
 				//getScores(filename, grabHighScores)          
                 glTranslatef(1.0f,0.0f,0.0f); 
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+                glTranslatef(-0.5f,0.0f,0.0f);
 			}
             else if(doneStart == 1){
                 //Rect r;
