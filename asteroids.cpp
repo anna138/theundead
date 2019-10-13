@@ -366,6 +366,7 @@ int main()
 			physicsCountdown -= physicsRate;
 		}
 		if(!grabHighScores){
+
 			getScores(filename,grabHighScores);
 		}
 		/*Loading Starting Intro
@@ -389,14 +390,15 @@ int main()
 				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, yourCurrentScore);
 			}
 			else if(credits){
-				renderCoolCredits(gl.xres, gl.yres, imageTexture);
+                renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}
 			else if(highScore){
 				Rect r2;
-				//getScores(filename, grabHighScores);
+				//getScores(filename, grabHighScores)          
+                glTranslatef(1.0f,0.0f,0.0f); 
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
 			}
             else if(doneStart == 1){

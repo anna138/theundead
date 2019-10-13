@@ -85,10 +85,10 @@ void boxText(Rect r) {
     int posx[3]={0,-300,290};
     int posy[3]={-150,-150,-150};
     for(int i=0;i<3;i++) {
-    r.left=posx[i];
-    r.bot=posy[i];
-    r.center=0;
-    ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
+        r.left=posx[i];
+        r.bot=posy[i];
+        r.center=0;
+        ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
     }
 
 }
@@ -105,6 +105,20 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
         glVertex2i(-w+dirX, -h+dirY);
         glEnd();
         glPopMatrix();
+    }
+
+}
+void BulletColor(int n){
+    switch(n)
+    {
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
     }
 
 }
