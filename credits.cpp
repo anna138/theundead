@@ -7,7 +7,7 @@
 #include <cstdlib>
 
 extern void chaos_equations();
-extern void displayBackground(int w, int h, GLuint imageTexture);
+extern void displayBackground(int w, int h, unsigned int imageTexture);
 extern void creditsKevin(Rect);
 extern void creditsAnna(Rect);
 extern void creditsGerardo(Rect);
@@ -34,7 +34,7 @@ void showCredits(int w, int h)
     move = (move + 1) % w;
 }
 
-void renderCoolCredits(int w, int h, GLuint imageTexture){
+void renderCoolCredits(int w, int h, unsigned int imageTexture){
     glClear(GL_COLOR_BUFFER_BIT);
 	displayBackground(w, h,imageTexture);
 	showCredits(w, h);
