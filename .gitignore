@@ -3,3 +3,8 @@ asteroids
 x.x
 a.out
 .vscode
+*.h.gch
+*.swp
+*.txt
+*.ppm
+*.PPM

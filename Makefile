@@ -1,4 +1,4 @@
-CFLAGS = -I ./include
+CFLAGS = -I ./include -std=c++11
 ##LIB    = ./libggfonts.so
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lssl -lcrypto #-lXrandr
 

@@ -1,0 +1,18 @@
+HTTP/1.1 200 OK
+Date: Sun, 13 Oct 2019 08:29:41 GMT
+Server: Apache/2.4.25 (Debian)
+Last-Modified: Wed, 09 Oct 2019 17:33:53 GMT
+ETag: "55-5947db04f4cbb"
+Accept-Ranges: bytes
+Content-Length: 85
+Vary: Accept-Encoding
+Content-Type: text/plain
+
+Start
+Tom0 1520724542
+Kevin 100000
+Anna 1000
+Manvir 0
+Gerardo -1000
+Gordon -10000
+End
