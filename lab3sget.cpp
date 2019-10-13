@@ -60,7 +60,7 @@ char hostname[256] = "www.cs.csub.edu";
 
 void readScores(char *pagename) 
 {
-    std::fstream fout("scores.txt");
+    std::fstream fout;
     BIO *ssl_setup_bio(void);
     void show_cert_data(SSL *ssl, BIO *outbio, const char *hostname);
     void set_to_non_blocking(const int sock);
@@ -136,7 +136,10 @@ void readScores(char *pagename)
     if (ret <= 0) {
         fprintf(stderr, "ERROR: SSL_write\n"); fflush(stderr);
     }
-    //
+    //lets make open the file to write to if its doesn't
+    //exist creat it 
+    fout.open("scores.txt",std::fstream::out);
+    
     //Get data returned from the server.
     //First, do priming read.
     //We can take this approach because our socket is non-blocking.
