@@ -100,6 +100,5 @@ void chaos_equations(){
 	glPopMatrix();
 	if (z > 50)
 		z = 0;
-	z += 0.005;
-	
+	z += 0.005;	
 }
