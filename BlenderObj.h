@@ -35,7 +35,6 @@ class TypeObj{
 class Blender{
     private:
         float ang;
-        int colors[6][3];
     public:
         Blender();
         void readObj(const std::string, float, float, float);
