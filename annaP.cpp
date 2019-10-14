@@ -10,6 +10,7 @@
 #include <GL/glx.h>
 #include "fonts.h"
 #include <fstream>
+#include <unistd.h>
 
 /*Summary of Source File
 	Start Menu Function is used to display the start menu at the start of game.
@@ -192,6 +193,15 @@ void displayBackground(int w, int h, unsigned int texture)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
 }
+void runLogoIntro(unsigned int logoIntroTexture, int &logo){
+	displayImage(400, 400, 0, 0, logoIntroTexture);
+	int show = 100000000;
+	while(show == 0){
+		show--;
+	}
+	logo = 1;
+	
+}
 void movingEyes(int *eye, int *location)
 {
 	int width = eye[0]; //, height = eye[1];
@@ -208,6 +218,11 @@ void movingEyes(int *eye, int *location)
 
 	glEnd();
 	glPopMatrix();
+}
+void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres){
+	enemy_pos[1]= (int)((enemy_pos[1] + (trooper_pos[1]*0.01))) - yres % yres;
+	enemy_pos[0]= (int)((enemy_pos[0] + (trooper_pos[0]*0.01))) - xres % xres;
+	enemy_angle = trooper_angle*0.5 + enemy_angle;
 }
 void creditsAnna(Rect r)
 {
