@@ -42,7 +42,6 @@ void makeParticles(int w, int h)
 		particles[i].x = ((float)(rand() % w)) - (w / 2);
 		particles[i].y = ((float)(rand() % h)) - (h / 2);
 		particles[i].z = ((float)rand() / RAND_MAX) * -100;
-		//printf("z: %f\n", particles[i].z);
 	}
 }
 
@@ -53,7 +52,6 @@ double yp = t;
 int angle = 5;
 float z = 0.005;
 void chaos_equations(){
-	//glClear(GL_COLOR_BUFFER_BIT);
 	//draw dots
 	glTranslatef(0,0,z);
 	glPushMatrix();
@@ -82,7 +80,6 @@ void chaos_equations(){
 			x = xp;
 			y = yp;
 			glPointSize(5);
-			/*glColor3ub(255,255,255);*/
 			glColor3ub(colorArray[i%100], colorArray[(i+1)%100], colorArray[(i+2)%100]);
 			glBegin(GL_POINTS);
 				glVertex3d(xp,yp,-1.1);
