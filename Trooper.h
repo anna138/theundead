@@ -1,7 +1,7 @@
 #pragma once
-#define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
+#include "GlobalSpace.h"
 
-typedef float Vec[3];
+using gvars::Vec;
 
 class Trooper {
 public:
