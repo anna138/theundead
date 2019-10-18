@@ -26,6 +26,7 @@
  * Apply and Test
 */
 
+
 typedef float Vec[3];
 int scores[5];
 std::string names[5];

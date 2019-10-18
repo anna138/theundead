@@ -1,4 +1,5 @@
 #include "Trooper.h"
+#include "Macros.h"
 
 Trooper::Trooper() {
 	VecZero(dir);
