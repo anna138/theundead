@@ -1,4 +1,4 @@
-//author:Gerardo martinez
+
 /*Four steps of Debugging
  *1)Recognize that a bug exists
  *2)Isolate the source of the bug
@@ -82,10 +82,10 @@ void boxText(Rect r) {
     int posx[3]={0,-300,290};
     int posy[3]={-150,-150,-150};
     for(int i=0;i<3;i++) {
-    r.left=posx[i];
-    r.bot=posy[i];
-    r.center=0;
-    ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
+        r.left=posx[i];
+        r.bot=posy[i];
+        r.center=0;
+        ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
     }
 
 }
@@ -102,6 +102,40 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
         glVertex2i(-w+dirX, -h+dirY);
         glEnd();
         glPopMatrix();
+    }
+
+}
+
+void drawLine() {
+    glPushMatrix();
+    for(int i=0;i<10;i++) {
+    glLineWidth(7);
+    glBegin(GL_LINES);
+        glColor3f(0.0,0.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+        glEnd();
+        glLineWidth(2);
+        glBegin(GL_LINES);
+        glColor3f(1.0,1.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+    }
+    glEnd();
+    glPopMatrix();
+    glLineWidth(1);
+}
+void BulletColor(int n){
+    switch(n)
+    {
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
     }
 
 }
