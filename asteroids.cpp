@@ -36,13 +36,10 @@ typedef Flt	Matrix[4][4];
 int img_x;
 int img_y;
 //image for background
-GLuint imageTexture; 
+unsigned int imageTexture;
+unsigned int bloodBackgroundTexture; 
 //image for zombie
-GLuint startMenuTexture; 
-//image for trooper
-GLuint trooperImageTexture; 
-//image for asteroid
-GLuint villainImageTexture; 
+unsigned int startMenuTexture; 
 //File for Reading In HighScore
 char filename[] = "scores.txt";
 
@@ -87,12 +84,13 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Set Up Images
 Global gl;
-Image img[5] = {
+Image img[6] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
 		"./images/villain.png",
-		"./images/undead_logo.png"
+		"./images/undead_logo.png",
+		"./images/bloodBackground.png"
 };
 
 class Position {
@@ -124,6 +122,7 @@ public:
 class Game {
 public:
 	Trooper trooper;
+	Villain enemy;
 	Asteroid *asteroid;
 	Bullet *barr;
 	int nasteroids;
@@ -169,6 +168,7 @@ public:
 			asteroid = a;
 			++nasteroids;
 		}
+
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
 	~Game() {
@@ -322,17 +322,18 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
-extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, GLuint startMenuTexture);
-extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, GLuint texture);
+extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, unsigned int startMenuTexture);
+extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, unsigned int texture);
 extern void randomColor();
-extern void renderCoolCredits(int w, int h, GLuint imageTexture);
+extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
 extern void makeParticles(int, int);
 extern void getScores(char*, int &);
 extern void makeButton(int x, int y, int dirX, int dirY);
-extern void highScoreBoard(Rect r, int w, int h, GLuint imageTexture);
+extern void drawLine();
 extern void boxText(Rect r);
 extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
-extern void displayGameOverScore(Rect r2, int w, int h, GLuint imageTexture, int yourCurrentScore);
+extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
+extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -382,6 +383,7 @@ int main()
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
             makeButton(x,y,dirX,dirY);
+            drawLine();
             boxText(r);
         }
         else {
@@ -397,10 +399,11 @@ int main()
 			}
 			else if(highScore){
 				Rect r2;
-				//getScores(filename, grabHighScores)          
-                glTranslatef(1.0f,0.0f,0.0f); 
+                static float highscorePos=-gl.xres/2;
+                glTranslatef(300,0.0f,0.0f); 
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
-                glTranslatef(-0.5f,0.0f,0.0f);
+				//highscorePos++;
+                //getScores(filename, grabHighScores);
 			}
             else if(doneStart == 1){
                 //Rect r;
@@ -438,21 +441,18 @@ void init_opengl(void)
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_FOG);
 	glDisable(GL_CULL_FACE);
-	//
 	//Clear the screen to black
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	//glClearColor(0.1, 0.1, 0.1, 1.0);
 	//Do this to allow fonts
 	glEnable(GL_TEXTURE_2D);
 	initialize_fonts();
-	
 	//Image - Background
 	glGenTextures(1, &gl.backgroundTexture);
 	int w = img[0].width;
 	int h = img[0].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.backgroundTexture);
-	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -472,7 +472,6 @@ void init_opengl(void)
 	int h2 = img[1].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.startTexture);
-	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -489,7 +488,6 @@ void init_opengl(void)
 	int h3 = img[2].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.trooperTexture);
-	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -497,8 +495,24 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w3, h3, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
 
-	trooperImageTexture = gl.trooperTexture;
+	g.trooper.trooperImageTexture = gl.trooperTexture;
 	
+	//Image - High scores bloodBackground
+	
+	glGenTextures(1, &gl.bbTexture);
+	int w5 = img[5].width;
+	int h5 = img[5].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.bbTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w5, h5, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[5].data);
+
+	bloodBackgroundTexture = gl.bbTexture;
+
 	//Image - Asteroid
 	
 	glGenTextures(1, &gl.villainTexture);
@@ -506,7 +520,6 @@ void init_opengl(void)
 	int h4 = img[3].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.villainTexture);
-	//
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -514,7 +527,7 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w4, h4, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
-	villainImageTexture = gl.villainTexture;
+	g.enemy.villainImageTexture = gl.villainTexture;
 }
 
 void normalize2d(Vec v)
@@ -954,31 +967,8 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
 	//-------------------------------------------------------------------------
-	//Draw the trooper
-	/*glColor3fv(g.trooper.color);
-	glPushMatrix();
-	glTranslatef(g.trooper.pos[0], g.trooper.pos[1], g.trooper.pos[2]);
-	glTranslatef(0, 0, 0);
-	
-	//float angle = atan2(trooper.dir[1], trooper.dir[0]);
-	glRotatef(g.trooper.angle, 0.0f, 0.0f, 1.0f);
-	glBegin(GL_TRIANGLES);
-	//glVertex2f(-10.0f, -10.0f);
-	//glVertex2f(  0.0f, 20.0f);
-	//glVertex2f( 10.0f, -10.0f);
-	glVertex2f(-12.0f, -10.0f);
-	glVertex2f(  0.0f, 20.0f);
-	glVertex2f(  0.0f, -6.0f);
-	glVertex2f(  0.0f, -6.0f);
-	glVertex2f(  0.0f, 20.0f);
-	glVertex2f( 12.0f, -10.0f);
-	glEnd();
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glBegin(GL_POINTS);
-	glVertex2f(0.0f, 0.0f);
-	glEnd();
-	glPopMatrix();*/
-	movingImages(30, 30, g.trooper.pos, g.trooper.angle, trooperImageTexture);
+
+	movingImages(50,50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
 	
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
@@ -1001,6 +991,11 @@ void render()
 		}
 		glEnd();
 	}
+	//-------------------------------------------------------------------------
+	//Draw the Zombies
+	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
+	g.enemy.pos[1]=((int)g.enemy.pos[1] - 1 % gl.yres );
+
 	//-------------------------------------------------------------------------
 	//Draw the asteroids
 	{
@@ -1029,9 +1024,9 @@ void render()
 			glEnd();
 			a = a->next;
 			
-			/*
-			movingImages(30, 30, a->pos, a->angle, villainImageTexture);
-			*/
+			
+			/*movingImages(30, 30, a->pos, a->angle, g.villain.villainImageTexture);*/
+			
 		}
 	}
 	//-------------------------------------------------------------------------

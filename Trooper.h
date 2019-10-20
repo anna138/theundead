@@ -1,11 +1,11 @@
 #pragma once
-
 #define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
+
 typedef float Vec[3];
 
-class Trooper 
-{
+class Trooper {
 public:
+	unsigned int trooperImageTexture; 
 	Vec dir;
 	Vec pos;
 	Vec vel;

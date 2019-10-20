@@ -1,5 +1,9 @@
 HTTP/1.1 200 OK
+<<<<<<< HEAD
 Date: Sun, 13 Oct 2019 22:40:25 GMT
+=======
+Date: Sun, 13 Oct 2019 08:41:20 GMT
+>>>>>>> origin/master
 Server: Apache/2.4.25 (Debian)
 Last-Modified: Wed, 09 Oct 2019 17:33:53 GMT
 ETag: "55-5947db04f4cbb"
@@ -15,10 +19,13 @@ Anna 1000
 Manvir 0
 Gerardo -1000
 Gordon -10000
+<<<<<<< HEAD
 EndS-3350
 
 
 Manvir 100
 fsj 10
 Gerardo -1000
+=======
+>>>>>>> origin/master
 End

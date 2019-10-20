@@ -1,4 +1,4 @@
-//author:Gerardo martinez
+
 /*Four steps of Debugging
  *1)Recognize that a bug exists
  *2)Isolate the source of the bug
@@ -107,6 +107,26 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
         glPopMatrix();
     }
 
+}
+
+void drawLine() {
+    glPushMatrix();
+    for(int i=0;i<10;i++) {
+    glLineWidth(7);
+    glBegin(GL_LINES);
+        glColor3f(0.0,0.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+        glEnd();
+        glLineWidth(2);
+        glBegin(GL_LINES);
+        glColor3f(1.0,1.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+    }
+    glEnd();
+    glPopMatrix();
+    glLineWidth(1);
 }
 void BulletColor(int n){
     switch(n)

@@ -1,14 +1,13 @@
 #pragma once
-#include <GL/glx.h>
-
 
 class Global {
 public:
 	int xres, yres;
 	char keys[65536];
-	GLuint backgroundTexture;
-	GLuint startTexture;
-	GLuint trooperTexture;
-	GLuint villainTexture;
+	unsigned int backgroundTexture;
+	unsigned int startTexture;
+	unsigned int trooperTexture;
+	unsigned int villainTexture;
+	unsigned int bbTexture;
 	Global();
 };
