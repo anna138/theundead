@@ -9,5 +9,6 @@ public:
 	unsigned int trooperTexture;
 	unsigned int villainTexture;
 	unsigned int bbTexture;
+	unsigned int logoTexture;
 	Global();
 };

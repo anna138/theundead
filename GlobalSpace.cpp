@@ -5,10 +5,10 @@ namespace gvars{
     typedef float Matrix[4][4];
     int img_x;
     int img_y;
-    GLuint imageTexture; 
-    GLuint startMenuTexture; 
-    GLuint trooperImageTexture; 
-    GLuint villainImageTexture; 
+    unsigned int imageTexture; 
+    unsigned int startMenuTexture; 
+    unsigned int trooperImageTexture; 
+    unsigned int villainImageTexture; 
     const float timeslice = 1.0f;
     const float gravity = -0.2f;
     const int MAX_BULLETS = 11;
@@ -18,6 +18,7 @@ namespace gvars{
     int started = 0;
     int doneStart = 0;
     int changeColor=0;
+    int logo = 0;
     Global gl;
     int yourCurrentScore=0;
 

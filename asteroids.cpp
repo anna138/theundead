@@ -31,6 +31,9 @@
 
 
 unsigned int bloodBackgroundTexture; 
+//image for zombie
+// unsigned int startMenuTexture; 
+unsigned int logoIntroTexture; 
 
 //File for Reading In HighScore
 char filename[] = "scores.txt";
@@ -39,7 +42,6 @@ char filename[] = "scores.txt";
 int credits = 0;
 int highScore = 0;
 int gameOver = 0;
-
 int grabHighScores=0; 
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
@@ -86,9 +88,11 @@ extern void getScores(char*, int &);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
 extern void boxText(Rect r);
+extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
 extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
 extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
+extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres, int & gameOver);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -130,9 +134,11 @@ int main()
 		/*Loading Starting Intro
          *Passing In Parameters
          */
-		
-        if(!started) {
-            Rect r;
+		if(!started && !logo){
+			runLogoIntro(logoIntroTexture, logo);
+		}
+        else if(!started && logo) {
+			Rect r;
             int x=200;
             int y=200;
             int dirX=0;
@@ -224,30 +230,30 @@ void init_opengl(void)
 	//Image - Start Menu Zombie
 	
 	glGenTextures(1, &gl.startTexture);
-	int w2 = img[1].width;
-	int h2 = img[1].height;
+	int w1 = img[1].width;
+	int h1 = img[1].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.startTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w1, h1, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[1].data);
 
 	startMenuTexture = gl.startTexture;
 	
 	//Image - Trooper
 	glGenTextures(1, &gl.trooperTexture);
-	int w3 = img[2].width;
-	int h3 = img[2].height;
+	int w2 = img[2].width;
+	int h2 = img[2].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.trooperTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w3, h3, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
 
 	g.trooper.trooperImageTexture = gl.trooperTexture;
@@ -271,18 +277,34 @@ void init_opengl(void)
 	//Image - Asteroid
 	
 	glGenTextures(1, &gl.villainTexture);
-	int w4 = img[3].width;
-	int h4 = img[3].height;
+	int w3 = img[3].width;
+	int h3 = img[3].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.villainTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w4, h4, 0,
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w3, h3, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
 	g.enemy.villainImageTexture = gl.villainTexture;
+
+	//Image - Undead Logo
+	
+	glGenTextures(1, &gl.logoTexture);
+	int w4 = img[4].width;
+	int h4 = img[4].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.logoTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w4, h4, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
+
+	logoIntroTexture = gl.logoTexture;
 }
 
 void normalize2d(Vec v)
@@ -433,7 +455,7 @@ int check_keys(XEvent *e)
 			highScore ^= 1;
 			break;
 		case XK_g:
-			gameOver ^= 1;
+			//gameOver ^= 1;
 			break;
 		case XK_Down:
 			break;
@@ -749,7 +771,9 @@ void render()
 	//-------------------------------------------------------------------------
 	//Draw the Zombies
 	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
-	g.enemy.pos[1]=((int)g.enemy.pos[1] - 1 % gl.yres );
+	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres, gameOver);
+	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
+	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
 	//-------------------------------------------------------------------------
 	//Draw the asteroids
