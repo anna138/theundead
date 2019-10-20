@@ -42,10 +42,12 @@ extern void readScores(char * filename);
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenuTexture)
 {
+	
 	int eyeLeft[2] = {15, 15};
 	int eyeRight[2] = {-15, 15};
-	int leftLocation[2] = {32, 50};
-	int rightLocation[2] = {-47, 50};
+	int leftLocation[2] = {50, 60};
+	int rightLocation[2] = {-50-20, 60};
+	
 	img_y = 0 + img_x;
 	displayImage(img_y / 2, img_y / 2, 0, 50, startMenuTexture);
 	movingEyes(eyeLeft, leftLocation);
@@ -195,13 +197,12 @@ void displayBackground(int w, int h, unsigned int texture)
 }
 void movingEyes(int *eye, int *location)
 {
-	int width = eye[0]; //, height = eye[1];
+	int width = eye[0]*2; //, height = eye[1];
 	int offset_x = location[0], offset_y = location[1];
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
 	glTranslatef(0.0, 0.0, 1);
-	glBegin(GL_LINE_LOOP);
-
+	glBegin(GL_TRIANGLE_FAN);
 	for (int i = 0; i < 360; i++) {
 		float degInRad = i * DEG2RAD;
 		glVertex2f(cos(degInRad) * (width / 2) + offset_x, sin(degInRad) * (width / 2) + offset_y);

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
+#include <X11/Xatom.h>
 #include "GlobalSpace.h"
 
 using gvars::gl;
@@ -37,8 +38,8 @@ public:
 			gl.yres = getWinAttr.height;
 			//When window is fullscreen, there is no client window
 			//so keystrokes are linked to the root window.
-			//XGrabKeyboard(dpy, root, False,
-				//GrabModeAsync, GrabModeAsync, CurrentTime);
+			// XGrabKeyboard(dpy, root, False,
+			// 	GrabModeAsync, GrabModeAsync, CurrentTime);
 			fullscreen=1;
 		}
 		XVisualInfo *vi = glXChooseVisual(dpy, 0, att);
@@ -53,22 +54,24 @@ public:
 			StructureNotifyMask | SubstructureNotifyMask;
 		unsigned int winops = CWBorderPixel|CWColormap|CWEventMask;
 		if (fullscreen) {
-			//winops |= CWOverrideRedirect;
-			//swa.override_redirect = True;
+			// winops |= CWOverrideRedirect;
+			// swa.override_redirect = true;
 		}
 		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 			vi->depth, InputOutput, vi->visual, winops, &swa);
-		//win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
-		//vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+		// win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
+		// vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
 		set_title();
 		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
 		glXMakeCurrent(dpy, win, glc);
 		show_mouse_cursor(0);
+		
 	}
 	~X11_wrapper() {
 		XDestroyWindow(dpy, win);
 		XCloseDisplay(dpy);
 	}
+
 	void set_title() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);

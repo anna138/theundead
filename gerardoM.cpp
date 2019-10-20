@@ -71,7 +71,7 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
 
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=Tom%d&score=%d", yourScore,temp); 
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),temp%10); 
     if(!posted){
         posted = True;
         postScores(pn);
