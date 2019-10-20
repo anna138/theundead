@@ -21,6 +21,7 @@ namespace gvars{
     extern int started;
     extern int doneStart;
     extern int changeColor;
+    extern int logo;
     extern Global gl;
     extern int yourCurrentScore;
 }

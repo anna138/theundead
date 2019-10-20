@@ -31,13 +31,10 @@
 
 
 unsigned int bloodBackgroundTexture; 
-<<<<<<< HEAD
 //image for zombie
-unsigned int startMenuTexture; 
+// unsigned int startMenuTexture; 
 unsigned int logoIntroTexture; 
-=======
 
->>>>>>> origin/master
 //File for Reading In HighScore
 char filename[] = "scores.txt";
 
@@ -45,38 +42,7 @@ char filename[] = "scores.txt";
 int credits = 0;
 int highScore = 0;
 int gameOver = 0;
-
-<<<<<<< HEAD
-//macros
-#define rnd() (((Flt)rand())/(Flt)RAND_MAX)
-#define random(a) (rand()%a)
-#define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
-#define MakeVector(x, y, z, v) (v)[0]=(x),(v)[1]=(y),(v)[2]=(z)
-#define VecCopy(a,b) (b)[0]=(a)[0];(b)[1]=(a)[1];(b)[2]=(a)[2]
-#define VecDot(a,b)	((a)[0]*(b)[0]+(a)[1]*(b)[1]+(a)[2]*(b)[2])
-#define VecSub(a,b,c) (c)[0]=(a)[0]-(b)[0]; \
-						(c)[1]=(a)[1]-(b)[1]; \
-						(c)[2]=(a)[2]-(b)[2]
-//constants
-const float timeslice = 1.0f;
-const float gravity = -0.2f;
-#define PI 3.141592653589793
-#define ALPHA 1
-const int MAX_BULLETS = 11;
-const Flt MINIMUM_ASTEROID_SIZE = 60.0;
-
-//-----------------------------------------------------------------------------
-//Setup timers
-const double physicsRate = 1.0 / 60.0;
-const double oobillion = 1.0 / 1e9;
-int started = 0;
-int logo = 0;
-int doneStart = 0;
-int changeColor=0;
-int grabHighScores=0;
-=======
 int grabHighScores=0; 
->>>>>>> origin/master
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -125,7 +91,7 @@ extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
 extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
 extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
-extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres, int & gameOver);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -484,7 +450,7 @@ int check_keys(XEvent *e)
 			highScore ^= 1;
 			break;
 		case XK_g:
-			gameOver ^= 1;
+			//gameOver ^= 1;
 			break;
 		case XK_Down:
 			break;
@@ -800,8 +766,9 @@ void render()
 	//-------------------------------------------------------------------------
 	//Draw the Zombies
 	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres);
-
+	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres, gameOver);
+	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
+	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
 	//-------------------------------------------------------------------------
 	//Draw the asteroids
