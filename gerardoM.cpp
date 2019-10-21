@@ -1,4 +1,4 @@
-//author:Gerardo martinez
+
 /*Four steps of Debugging
  *1)Recognize that a bug exists
  *2)Isolate the source of the bug
@@ -82,7 +82,7 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
 
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=Tom%d&score=%d", yourScore,temp); 
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),temp%10); 
     if(!posted){
         posted = True;
         postScores(pn);
@@ -93,10 +93,17 @@ void boxText(Rect r) {
     int posx[3]={-330, -30, 282};
     int posy[3]={-190,-190,-190};
     for(int i=0;i<3;i++) {
+<<<<<<< HEAD
     r.left=posx[i];
     r.bot=posy[i];
     r.center=0;
     ggprint8b(&r,16,0x002E8B57, boxText[i].c_str());
+=======
+        r.left=posx[i];
+        r.bot=posy[i];
+        r.center=0;
+        ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
+>>>>>>> origin/master
     }
 
 }
@@ -113,6 +120,40 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
         glVertex2i(-w+dirX, -h+dirY);
         glEnd();
         glPopMatrix();
+    }
+
+}
+
+void drawLine() {
+    glPushMatrix();
+    for(int i=0;i<10;i++) {
+    glLineWidth(7);
+    glBegin(GL_LINES);
+        glColor3f(0.0,0.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+        glEnd();
+        glLineWidth(2);
+        glBegin(GL_LINES);
+        glColor3f(1.0,1.0,1.0);
+        glVertex2f(100,200);
+        glVertex2f(200,200);
+    }
+    glEnd();
+    glPopMatrix();
+    glLineWidth(1);
+}
+void BulletColor(int n){
+    switch(n)
+    {
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
     }
 
 }

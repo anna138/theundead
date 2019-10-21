@@ -52,10 +52,17 @@ extern void readScores(char * filename);
 void startMenu(Rect r, int y, int x, int img_x, int img_y, 
 	unsigned int startMenu, unsigned int title)
 {
+	
 	int eyeLeft[2] = {15, 15};
 	int eyeRight[2] = {-15, 15};
+<<<<<<< HEAD
 	int leftLocation[2] = {50, 30};
 	int rightLocation[2] = {-50, 30};
+=======
+	int leftLocation[2] = {50, 60};
+	int rightLocation[2] = {-50-20, 60};
+	
+>>>>>>> origin/master
 	img_y = 0 + img_x;
 	
 	
@@ -232,6 +239,7 @@ void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			uns
 }
 void runLogoIntro(unsigned int logoIntroTexture, int &logo)
 {
+<<<<<<< HEAD
 	Rect r; 
 	spinningIntro(150, 150, 20, 0, logoIntroTexture);
 	r.bot = -215;
@@ -240,6 +248,10 @@ void runLogoIntro(unsigned int logoIntroTexture, int &logo)
 	ggprint16(&r, 16, 0x00c0c0c0, "Undead Games Presents");  
 	//displayImage(300, 300, 20, 0, logoIntroTexture);
 	int show = 1000000;
+=======
+	displayImage(400, 400, 0, 0, logoIntroTexture);
+	int show = 100000;
+>>>>>>> origin/master
 	while (show == 0) {
 		show--;
 	}
@@ -248,13 +260,12 @@ void runLogoIntro(unsigned int logoIntroTexture, int &logo)
 }
 void movingEyes(int * eye, int * location)
 {
-	int width = eye[0]; //, height = eye[1];
+	int width = eye[0]*2; //, height = eye[1];
 	int offset_x = location[0], offset_y = location[1];
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
 	glTranslatef(0.0, 0.0, 1);
 	glBegin(GL_TRIANGLE_FAN);
-
 	for (int i = 0; i < 360; i++) {
 		float degInRad = i * DEG2RAD;
 		glVertex2f(cos(degInRad) * (width / 2) + offset_x, 

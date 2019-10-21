@@ -87,6 +87,7 @@ extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
 extern void makeParticles(int, int);
 extern void getScores(char*, int &);
 extern void makeButton(int x, int y, int dirX, int dirY);
+extern void drawLine();
 extern void boxText(Rect r);
 extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
 extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
@@ -128,6 +129,7 @@ int main()
 			physicsCountdown -= physicsRate;
 		}
 		if(!grabHighScores){
+
 			getScores(filename,grabHighScores);
 		}
 		/*Loading Starting Intro
@@ -145,6 +147,7 @@ int main()
 	        glClear(GL_COLOR_BUFFER_BIT);
             startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
             makeButton(x,y,dirX,dirY);
+            drawLine();
             boxText(r);
         }
         else {
@@ -153,15 +156,17 @@ int main()
 				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, yourCurrentScore);
 			}
 			else if(credits){
-				renderCoolCredits(gl.xres, gl.yres, imageTexture);
+                renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 			}
 			else if(highScore){
 				Rect r2;
-				//getScores(filename, grabHighScores);
-				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
+                glTranslatef(300,0.0f,0.0f); 
+				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+				//highscorePos++;
+                //getScores(filename, grabHighScores);
 			}
             else if(doneStart == 1){
                 //Rect r;
