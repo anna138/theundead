@@ -10,5 +10,6 @@ public:
 	unsigned int villainTexture;
 	unsigned int bbTexture;
 	unsigned int logoTexture;
+	unsigned int titleTexture;
 	Global();
 };

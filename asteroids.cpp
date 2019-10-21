@@ -52,13 +52,14 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Set Up Images
 
-Image img[6] = {
+Image img[7] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
 		"./images/villain.png",
 		"./images/undead_logo.png",
-		"./images/bloodBackground.png"
+		"./images/bloodBackground.png",
+		"./images/title.png"
 };
 
 class Position {
@@ -79,7 +80,7 @@ extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
 extern void creditsKevin(Rect r);
-extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, unsigned int startMenuTexture);
+extern void startMenu(Rect r, int y_num, int x_num, int img_x, int img_y, unsigned int startMenuTexture, unsigned int titleImageTexture);
 extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, unsigned int texture);
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
@@ -142,7 +143,7 @@ int main()
             int dirX=0;
             int dirY=0;
 	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture);
+            startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
             makeButton(x,y,dirX,dirY);
             boxText(r);
         }
@@ -300,6 +301,22 @@ void init_opengl(void)
 		GL_RGB, GL_UNSIGNED_BYTE, img[4].data);
 
 	logoIntroTexture = gl.logoTexture;
+
+	//Image - Undead Title
+	
+	glGenTextures(1, &gl.titleTexture);
+	int w6 = img[6].width;
+	int h6 = img[6].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.titleTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w6, h6, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[6].data);
+
+	titleImageTexture = gl.titleTexture;
 }
 
 void normalize2d(Vec v)

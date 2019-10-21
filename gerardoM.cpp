@@ -31,16 +31,27 @@ void makeButton(int x, int y, int dirX, int dirY)
     int height = y/6;
     int choice=3;
     int posx[3]={-300,0,300};
-    int posy[3]={-150,-150,-150};
+    int posy[3]={-185,-185,-185};
     glPushMatrix();
+
     glBegin(GL_QUADS);
-    glColor3f(1.0,0.0,0.0);
+    glColor3f(0.5,0.0,0.0);
     for(int i=0;i<3;i++) {
         dirX = posx[i];
         dirY = posy[i];
         drawSquare(width, height, dirX, dirY, choice);
     }
     glEnd();
+
+    glBegin(GL_QUADS);
+    glColor3f(1.0,0.0,0.0);
+    for(int i=0;i<3;i++) {
+        dirX = posx[i];
+        dirY = posy[i];
+        drawSquare(width - 3, height - 3, dirX, dirY, choice);
+    }
+    glEnd();
+
     glPopMatrix();
 }
 
@@ -50,7 +61,7 @@ void changeButtonColor( int y, int x ,int dirX, int dirY, int &doneStart) {
     int height = y/6;
     int choice=3;
     int posx[3]={-300,0,300};
-    int posy[3]={-150,-150,-150};
+    int posy[3]={-185,-185,-185};
     for(int i=0;i<3;i++) {
         dirX=posx[i];
         dirY=posy[i];
@@ -78,14 +89,14 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     }
 }
 void boxText(Rect r) {
-    std::string boxText[3]={"Start Game","Characters","Credits"};
-    int posx[3]={0,-300,290};
-    int posy[3]={-150,-150,-150};
+    std::string boxText[3]={"Characters","Start Game","Credits"};
+    int posx[3]={-330, -30, 282};
+    int posy[3]={-190,-190,-190};
     for(int i=0;i<3;i++) {
     r.left=posx[i];
     r.bot=posy[i];
     r.center=0;
-    ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
+    ggprint8b(&r,16,0x002E8B57, boxText[i].c_str());
     }
 
 }

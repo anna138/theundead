@@ -35,6 +35,8 @@ int scores[5];
 std::string names[5];
 char pagename[256] = "~mbal/3350/lab7/scores.txt";
 const float DEG2RAD = 3.14159 / 180;
+int showTitle = 1000000;
+
 
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
@@ -48,26 +50,30 @@ extern void readScores(char * filename);
 
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, 
-	unsigned int startMenuTexture)
+	unsigned int startMenu, unsigned int title)
 {
 	int eyeLeft[2] = {15, 15};
 	int eyeRight[2] = {-15, 15};
-	int leftLocation[2] = {32, 50};
-	int rightLocation[2] = {-47, 50};
+	int leftLocation[2] = {50, 30};
+	int rightLocation[2] = {-50, 30};
 	img_y = 0 + img_x;
-	displayImage(img_y / 2, img_y / 2, 0, 50, startMenuTexture);
+	
+	
+	displayImage(img_x / 4, img_y / 16, 0, 270, title);
+	displayImage(img_y / 8, img_y / 6, 0, 20, startMenu);
+
 	fireCircles();
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
 	r.bot = 0 - (y / 3);
-	r.left = 0 - (x / 7);
+	r.left = 0 - (x / 9);
 	r.center = 0;
-	ggprint16(& r, 16, 0x00ff0000, "Press Space to Continue");
-	ggprint16(& r, 16, 0x00ff0000,
+	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
+	ggprint8b(& r, 16, 0x00ff0000,
 			  "Press Space + C for Credits During Gameplay");
-	ggprint16(& r, 16, 0x00ff0000,
+	ggprint8b(& r, 16, 0x00ff0000,
 			  "Press Space + G for GameOver Screen During Gameplay");
-	ggprint16(& r, 16, 0x00ff0000,
+	ggprint8b(& r, 16, 0x00ff0000,
 			  "Press Space + H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
@@ -134,8 +140,8 @@ void getScores(char *filename, int & grabHighScores)
 void displayImage(int width_x, int height_y, int offset_x, 
 	int offset_y, unsigned int texture)
 {
-	int width = width_x / 2;
-	int height = height_y / 2;
+	int width = width_x;
+	int height = height_y;
 	glPushMatrix();
 	glColor3f(1.0, 1.0, 1.0);
 
@@ -205,10 +211,35 @@ void displayBackground(int w, int h, unsigned int texture)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
 }
+void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			unsigned int texture)
+{
+	glTranslatef(10, 0, 0);
+	//glRotatef(0.0, 0.45f, 0.0f, 0.0f);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	glBegin(GL_QUADS);
+
+	glTexCoord2f(1, 1);
+	glVertex2i(width_x + offset_x, -height_y + offset_y);
+	glTexCoord2f(1, 0);
+	glVertex2i(width_x + offset_x, height_y + offset_y);
+	glTexCoord2f(0, 0);
+	glVertex2i(-width_x + offset_x, height_y + offset_y);
+	glTexCoord2f(0, 1);
+	glVertex2i(-width_x + offset_x, -height_y + offset_y);
+
+	glEnd();
+	glPopMatrix();
+}
 void runLogoIntro(unsigned int logoIntroTexture, int &logo)
 {
-	displayImage(400, 400, 0, 0, logoIntroTexture);
-	int show = 10000000000;
+	Rect r; 
+	spinningIntro(150, 150, 20, 0, logoIntroTexture);
+	r.bot = -215;
+	r.left = -95;
+	r.center = 0;
+	ggprint16(&r, 16, 0x00c0c0c0, "Undead Games Presents");  
+	//displayImage(300, 300, 20, 0, logoIntroTexture);
+	int show = 1000000;
 	while (show == 0) {
 		show--;
 	}
@@ -295,5 +326,5 @@ void fireCircles()
 }
 void creditsAnna(Rect r)
 {
-	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");
+	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
 }

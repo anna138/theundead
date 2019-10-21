@@ -8,10 +8,11 @@ namespace gvars{
     typedef float Matrix[4][4];
     extern int img_x;
     extern int img_y;
-    extern GLuint imageTexture; 
-    extern GLuint startMenuTexture; 
-    extern GLuint trooperImageTexture; 
-    extern GLuint villainImageTexture; 
+    extern unsigned int imageTexture; 
+    extern unsigned int startMenuTexture; 
+    extern unsigned int trooperImageTexture; 
+    extern unsigned int villainImageTexture;
+    extern unsigned int titleImageTexture; 
     extern const float timeslice;
     extern const float gravity;
     extern const int MAX_BULLETS;

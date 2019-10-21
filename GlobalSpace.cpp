@@ -9,6 +9,7 @@ namespace gvars{
     unsigned int startMenuTexture; 
     unsigned int trooperImageTexture; 
     unsigned int villainImageTexture; 
+    unsigned int titleImageTexture; 
     const float timeslice = 1.0f;
     const float gravity = -0.2f;
     const int MAX_BULLETS = 11;
