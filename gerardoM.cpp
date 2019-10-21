@@ -93,17 +93,10 @@ void boxText(Rect r) {
     int posx[3]={-330, -30, 282};
     int posy[3]={-190,-190,-190};
     for(int i=0;i<3;i++) {
-<<<<<<< HEAD
     r.left=posx[i];
     r.bot=posy[i];
     r.center=0;
     ggprint8b(&r,16,0x002E8B57, boxText[i].c_str());
-=======
-        r.left=posx[i];
-        r.bot=posy[i];
-        r.center=0;
-        ggprint8b(&r,16,0x00ffff00, boxText[i].c_str());
->>>>>>> origin/master
     }
 
 }
