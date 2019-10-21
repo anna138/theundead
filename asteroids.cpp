@@ -38,12 +38,7 @@ unsigned int logoIntroTexture;
 //File for Reading In HighScore
 char filename[] = "scores.txt";
 
-//These are Flags for the game.
-int credits = 0;
-int highScore = 0;
-int gameOver = 0;
-int grabHighScores=0;
-int changed = 0; 
+//These are Flags for the game. 
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -62,6 +57,7 @@ Image img[7] = {
 		"./images/bloodBackground.png",
 		"./images/title.png"
 };
+
 
 class Position {
 public:
@@ -377,9 +373,10 @@ void check_mouse(XEvent *e)
 					b->pos[1] += ydir*20.0f;
 					b->vel[0] += xdir*6.0f + rnd()*0.1;
 					b->vel[1] += ydir*6.0f + rnd()*0.1;
-					b->color[0] = 1.0f;
-					b->color[1] = 1.0f;
-					b->color[2] = 1.0f;
+					b->row = rand() % 6;
+					b->color[0] = fireColors[b->row][0];
+					b->color[1] = fireColors[b->row][1];
+					b->color[2] = fireColors[b->row][2];
 					++g.nbullets;
 				}
 			}
@@ -726,9 +723,10 @@ void physics()
 				b->pos[1] += ydir*20.0f;
 				b->vel[0] += xdir*6.0f + rnd()*0.1;
 				b->vel[1] += ydir*6.0f + rnd()*0.1;
-				b->color[0] = 1.0f;
-				b->color[1] = 1.0f;
-				b->color[2] = 1.0f;
+				b->row = rand() % 6;
+				b->color[0] = fireColors[b->row][0];
+				b->color[1] = fireColors[b->row][1];
+				b->color[2] = fireColors[b->row][2];
 				g.nbullets++;
 			}
 		}
@@ -829,7 +827,7 @@ void render()
 	}
 	//-------------------------------------------------------------------------
 	//Draw the bullets
-	int color;
+	
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		/*//Log("draw bullet...\n");
@@ -846,8 +844,8 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();*/
-		color = rand() % 5 + 1;
-		fireCircles(color, b->pos[0], b->pos[1]);
+		
+		fireCircles(b->row, b->pos[0], b->pos[1]);
 	}
     
 }

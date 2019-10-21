@@ -12,6 +12,7 @@
 #include "fonts.h"
 #include <fstream>
 #include <unistd.h>
+#include "GlobalSpace.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -37,7 +38,7 @@ char pagename[256] = "~mbal/3350/lab7/scores.txt";
 const float DEG2RAD = 3.14159 / 180;
 int showTitle = 1000000;
 
-
+using namespace gvars;
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
@@ -273,8 +274,8 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 		% xres;
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
 	/*if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
-	&& (enemy_pos[0] > (trooper_pos[0] + 5)))
-		gameOver = 1;*/
+	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
+		gameOver = 0;
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -282,43 +283,46 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 	-size of circle
 	-draw a circle
 */
-void fireCircles(int color, int offset_x, int offset_y)
+void fireCircles(int row, int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 50 - (rand()%8), 
-		h = 50 - (rand() % 8), blue, green, red;
-	int choice = 4;
+	int x = 300, y = 300, w = 50, 
+		h = 50;
 	if(offset_x && offset_y){
 		x = offset_x;
 		y = offset_y;
 	}
-	/*rand() % 5 + 1 ;*/
-	//int x = rand()%50-50, y = rand()%50-50;
-	choice = color;
 	for (int i = 0; i < 10000; i++) {
 		w = h = rand() % 10;
-		if (choice==1) {
-			/*flame_red*/
+		if (0) {
+			/*flame_maroon
 			red = rand() % 35 + 120;
 			blue = rand() % 40;
-			green = rand() % 40;
-		} else if (choice == 2) {
-			/*flame_yellow*/
+			green = rand() % 40;*/
+			glColor3ub(128,0,0);
+		} else if (0) {
+			/*flame_orange
 			red = rand() % 45 + 210;
 			blue = 0;
-			green = rand() % 65 + 130;
-		} else if (choice == 3) {
-			/*flame_orange*/
+			green = rand() % 65 + 130;*/
+			glColor3ub(255,80,66);
+		} else if (0) {
+			/*flame_red
 			red = rand() % 32 + 220;
 			blue = rand() % 120;
-			green = rand() % 32 + 120;
-		} else if (choice==4) {
-			/*flame_redorange*/
+			green = rand() % 32 + 120;*/
+			glColor3ub(255,0,0);
+		} else if (0) {
+			/*flame_redorange
 			red = rand() % 40 + 215;
 			blue = rand() % 60;
-			green = rand() % 20 + 80;
+			green = rand() % 20 + 80;*/
+			glColor3ub(245,18,0);
 		}
+		else if (0){
+			glColor3ub(255,174,66);
+		}
+		glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2] );
 		glPushMatrix();
-		glColor3ub(red,green,blue);
 		glBegin(GL_TRIANGLE_FAN);
 
 		for (int i = 0; i < 360; i+=60) {
@@ -329,15 +333,6 @@ void fireCircles(int color, int offset_x, int offset_y)
 		glEnd();
 	}
 }
-/*
-void fireBullet(int color, int offset_x, int offset_y)
-{
-	for (int i = 0; i < 360; i+=) {
-			float degInRad = i * DEG2RAD;
-			glVertex2f(cos(degInRad) * (w/ 2) + x, 
-				sin(degInRad) * (h / 2) + y);
-	}
-}*/
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  

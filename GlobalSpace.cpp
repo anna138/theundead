@@ -20,7 +20,14 @@ namespace gvars{
     int doneStart = 0;
     int changeColor=0;
     int logo = 0;
+    int credits = 0;
+    int highScore = 0;
+    int gameOver = 0;
+    int grabHighScores = 0;
+    int changed = 0;
     Global gl;
     int yourCurrentScore=0;
+    int fireColors[5][3] = {128, 0, 0, 255, 
+    80, 66, 255, 0, 0, 245, 18, 0, 255, 174, 66};
 
 } // namespace GVars
