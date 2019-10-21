@@ -42,7 +42,8 @@ char filename[] = "scores.txt";
 int credits = 0;
 int highScore = 0;
 int gameOver = 0;
-int grabHighScores=0; 
+int grabHighScores=0;
+int changed = 0; 
 extern struct timespec timeStart, timeCurrent;
 extern struct timespec timePause;
 extern double physicsCountdown;
@@ -88,9 +89,10 @@ extern void makeParticles(int, int);
 extern void getScores(char*, int &);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
+extern void fireCircles(int, int, int);
 extern void boxText(Rect r);
 extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
-extern void changeButtonColor( int y, int x,int dirX, int dirY, int &doneStart);
+extern void changeButtonColor( int y, int x,int dirX, int dirY, int & doneStart, int & changed);
 extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres, int & gameOver);
@@ -168,13 +170,13 @@ int main()
 				//highscorePos++;
                 //getScores(filename, grabHighScores);
 			}
-            else if(doneStart == 1){
+            else if(doneStart && !changed){
                 //Rect r;
                 int dirX=0;
                 int dirY=0;
                 int x=200;
                 int y=200;
-                changeButtonColor( y, x, dirX,dirY, doneStart);
+                changeButtonColor( y, x, dirX,dirY, doneStart, changed);
             }
             else{
 		    	render();
@@ -827,9 +829,10 @@ void render()
 	}
 	//-------------------------------------------------------------------------
 	//Draw the bullets
+	int color;
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
-		//Log("draw bullet...\n");
+		/*//Log("draw bullet...\n");
 		glColor3f(1.0, 1.0, 1.0);
 		glBegin(GL_POINTS);
 		glVertex2f(b->pos[0],      b->pos[1]);
@@ -842,7 +845,9 @@ void render()
 		glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
-		glEnd();
+		glEnd();*/
+		color = rand() % 5 + 1;
+		fireCircles(color, b->pos[0], b->pos[1]);
 	}
     
 }

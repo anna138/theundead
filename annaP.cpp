@@ -40,7 +40,7 @@ int showTitle = 1000000;
 
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
-void fireCircles();
+void fireCircles(int, int, int);
 void displayBackground(int w, int h, unsigned int texture);
 void displayImage(int width_x, int height_y, int offset_x,
 int offset_y, unsigned int texture);
@@ -60,16 +60,17 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 	
 	img_y = 0 + img_x;
 	
-	
 	displayImage(img_x / 4, img_y / 16, 0, 270, title);
 	displayImage(img_y / 8, img_y / 6, 0, 20, startMenu);
 
-	fireCircles();
+	fireCircles(4, 0, 0);
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
+
 	r.bot = 0 - (y / 3);
 	r.left = 0 - (x / 9);
 	r.center = 0;
+
 	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
 	ggprint8b(& r, 16, 0x00ff0000,
 			  "Press Space + C for Credits During Gameplay");
@@ -232,7 +233,7 @@ void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			uns
 	glEnd();
 	glPopMatrix();
 }
-void runLogoIntro(unsigned int logoIntroTexture, int &logo)
+void runLogoIntro(unsigned int logoIntroTexture, int & logo)
 {
 	Rect r; 
 	spinningIntro(150, 150, 20, 0, logoIntroTexture);
@@ -245,8 +246,7 @@ void runLogoIntro(unsigned int logoIntroTexture, int &logo)
 	while (show == 0) {
 		show--;
 	}
-	logo = 1;
-	
+	logo = 1;	
 }
 void movingEyes(int * eye, int * location)
 {
@@ -261,21 +261,20 @@ void movingEyes(int * eye, int * location)
 		glVertex2f(cos(degInRad) * (width / 2) + offset_x, 
 			sin(degInRad) * (width / 2) + offset_y);
 	}
-
 	glEnd();
 	glPopMatrix();
 }
 void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, 
 	float enemy_angle, int xres, int yres, int & gameOver)
 {
-	enemy_pos[1]= (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
+	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
 		% yres;
-	enemy_pos[0]= (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) 
+	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) 
 		% xres;
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
-	if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
+	/*if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
 	&& (enemy_pos[0] > (trooper_pos[0] + 5)))
-		gameOver = 1;
+		gameOver = 1;*/
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -283,13 +282,18 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 	-size of circle
 	-draw a circle
 */
-void fireCircles()
+void fireCircles(int color, int offset_x, int offset_y)
 {
 	int x = 300, y = 300, w = 50 - (rand()%8), 
 		h = 50 - (rand() % 8), blue, green, red;
-	int choice = rand() % 5 + 1 ;
+	int choice = 4;
+	if(offset_x && offset_y){
+		x = offset_x;
+		y = offset_y;
+	}
+	/*rand() % 5 + 1 ;*/
 	//int x = rand()%50-50, y = rand()%50-50;
-
+	choice = color;
 	for (int i = 0; i < 10000; i++) {
 		w = h = rand() % 10;
 		if (choice==1) {
@@ -317,7 +321,7 @@ void fireCircles()
 		glColor3ub(red,green,blue);
 		glBegin(GL_TRIANGLE_FAN);
 
-		for (int i = 0; i < 360; i++) {
+		for (int i = 0; i < 360; i+=60) {
 			float degInRad = i * DEG2RAD;
 			glVertex2f(cos(degInRad) * (w/ 2) + x, 
 				sin(degInRad) * (h / 2) + y);
@@ -325,6 +329,15 @@ void fireCircles()
 		glEnd();
 	}
 }
+/*
+void fireBullet(int color, int offset_x, int offset_y)
+{
+	for (int i = 0; i < 360; i+=) {
+			float degInRad = i * DEG2RAD;
+			glVertex2f(cos(degInRad) * (w/ 2) + x, 
+				sin(degInRad) * (h / 2) + y);
+	}
+}*/
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
