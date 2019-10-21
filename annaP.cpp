@@ -53,10 +53,10 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 	unsigned int startMenu, unsigned int title)
 {
 	
-	int eyeLeft[2] = {15, 15};
-	int eyeRight[2] = {-15, 15};
-	int leftLocation[2] = {50, 60};
-	int rightLocation[2] = {-50, 60};
+	int eyeLeft[2] = {10, 10};
+	int eyeRight[2] = {-10, 10};
+	int leftLocation[2] = {50, 30};
+	int rightLocation[2] = {-50, 30};
 	
 	img_y = 0 + img_x;
 	

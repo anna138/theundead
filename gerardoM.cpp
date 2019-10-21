@@ -44,7 +44,7 @@ void makeButton(int x, int y, int dirX, int dirY)
     glEnd();
 
     glBegin(GL_QUADS);
-    glColor3f(1.0,0.0,0.0);
+    glColor3f(0.7,0.13,0.13);
     for(int i=0;i<3;i++) {
         dirX = posx[i];
         dirY = posy[i];
@@ -66,7 +66,7 @@ void changeButtonColor( int y, int x ,int dirX, int dirY, int &doneStart) {
         dirX=posx[i];
         dirY=posy[i];
         glColor3f(0.0,1.0,1.0);
-        drawSquare(width,height,dirX,dirY,choice);
+        drawSquare(width - 3, height - 3,dirX,dirY,choice);
     }
     doneStart = 0;
 }
@@ -96,7 +96,7 @@ void boxText(Rect r) {
     r.left=posx[i];
     r.bot=posy[i];
     r.center=0;
-    ggprint8b(&r,16,0x002E8B57, boxText[i].c_str());
+    ggprint8b(&r,16,0x00cefdce, boxText[i].c_str());
     }
 
 }
