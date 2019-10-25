@@ -85,6 +85,7 @@ extern void makeParticles(int, int);
 extern void getScores(char*, int &);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
+extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void boxText(Rect r);
 extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
@@ -366,13 +367,17 @@ void check_mouse(XEvent *e)
 					b->vel[1] = g.trooper.vel[1];
 					//convert trooper angle to radians
 					Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+					b->angle = rad;
 					//convert angle to a vector
 					Flt xdir = cos(rad);
 					Flt ydir = sin(rad);
-					b->pos[0] += xdir*20.0f;
-					b->pos[1] += ydir*20.0f;
-					b->vel[0] += xdir*6.0f + rnd()*0.1;
-					b->vel[1] += ydir*6.0f + rnd()*0.1;
+					// b->pos[0] += xdir*20.0f;
+					// b->pos[1] += ydir*20.0f;
+					b->vel[0] += xdir*6.0f;
+					b->vel[1] += ydir*6.0f;
+					b->pos[0] += b->vel[0];
+					b->pos[1] += b->vel[1];
+					
 					b->row = rand() % 6;
 					b->color[0] = fireColors[b->row][0];
 					b->color[1] = fireColors[b->row][1];
@@ -684,6 +689,7 @@ void physics()
 		//apply thrust
 		//convert trooper angle to radians
 		Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+
 		//convert angle to a vector
 		Flt xdir = cos(rad);
 		Flt ydir = sin(rad);
@@ -716,17 +722,28 @@ void physics()
 				b->vel[1] = g.trooper.vel[1];
 				//convert trooper angle to radians
 				Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+				b->angle = rad;
 				//convert angle to a vector
 				Flt xdir = cos(rad);
 				Flt ydir = sin(rad);
 				b->pos[0] += xdir*20.0f;
 				b->pos[1] += ydir*20.0f;
-				b->vel[0] += xdir*6.0f + rnd()*0.1;
-				b->vel[1] += ydir*6.0f + rnd()*0.1;
+				b->vel[0] += xdir*6.0f;
+				b->vel[1] += ydir*6.0f;
+				
+				
+				//FIRE BULLETS
+				/*
 				b->row = rand() % 6;
 				b->color[0] = fireColors[b->row][0];
 				b->color[1] = fireColors[b->row][1];
 				b->color[2] = fireColors[b->row][2];
+				*/
+				b->row = 1;
+				b->color[0] = lightningColors[b->row][0];
+				b->color[1] = lightningColors[b->row][1];
+				b->color[2] = lightningColors[b->row][2];
+
 				g.nbullets++;
 			}
 		}
@@ -763,11 +780,12 @@ void render()
 	//-------------------------------------------------------------------------
 
 	movingImages(50,50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
-	
+	Flt rad;
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
 		//draw thrust
-		Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+		rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+	
 		//convert angle to a vector
 		Flt xdir = cos(rad);
 		Flt ydir = sin(rad);
@@ -803,6 +821,7 @@ void render()
 			glPushMatrix();
 			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
 			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
+			glLineWidth(1);
 			glBegin(GL_LINE_LOOP);
 			//Log("%i verts\n",a->nverts);
 			for (int j=0; j<a->nverts; j++) {
@@ -845,7 +864,9 @@ void render()
 		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
 		glEnd();*/
 		
-		fireCircles(b->row, b->pos[0], b->pos[1]);
+		//fireCircles(b->row, b->pos[0], b->pos[1]);
+		
+		lightningShoots(b->angle, b->pos[0], b->pos[1]);
 	}
     
 }

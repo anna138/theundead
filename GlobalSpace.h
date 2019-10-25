@@ -31,4 +31,7 @@ namespace gvars{
     extern Global gl;
     extern int yourCurrentScore;
     extern int fireColors[][3];
+    extern int waterColors[][3];
+    extern int grassColors[][3];
+    extern int lightningColors[][3];
 }

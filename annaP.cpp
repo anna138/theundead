@@ -291,48 +291,75 @@ void fireCircles(int row, int offset_x, int offset_y)
 		x = offset_x;
 		y = offset_y;
 	}
-	for (int i = 0; i < 10000; i++) {
-		w = h = rand() % 10;
-		if (0) {
-			/*flame_maroon
-			red = rand() % 35 + 120;
-			blue = rand() % 40;
-			green = rand() % 40;*/
-			glColor3ub(128,0,0);
-		} else if (0) {
-			/*flame_orange
-			red = rand() % 45 + 210;
-			blue = 0;
-			green = rand() % 65 + 130;*/
-			glColor3ub(255,80,66);
-		} else if (0) {
-			/*flame_red
-			red = rand() % 32 + 220;
-			blue = rand() % 120;
-			green = rand() % 32 + 120;*/
-			glColor3ub(255,0,0);
-		} else if (0) {
-			/*flame_redorange
-			red = rand() % 40 + 215;
-			blue = rand() % 60;
-			green = rand() % 20 + 80;*/
-			glColor3ub(245,18,0);
-		}
-		else if (0){
-			glColor3ub(255,174,66);
-		}
-		glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2] );
-		glPushMatrix();
-		glBegin(GL_TRIANGLE_FAN);
 
-		for (int i = 0; i < 360; i+=60) {
-			float degInRad = i * DEG2RAD;
-			glVertex2f(cos(degInRad) * (w/ 2) + x, 
-				sin(degInRad) * (h / 2) + y);
-		}
-		glEnd();
+	glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2]);
+	glPushMatrix();
+	glBegin(GL_TRIANGLE_FAN);
+
+	for (int i = 0; i < 360; i+=40) {
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * (w) + x, 
+			sin(degInRad) * (h) + y);
 	}
+	glEnd();
+	
 }
+
+/* Anna, you need to fix where the lightning's position is*/
+
+void lightningShoots(float angle, int offset_x, int offset_y){
+	
+	float x_angle = cos(angle);
+	float y_angle = sin(angle);
+
+	glPushMatrix();
+	//glRotatef(0, 0.45, 0, 0);
+	glLineWidth(7);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	glEnd();
+
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	
+	glEnd();
+	
+}
+/*
+void grassVines(float angle, int offset_x, int offset_y){
+	
+
+	float x_angle = cos(angle);
+	float y_angle = sin(angle);
+
+	glPushMatrix();
+	//glRotatef(0, 0.45, 0, 0);
+	glLineWidth(7);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	glEnd();
+
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*offset_x, 
+		y_angle*(20 + offset_y));
+	
+	glEnd();
+	
+}
+*/
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  

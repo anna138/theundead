@@ -27,7 +27,7 @@ namespace gvars{
     int changed = 0;
     Global gl;
     int yourCurrentScore=0;
-    int fireColors[5][3] = {128, 0, 0, 255, 
-    80, 66, 255, 0, 0, 245, 18, 0, 255, 174, 66};
-
+    int fireColors[5][3] = {{128, 0, 0}, 
+    {255, 80, 66}, {255, 0, 0}, {245, 18, 0}, {255, 174, 66}};
+    int lightningColors[2][3] = {{0, 0, 255}, {255, 255, 255}};
 } // namespace GVars

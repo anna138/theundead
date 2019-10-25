@@ -8,6 +8,7 @@ public:
 	Vec pos;
 	Vec vel;
 	int color[3];
+	int angle;
 	struct timespec time;
 	int row;
 
