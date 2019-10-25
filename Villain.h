@@ -11,5 +11,6 @@ public:
 	Vec vel;
 	float angle;
 	float color[3];
+	float size[2];
 	Villain();
 };

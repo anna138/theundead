@@ -332,34 +332,19 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	glEnd();
 	
 }
-/*
+
 void grassVines(float angle, int offset_x, int offset_y){
 	
-
 	float x_angle = cos(angle);
 	float y_angle = sin(angle);
 
 	glPushMatrix();
-	//glRotatef(0, 0.45, 0, 0);
-	glLineWidth(7);
-	glBegin(GL_LINES);
-	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
-	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*(20  + offset_x), 
-		y_angle*(20 + offset_y));
-	glEnd();
-
-	glLineWidth(2);
-	glBegin(GL_LINES);
-	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
-	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*offset_x, 
-		y_angle*(20 + offset_y));
+	
 	
 	glEnd();
 	
 }
-*/
+
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  

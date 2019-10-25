@@ -52,7 +52,7 @@ Image img[7] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
-		"./images/villain.png",
+		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
 		"./images/title.png"
@@ -279,6 +279,8 @@ void init_opengl(void)
 	glGenTextures(1, &gl.villainTexture);
 	int w3 = img[3].width;
 	int h3 = img[3].height;
+	g.enemy.size[0] = img[3].width;
+	g.enemy.size[1] = img[3].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.villainTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -721,7 +723,7 @@ void physics()
 				b->vel[0] = g.trooper.vel[0];
 				b->vel[1] = g.trooper.vel[1];
 				//convert trooper angle to radians
-				Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+				Flt rad = g.trooper.angle* PI; //((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 				b->angle = rad;
 				//convert angle to a vector
 				Flt xdir = cos(rad);
@@ -777,6 +779,14 @@ void render()
     creditsGerardo(r);
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
+
+	//-------------------------------------------------------------------------
+	//Draw the Zombies
+	movingImages(g.enemy.size[0], g.enemy.size[1], g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
+	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres, gameOver);
+	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
+	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
+
 	//-------------------------------------------------------------------------
 
 	movingImages(50,50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
@@ -803,12 +813,6 @@ void render()
 		}
 		glEnd();
 	}
-	//-------------------------------------------------------------------------
-	//Draw the Zombies
-	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres, gameOver);
-	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
-	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
 	//-------------------------------------------------------------------------
 	//Draw the asteroids

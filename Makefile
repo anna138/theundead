@@ -26,7 +26,7 @@ Bullet.o: Bullet.cpp
 	g++ -c Bullet.cpp 
 	
 BlenderObj.o: BlenderObj.cpp
-	g++ -c BlenderObj.cpp;
+	g++ -c BlenderObj.cpp
 
 GlobalSpace.o: GlobalSpace.cpp
 	g++ -c GlobalSpace.cpp
