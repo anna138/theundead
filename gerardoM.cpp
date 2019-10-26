@@ -55,7 +55,7 @@ void makeButton(int x, int y, int dirX, int dirY)
     glPopMatrix();
 }
 
-void changeButtonColor( int y, int x ,int dirX, int dirY, int &doneStart) {
+void changeButtonColor( int y, int x ,int dirX, int dirY) {
 
     int width = x/2;
     int height = y/6;
@@ -68,7 +68,6 @@ void changeButtonColor( int y, int x ,int dirX, int dirY, int &doneStart) {
         glColor3f(0.0,1.0,1.0);
         drawSquare(width - 3, height - 3,dirX,dirY,choice);
     }
-    doneStart = 0;
 }
 bool posted = false;
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){

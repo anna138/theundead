@@ -7,7 +7,9 @@ class Bullet {
 public:
 	Vec pos;
 	Vec vel;
-	float color[3];
+	int color[3];
+	int angle;
 	struct timespec time;
+	int row;
 
 };

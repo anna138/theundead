@@ -12,6 +12,7 @@
 #include "fonts.h"
 #include <fstream>
 #include <unistd.h>
+#include "GlobalSpace.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -37,10 +38,10 @@ char pagename[256] = "~mbal/3350/lab7/scores.txt";
 const float DEG2RAD = 3.14159 / 180;
 int showTitle = 1000000;
 
-
+using namespace gvars;
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
-void fireCircles();
+void fireCircles(int, int, int);
 void displayBackground(int w, int h, unsigned int texture);
 void displayImage(int width_x, int height_y, int offset_x,
 int offset_y, unsigned int texture);
@@ -60,23 +61,26 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 	
 	img_y = 0 + img_x;
 	
-	
 	displayImage(img_x / 4, img_y / 16, 0, 270, title);
 	displayImage(img_y / 8, img_y / 6, 0, 20, startMenu);
 
-	fireCircles();
+	fireCircles(4, 0, 0);
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
+
 	r.bot = 0 - (y / 3);
 	r.left = 0 - (x / 9);
 	r.center = 0;
+
 	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + C for Credits During Gameplay");
+			  "Press M for Menu Screen During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + G for GameOver Screen During Gameplay");
+			  "Press C for Credits During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + H for Highscores Screen During Gameplay");
+			  "Press G for GameOver Screen During Gameplay");
+	ggprint8b(& r, 16, 0x00ff0000,
+			  "Press H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 {
@@ -117,7 +121,7 @@ void displayGameOverScore(Rect r2, int w, int h,
 			  "Press H for HighScores Screen");
 	displaycurrentscore(r2, h, w, scores[0], currentScore);
 }
-void getScores(char *filename, int & grabHighScores)
+void getScores(char *filename)
 {
 	std::ifstream highscore;
 	readScores(pagename);
@@ -137,7 +141,6 @@ void getScores(char *filename, int & grabHighScores)
 			}
 		}
 	}
-	grabHighScores = 1;
 }
 void displayImage(int width_x, int height_y, int offset_x, 
 	int offset_y, unsigned int texture)
@@ -232,21 +235,16 @@ void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			uns
 	glEnd();
 	glPopMatrix();
 }
-void runLogoIntro(unsigned int logoIntroTexture, int &logo)
+void runLogoIntro(unsigned int logoIntroTexture)
 {
 	Rect r; 
 	spinningIntro(150, 150, 20, 0, logoIntroTexture);
 	r.bot = -215;
 	r.left = -95;
 	r.center = 0;
-	ggprint16(&r, 16, 0x00c0c0c0, "Undead Games Presents");  
+	ggprint16(&r, 0, 0x00c0c0c0, "Undead Games Presents"); 
+	std::fflush(stdout); 
 	//displayImage(300, 300, 20, 0, logoIntroTexture);
-	int show = 1000000;
-	while (show == 0) {
-		show--;
-	}
-	logo = 1;
-	
 }
 void movingEyes(int * eye, int * location)
 {
@@ -261,21 +259,19 @@ void movingEyes(int * eye, int * location)
 		glVertex2f(cos(degInRad) * (width / 2) + offset_x, 
 			sin(degInRad) * (width / 2) + offset_y);
 	}
-
 	glEnd();
 	glPopMatrix();
 }
 void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, 
-	float enemy_angle, int xres, int yres, int & gameOver)
+	float enemy_angle, int xres, int yres)
 {
-	enemy_pos[1]= (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
+	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
 		% yres;
-	enemy_pos[0]= (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) 
+	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) 
 		% xres;
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
-	if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
-	&& (enemy_pos[0] > (trooper_pos[0] + 5)))
-		gameOver = 1;
+	/*if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
+	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -283,48 +279,83 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 	-size of circle
 	-draw a circle
 */
-void fireCircles()
+void fireCircles(int row, int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 50 - (rand()%8), 
-		h = 50 - (rand() % 8), blue, green, red;
-	int choice = rand() % 5 + 1 ;
-	//int x = rand()%50-50, y = rand()%50-50;
-
-	for (int i = 0; i < 10000; i++) {
-		w = h = rand() % 10;
-		if (choice==1) {
-			/*flame_red*/
-			red = rand() % 35 + 120;
-			blue = rand() % 40;
-			green = rand() % 40;
-		} else if (choice == 2) {
-			/*flame_yellow*/
-			red = rand() % 45 + 210;
-			blue = 0;
-			green = rand() % 65 + 130;
-		} else if (choice == 3) {
-			/*flame_orange*/
-			red = rand() % 32 + 220;
-			blue = rand() % 120;
-			green = rand() % 32 + 120;
-		} else if (choice==4) {
-			/*flame_redorange*/
-			red = rand() % 40 + 215;
-			blue = rand() % 60;
-			green = rand() % 20 + 80;
-		}
-		glPushMatrix();
-		glColor3ub(red,green,blue);
-		glBegin(GL_TRIANGLE_FAN);
-
-		for (int i = 0; i < 360; i++) {
-			float degInRad = i * DEG2RAD;
-			glVertex2f(cos(degInRad) * (w/ 2) + x, 
-				sin(degInRad) * (h / 2) + y);
-		}
-		glEnd();
+	int x = 300, y = 300, w = 50, 
+		h = 50;
+	if(offset_x && offset_y){
+		x = offset_x;
+		y = offset_y;
 	}
+
+	glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2]);
+	glPushMatrix();
+	glBegin(GL_TRIANGLE_FAN);
+
+	for (int i = 0; i < 360; i+=40) {
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * (w) + x, 
+			sin(degInRad) * (h) + y);
+	}
+	glEnd();
+	
 }
+
+/* Anna, you need to fix where the lightning's position is*/
+
+void lightningShoots(float angle, int offset_x, int offset_y){
+	
+	float x_angle = cos(angle);
+	float y_angle = sin(angle);
+
+	glPushMatrix();
+	//glRotatef(0, 0.45, 0, 0);
+	glLineWidth(7);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	glEnd();
+
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	
+	glEnd();
+	
+}
+/*
+void grassVines(float angle, int offset_x, int offset_y){
+	
+
+	float x_angle = cos(angle);
+	float y_angle = sin(angle);
+
+	glPushMatrix();
+	//glRotatef(0, 0.45, 0, 0);
+	glLineWidth(7);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*(20  + offset_x), 
+		y_angle*(20 + offset_y));
+	glEnd();
+
+	glLineWidth(2);
+	glBegin(GL_LINES);
+	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+	glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    glVertex2f(x_angle*offset_x, 
+		y_angle*(20 + offset_y));
+	
+	glEnd();
+	
+}
+*/
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  

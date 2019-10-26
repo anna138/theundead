@@ -16,11 +16,11 @@ namespace gvars{
     const float MINIMUM_ASTEROID_SIZE = 60.0;
     const double physicsRate = 1.0 / 60.0;
     const double oobillion = 1.0 / 1e9;
-    int started = 0;
-    int doneStart = 0;
     int changeColor=0;
-    int logo = 0;
     Global gl;
     int yourCurrentScore=0;
-
+    int fireColors[5][3] = {{128, 0, 0}, 
+    {255, 80, 66}, {255, 0, 0}, {245, 18, 0}, {255, 174, 66}};
+    int lightningColors[2][3] = {{0, 0, 255}, {255, 255, 255}};
+    GameState state;
 } // namespace GVars
