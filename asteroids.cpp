@@ -160,7 +160,9 @@ int main()
 			}
 			case GameState::highscores:{
 				Rect r2;
+				getScores(filename);
 				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+				state = GameState::end;
 				break;
 			}
 			case GameState::credits:{
@@ -168,6 +170,12 @@ int main()
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				break;
+			}
+			case GameState::endgamescore:{
+				Rect r3;	
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, rand()%10);
+				state = GameState::end;
 				break;
 			}
 			default:{
@@ -473,6 +481,7 @@ int check_keys(XEvent *e)
 			state = GameState::highscores;
 			break;
 		case XK_g:
+			state = GameState::endgamescore;
 			break;
 		case XK_Down:
 			break;

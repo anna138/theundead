@@ -32,7 +32,7 @@ namespace gvars{
         game,
         credits,
         highscores,
-        endgamecredits,
+        endgamescore,
         end
     };
     extern GameState state;

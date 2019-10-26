@@ -90,7 +90,7 @@ void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 	r2.left = w / 2 - 225;
 	r2.center = 0;
 	ggprint8b(& r2, 16, 0x00ff0000,
-			  "Press H to Toggle back to Gameplay");
+			  "Press M to Toggle back to Menu");
 	r2.bot = h / 2 - 100;
 	r2.left = 0 - 25;
 	r2.center = 0;
@@ -118,7 +118,7 @@ void displayGameOverScore(Rect r2, int w, int h,
 	r2.left = -w / 2 + 25;
 	r2.center = 0;
 	ggprint16(& r2, 16, 0x00ff0000,
-			  "Press H for HighScores Screen");
+			  "Press M to go back to Menu");
 	displaycurrentscore(r2, h, w, scores[0], currentScore);
 }
 void getScores(char *filename)

@@ -69,23 +69,18 @@ void changeButtonColor( int y, int x ,int dirX, int dirY) {
         drawSquare(width - 3, height - 3,dirX,dirY,choice);
     }
 }
-bool posted = false;
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.bot=h-h;
     r.left=w-w-25;
     r.center=0;
-    int temp = rand();
     ggprint16(&r, 16, 0x003B8B68, "Game Over\n");
     ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
 
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),temp%10); 
-    if(!posted){
-        posted = True;
-        postScores(pn);
-    }
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
+    postScores(pn);
 }
 void boxText(Rect r) {
     std::string boxText[3]={"Characters","Start Game","Credits"};
