@@ -120,19 +120,22 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
 void drawLine() {
     glPushMatrix();
     for(int i=0;i<10;i++) {
-    glLineWidth(7);
-    glBegin(GL_LINES);
-        glColor3f(0.0,0.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%10: -(rand()%10);
+        glLineWidth(7);
+        glBegin(GL_LINE_LOOP);
+            glColor3f(0.0,0.0,1.0);
+            glVertex2f(100+randXnum,200-(50*i));
+            glVertex2f(100+randXnum,150-(50*i));
+            glEnd();
+            glLineWidth(2);
+            glBegin(GL_LINE_LOOP);
+                glColor3f(1.0,1.0,1.0);
+                glVertex2f(100+randXnum,200-(50*i));
+                glVertex2f(100+randXnum,150-(50*i));
+            glEnd();
         glEnd();
-        glLineWidth(2);
-        glBegin(GL_LINES);
-        glColor3f(1.0,1.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
     }
-    glEnd();
     glPopMatrix();
     glLineWidth(1);
 }
