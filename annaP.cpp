@@ -74,11 +74,13 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 
 	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + C for Credits During Gameplay");
+			  "Press M for Menu Screen During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + G for GameOver Screen During Gameplay");
+			  "Press C for Credits During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press Space + H for Highscores Screen During Gameplay");
+			  "Press G for GameOver Screen During Gameplay");
+	ggprint8b(& r, 16, 0x00ff0000,
+			  "Press H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 {
@@ -88,7 +90,7 @@ void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 	r2.left = w / 2 - 225;
 	r2.center = 0;
 	ggprint8b(& r2, 16, 0x00ff0000,
-			  "Press H to Toggle back to Gameplay");
+			  "Press M to Toggle back to Menu");
 	r2.bot = h / 2 - 100;
 	r2.left = 0 - 25;
 	r2.center = 0;
@@ -116,10 +118,10 @@ void displayGameOverScore(Rect r2, int w, int h,
 	r2.left = -w / 2 + 25;
 	r2.center = 0;
 	ggprint16(& r2, 16, 0x00ff0000,
-			  "Press H for HighScores Screen");
+			  "Press M to go back to Menu");
 	displaycurrentscore(r2, h, w, scores[0], currentScore);
 }
-void getScores(char *filename, int & grabHighScores)
+void getScores(char *filename)
 {
 	std::ifstream highscore;
 	readScores(pagename);
@@ -139,7 +141,6 @@ void getScores(char *filename, int & grabHighScores)
 			}
 		}
 	}
-	grabHighScores = 1;
 }
 void displayImage(int width_x, int height_y, int offset_x, 
 	int offset_y, unsigned int texture)
@@ -234,20 +235,16 @@ void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			uns
 	glEnd();
 	glPopMatrix();
 }
-void runLogoIntro(unsigned int logoIntroTexture, int & logo)
+void runLogoIntro(unsigned int logoIntroTexture)
 {
 	Rect r; 
 	spinningIntro(150, 150, 20, 0, logoIntroTexture);
 	r.bot = -215;
 	r.left = -95;
 	r.center = 0;
-	ggprint16(&r, 16, 0x00c0c0c0, "Undead Games Presents");  
+	ggprint16(&r, 0, 0x00c0c0c0, "Undead Games Presents"); 
+	std::fflush(stdout); 
 	//displayImage(300, 300, 20, 0, logoIntroTexture);
-	int show = 1000000;
-	while (show == 0) {
-		show--;
-	}
-	logo = 1;	
 }
 void movingEyes(int * eye, int * location)
 {
@@ -266,7 +263,7 @@ void movingEyes(int * eye, int * location)
 	glPopMatrix();
 }
 void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, 
-	float enemy_angle, int xres, int yres, int & gameOver)
+	float enemy_angle, int xres, int yres)
 {
 	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
 		% yres;
@@ -275,7 +272,6 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
 	/*if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
 	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
-		gameOver = 0;
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -332,11 +328,16 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	glEnd();
 	
 }
-
+/*
 void grassVines(float angle, int offset_x, int offset_y){
 	
 	float x_angle = cos(angle);
 	float y_angle = sin(angle);
+
+	offset_y = 0;
+	offset_x = 0;
+
+	int y= x_angle + offset_y + offset_x + y_angle + angle;
 
 	glPushMatrix();
 	
@@ -344,7 +345,7 @@ void grassVines(float angle, int offset_x, int offset_y){
 	glEnd();
 	
 }
-
+*/
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  

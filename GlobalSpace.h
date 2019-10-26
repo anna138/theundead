@@ -19,19 +19,21 @@ namespace gvars{
     extern const float MINIMUM_ASTEROID_SIZE;
     extern const double physicsRate;
     extern const double oobillion;
-    extern int started;
-    extern int doneStart;
     extern int changeColor;
-    extern int logo;
-    extern int credits;
-    extern int highScore;
-    extern int gameOver;
-    extern int grabHighScores;
-    extern int changed;
     extern Global gl;
     extern int yourCurrentScore;
     extern int fireColors[][3];
     extern int waterColors[][3];
     extern int grassColors[][3];
     extern int lightningColors[][3];
+    enum class GameState{
+        startup,
+        menu,
+        game,
+        credits,
+        highscores,
+        endgamescore,
+        end
+    };
+    extern GameState state;
 }

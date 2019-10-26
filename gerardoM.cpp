@@ -55,7 +55,7 @@ void makeButton(int x, int y, int dirX, int dirY)
     glPopMatrix();
 }
 
-void changeButtonColor( int y, int x ,int dirX, int dirY, int & doneStart, int &changed) {
+void changeButtonColor( int y, int x ,int dirX, int dirY) {
 
     int width = x/2;
     int height = y/6;
@@ -68,26 +68,19 @@ void changeButtonColor( int y, int x ,int dirX, int dirY, int & doneStart, int &
         glColor3f(0.0,1.0,1.0);
         drawSquare(width - 3, height - 3,dirX,dirY,choice);
     }
-    doneStart = 0;
-    changed = 1;
 }
-bool posted = false;
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.bot=h-h;
     r.left=w-w-25;
     r.center=0;
-    int temp = rand();
     ggprint16(&r, 16, 0x003B8B68, "Game Over\n");
     ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [100];
 
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),temp%10); 
-    if(!posted){
-        posted = True;
-        postScores(pn);
-    }
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
+    postScores(pn);
 }
 void boxText(Rect r) {
     std::string boxText[3]={"Characters","Start Game","Credits"};
@@ -121,19 +114,22 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
 void drawLine() {
     glPushMatrix();
     for(int i=0;i<10;i++) {
-    glLineWidth(7);
-    glBegin(GL_LINES);
-        glColor3f(0.0,0.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%10: -(rand()%10);
+        glLineWidth(7);
+        glBegin(GL_LINE_LOOP);
+            glColor3f(0.0,0.0,1.0);
+            glVertex2f(100+randXnum,200-(50*i));
+            glVertex2f(100+randXnum,150-(50*i));
+            glEnd();
+            glLineWidth(2);
+            glBegin(GL_LINE_LOOP);
+                glColor3f(1.0,1.0,1.0);
+                glVertex2f(100+randXnum,200-(50*i));
+                glVertex2f(100+randXnum,150-(50*i));
+            glEnd();
         glEnd();
-        glLineWidth(2);
-        glBegin(GL_LINES);
-        glColor3f(1.0,1.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
     }
-    glEnd();
     glPopMatrix();
     glLineWidth(1);
 }

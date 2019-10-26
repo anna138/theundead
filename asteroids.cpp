@@ -30,6 +30,8 @@
 #include "X11.h"
 
 
+
+
 unsigned int bloodBackgroundTexture; 
 //image for zombie
 // unsigned int startMenuTexture; 
@@ -82,17 +84,17 @@ extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle
 extern void randomColor();
 extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
 extern void makeParticles(int, int);
-extern void getScores(char*, int &);
+extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void boxText(Rect r);
-extern void runLogoIntro(unsigned int logoIntroTexture, int &logo);
-extern void changeButtonColor( int y, int x,int dirX, int dirY, int & doneStart, int & changed);
+extern void runLogoIntro(unsigned int logoIntroTexture);
+extern void changeButtonColor( int y, int x,int dirX, int dirY);
 extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
-extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres, int & gameOver);
+extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -107,6 +109,9 @@ int main()
 	srand(time(NULL));
 	randomColor();
 	makeParticles(gl.xres, gl.yres);
+	getScores(filename);
+	//start the state variable
+	state = GameState::startup;
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
@@ -127,58 +132,56 @@ int main()
 			physics();
 			physicsCountdown -= physicsRate;
 		}
-		if(!grabHighScores){
-
-			getScores(filename,grabHighScores);
-		}
-		/*Loading Starting Intro
-         *Passing In Parameters
-         */
-		if(!started && !logo){
-			runLogoIntro(logoIntroTexture, logo);
-		}
-        else if(!started && logo) {
-			Rect r;
-            int x=200;
-            int y=200;
-            int dirX=0;
-            int dirY=0;
-	        glClear(GL_COLOR_BUFFER_BIT);
-            startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
-            makeButton(x,y,dirX,dirY);
-            drawLine();
-            boxText(r);
-        }
-        else {
-			if(gameOver){
-				Rect r3;
-				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, yourCurrentScore);
+		//lets start the game states
+		switch (state){
+			case GameState::startup:{
+				runLogoIntro(logoIntroTexture);
+				//render everything to the screen
+				x11.swapBuffers();
+				usleep(1000000);//sleep for 5 seconds
+				state = GameState::menu;
+				glClear(GL_COLOR_BUFFER_BIT);
+				break;
 			}
-			else if(credits){
-                renderCoolCredits(gl.xres, gl.yres, imageTexture);
+			case GameState::menu:{
+				Rect r;
+				int x=200,y=200,dirX=0,dirY=0;
+				glClear(GL_COLOR_BUFFER_BIT);
+				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
+				makeButton(x,y,dirX,dirY);
+				//changeButtonColor( y, x, dirX,dirY);
+				drawLine();
+				boxText(r);
+				break;
+			}
+			case GameState::game:{
+				render();
+				break;
+			}
+			case GameState::highscores:{
+				Rect r2;
+				getScores(filename);
+				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+				state = GameState::end;
+				break;
+			}
+			case GameState::credits:{
+				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				break;
 			}
-			else if(highScore){
-				Rect r2;
-                glTranslatef(300,0.0f,0.0f); 
-				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
-				//highscorePos++;
-                //getScores(filename, grabHighScores);
+			case GameState::endgamescore:{
+				Rect r3;	
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, rand()%10);
+				state = GameState::end;
+				break;
 			}
-            else if(doneStart && !changed){
-                //Rect r;
-                int dirX=0;
-                int dirY=0;
-                int x=200;
-                int y=200;
-                changeButtonColor( y, x, dirX,dirY, doneStart, changed);
-            }
-            else{
-		    	render();
+			default:{
+				break;
 			}
-        }
+		}
 		x11.swapBuffers();
 	}
 	cleanup_fonts();
@@ -467,18 +470,20 @@ int check_keys(XEvent *e)
 		case XK_Escape:
             return 1;
 			break;
+		case XK_m:
+			state = GameState::menu;
+			break;
         case XK_space:
-            started = 1;
-            doneStart = 1;
+			state = GameState::game;
             break;
 		case XK_c:
-			credits ^= 1;
+			state = GameState::credits;
 			break;
 		case XK_h:
-			highScore ^= 1;
+			state = GameState::highscores;
 			break;
 		case XK_g:
-			//gameOver ^= 1;
+			state = GameState::endgamescore;
 			break;
 		case XK_Down:
 			break;
@@ -782,8 +787,8 @@ void render()
 
 	//-------------------------------------------------------------------------
 	//Draw the Zombies
-	movingImages(g.enemy.size[0], g.enemy.size[1], g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres, gameOver);
+	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
+	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres);
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
@@ -813,6 +818,7 @@ void render()
 		}
 		glEnd();
 	}
+
 
 	//-------------------------------------------------------------------------
 	//Draw the asteroids
