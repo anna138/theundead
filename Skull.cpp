@@ -1,8 +1,8 @@
-#include "Villain.h"
+#include "Skull.h"
 #define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
 
 
-Villain::Villain() {
+Skull::Skull() {
 	VecZero(dir);
 	// pos[0] = (Flt)(gl.xres/2);
 	// pos[1] = (Flt)(gl.yres/2);

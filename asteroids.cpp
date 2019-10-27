@@ -23,11 +23,12 @@
 #include "Image.h"
 #include "Global.h"
 #include "Trooper.h"
-#include "Villain.h"
+#include "Skull.h"
 #include "Bullet.h"
 #include "Asteroid.h"
 #include "Game.h"
 #include "X11.h"
+#include "Zombie.h"
 
 
 
@@ -50,14 +51,15 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Set Up Images
 
-Image img[7] = {
+Image img[8] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
 		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
-		"./images/title.png"
+		"./images/title.png",
+		"./images/zombie.png"
 };
 
 
@@ -89,6 +91,7 @@ extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
+extern void grassVines(float, int, int);
 extern void boxText(Rect r);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int y, int x,int dirX, int dirY);
@@ -277,15 +280,15 @@ void init_opengl(void)
 
 	bloodBackgroundTexture = gl.bbTexture;
 
-	//Image - Asteroid
+	//Image - Skull
 	
-	glGenTextures(1, &gl.villainTexture);
+	glGenTextures(1, &gl.skullTexture);
 	int w3 = img[3].width;
 	int h3 = img[3].height;
-	g.enemy.size[0] = img[3].width;
-	g.enemy.size[1] = img[3].height;
+	g.skull.size[0] = img[3].width;
+	g.skull.size[1] = img[3].height;
 
-	glBindTexture(GL_TEXTURE_2D, gl.villainTexture);
+	glBindTexture(GL_TEXTURE_2D, gl.skullTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
@@ -293,7 +296,25 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w3, h3, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[3].data);
 
-	g.enemy.villainImageTexture = gl.villainTexture;
+	g.skull.skullImageTexture = gl.skullTexture;
+
+	//Image - Zombie
+	
+	glGenTextures(1, &gl.zombieTexture);
+	int w7 = img[7].width;
+	int h7 = img[7].height;
+	g.zombie.size[0] = img[7].width;
+	g.zombie.size[1] = img[7].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.zombieTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w7, h7, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
+
+	g.zombie.zombieImageTexture = gl.zombieTexture;
 
 	//Image - Undead Logo
 	
@@ -786,9 +807,18 @@ void render()
     creditsKevin(r);
 
 	//-------------------------------------------------------------------------
-	//Draw the Zombies
-	movingImages(50, 50, g.enemy.pos, g.enemy.angle, g.enemy.villainImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.enemy.pos, g.enemy.angle, gl.xres, gl.yres);
+	//Draw the Zombies and Skulls
+	//for(int i = 0; i < 3; i++)
+	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
+
+	movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
+		g.zombie.angle, g.zombie.zombieImageTexture);
+	/*enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
+		gl.xres, gl.yres);*/
+	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
+		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
+	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
+
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
@@ -850,7 +880,7 @@ void render()
 			a = a->next;
 			
 			
-			/*movingImages(30, 30, a->pos, a->angle, g.villain.villainImageTexture);*/
+			/*movingImages(30, 30, a->pos, a->angle, g.villain.skullImageTexture);*/
 			
 		}
 	}
@@ -876,7 +906,8 @@ void render()
 		
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
-		lightningShoots(b->angle, b->pos[0], b->pos[1]);
+		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
+		grassVines(b->angle, b->pos[0], b->pos[1]);
 	}
     
 }

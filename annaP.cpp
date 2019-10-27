@@ -55,7 +55,7 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 {
 	
 	int eyeLeft[2] = {img_x / 100, img_y / 50};
-	int eyeRight[2] = {-img_x / 100, img_y/50};
+	int eyeRight[2] = {-img_x / 100, img_y / 50};
 	int leftLocation[2] = {img_x - (img_x - img_x / 23), 
 		img_y - (img_y - img_y / 25)};
 	int rightLocation[2] = {(img_x - img_x / 25) - img_x, 
@@ -327,24 +327,48 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	glEnd();
 	
 }
-/*
+
 void grassVines(float angle, int offset_x, int offset_y){
 	
+	/*
 	float x_angle = cos(angle);
 	float y_angle = sin(angle);
 
 	offset_y = 0;
 	offset_x = 0;
 
-	int y= x_angle + offset_y + offset_x + y_angle + angle;
+	int y = x_angle + offset_y + offset_x + y_angle + angle;
+	*/
+	int width = 5, height = 5;
 
 	glPushMatrix();
 	
+	glLineWidth(4);
+
+	glBegin(GL_POLYGON);
+
+	glColor3ub(gvars::grassColors[0][0], gvars::grassColors[0][1],gvars::grassColors[0][2]);
+	
+	glVertex2i(-width + offset_x, height + offset_y);
+	glVertex2i(width + offset_x, -height + offset_y);
+	glVertex2i(width + offset_x, height + offset_y);
+	glVertex2i(-width + offset_x, -height + offset_y);
 	
 	glEnd();
 	
+	glBegin(GL_POLYGON);
+
+	glColor3ub(gvars::grassColors[2][0], gvars::grassColors[2][1],gvars::grassColors[2][2]);
+	
+	glVertex2i(-width + offset_x, height + offset_y + 15);
+	glVertex2i(width + offset_x, -height + offset_y + 15);
+	glVertex2i(width + offset_x, height + offset_y + 15);
+	glVertex2i(-width + offset_x, -height + offset_y + 15);
+	
+	glEnd();
+	angle = offset_x + angle;
 }
-*/
+
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
