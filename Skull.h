@@ -3,14 +3,14 @@
 
 using gvars::Vec;
 
-class Villain {
+class Skull {
 public:
-	unsigned int villainImageTexture; 
+	unsigned int skullImageTexture; 
 	Vec dir;
 	Vec pos;
 	Vec vel;
 	float angle;
 	float color[3];
 	float size[2];
-	Villain();
+	Skull();
 };

@@ -11,7 +11,8 @@ namespace gvars{
     extern unsigned int imageTexture; 
     extern unsigned int startMenuTexture; 
     extern unsigned int trooperImageTexture; 
-    extern unsigned int villainImageTexture;
+    extern unsigned int skullImageTexture;
+    extern unsigned int zombieImageTexture;
     extern unsigned int titleImageTexture; 
     extern const float timeslice;
     extern const float gravity;

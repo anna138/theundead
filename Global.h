@@ -7,7 +7,8 @@ public:
 	unsigned int backgroundTexture;
 	unsigned int startTexture;
 	unsigned int trooperTexture;
-	unsigned int villainTexture;
+	unsigned int skullTexture;
+	unsigned int zombieTexture;
 	unsigned int bbTexture;
 	unsigned int logoTexture;
 	unsigned int titleTexture;

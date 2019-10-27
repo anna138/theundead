@@ -22,6 +22,7 @@ namespace gvars{
     int fireColors[5][3] = {{128, 0, 0}, 
     {255, 80, 66}, {255, 0, 0}, {245, 18, 0}, {255, 174, 66}};
     int lightningColors[2][3] = {{0, 0, 255}, {255, 255, 255}};
+    int grassColors[3][3] = {{5, 115, 52}, {30, 120, 62}, {104, 120, 30}};
     GameState state;
     int array[11];
 } // namespace GVars

@@ -1,7 +1,8 @@
 #pragma once
 #include "Asteroid.h"
 #include "Bullet.h"
-#include "Villain.h"
+#include "Skull.h"
+#include "Zombie.h"
 #include "Trooper.h"
 #include "Macros.h"
 #include <ctime>
@@ -12,7 +13,8 @@ using namespace gvars;
 class Game {
 public:
 	Trooper trooper;
-	Villain enemy;
+	Skull skull;
+	Zombie zombie;
 	Asteroid *asteroid;
 	Bullet *barr;
 	int nasteroids;

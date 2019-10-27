@@ -32,8 +32,8 @@ void makeButton(int x, int y, int dirX, int dirY)
     int width = x/2;
     int height = y/6;
     int choice=3;
-    int posx[3]={-300,0,300};
-    int posy[3]={-185,-185,-185};
+    int posx[3]={-(x / 2 +  x / 2 + x / 2), 0, (x / 2 +  x / 2 + x / 2)};
+    int posy[3]={-(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22)  + y / 13};
     glPushMatrix();
 
     glBegin(GL_QUADS);
