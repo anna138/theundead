@@ -14,36 +14,9 @@ class TypeObj{
         int * cord;
         int * textureCoord;
         TypeObj(int idx, int x, int y, int z,int tx, 
-                int ty,int tz, int mID){
-            id = idx;
-            matID = mID;
-            size = 3;
-            cord = new int[size];
-            textureCoord = new int[size];
-            cord[0] = x;
-            cord[1] = y;
-            cord[2] = z;
-            textureCoord[0] = tx;
-            textureCoord[1] = ty;
-            textureCoord[2] = tz;
-        }
+                int ty,int tz, int mID);
         TypeObj(int idx, int x, int y, int x1, int y1,
-                int t0, int t1,int t2, int t3, int mID){
-            id = idx;
-            matID = mID;
-            size = 4;
-            cord = new int[size];
-            textureCoord = new int[size];
-            cord[0] = x;
-            cord[1] = y;
-            cord[2] = x1;
-            cord[3] = y1;
-            textureCoord[0] = t0;
-            textureCoord[1] = t1;
-            textureCoord[2] = t2;
-            textureCoord[3] = t3;
-        }
-
+                int t0, int t1,int t2, int t3, int mID);
 };
 class Material{
 

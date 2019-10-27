@@ -5,8 +5,8 @@
 
 Global::Global() {
 		
-		xres = 1250;
-		yres = 900;
+		xres = 1920;//1250;
+		yres = 1080;//900;
         memset(keys, 0, 65536);
 
 }

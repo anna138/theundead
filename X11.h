@@ -29,8 +29,9 @@ public:
 		XWindowAttributes getWinAttr;
 		XGetWindowAttributes(dpy, root, &getWinAttr);
 		int fullscreen=0;
-		gl.xres = w;
-		gl.yres = h;
+		
+		w = gl.xres;
+		h = gl.yres;
 		if (!w && !h) {
 			//Go to fullscreen.
 			//std::cout << "here" << std::endl;
