@@ -17,6 +17,8 @@
 #include "log.h"
 #include "fonts.h"
 #include <math.h>
+#include "GlobalSpace.h"
+
 #define DEG2RAD 3.14159/180.0
 void drawSquare (int width, int height, int dirX, int dirY, int choice);
 void boxText(Rect r);
@@ -94,6 +96,7 @@ void boxText(Rect r) {
     }
 
 }
+
 void drawSquare(int x, int y, int dirX, int dirY, int choice) {
     int w=x;
     int h=y;
@@ -110,24 +113,32 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
     }
 
 }
-
+void populateWithRand(int * array, unsigned int size, int start, int end)
+{
+    for(unsigned int i = 0; i < size;i++){
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%(end-start)+start: 
+                        -(rand()%(end-start)+start);
+        array[i] = randXnum;
+    }
+}
 void drawLine() {
     glPushMatrix();
+    int count = 0;
     for(int i=0;i<10;i++) {
-        int randsign = rand()%2;
-        int randXnum = randsign ? rand()%10: -(rand()%10);
         glLineWidth(7);
         glBegin(GL_LINE_LOOP);
             glColor3f(0.0,0.0,1.0);
-            glVertex2f(100+randXnum,200-(50*i));
-            glVertex2f(100+randXnum,150-(50*i));
+            glVertex2f(100+gvars::array[count],200-(50*i));
+            glVertex2f(100+gvars::array[count+1],150-(50*i));
             glEnd();
             glLineWidth(2);
             glBegin(GL_LINE_LOOP);
                 glColor3f(1.0,1.0,1.0);
-                glVertex2f(100+randXnum,200-(50*i));
-                glVertex2f(100+randXnum,150-(50*i));
+                glVertex2f(100+gvars::array[count],200-(50*i));
+                glVertex2f(100+gvars::array[count+1],150-(50*i));
             glEnd();
+            count++;
         glEnd();
     }
     glPopMatrix();
