@@ -54,17 +54,16 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 	unsigned int startMenu, unsigned int title)
 {
 	
-	int eyeLeft[2] = {10, 10};
-	int eyeRight[2] = {-10, 10};
-	int leftLocation[2] = {50, 30};
-	int rightLocation[2] = {-50, 30};
-	
-	img_y = 0 + img_x;
-	
-	displayImage(img_x / 4, img_y / 16, 0, 270, title);
-	displayImage(img_y / 8, img_y / 6, 0, 20, startMenu);
+	int eyeLeft[2] = {img_x / 100, img_y / 50};
+	int eyeRight[2] = {-img_x / 100, img_y/50};
+	int leftLocation[2] = {img_x - (img_x - img_x / 23), 
+		img_y - (img_y - img_y / 25)};
+	int rightLocation[2] = {(img_x - img_x / 25) - img_x, 
+		img_y - (img_y - img_y / 25)};
 
-	fireCircles(4, 0, 0);
+	displayImage(img_x / 8, img_y / 4 + img_y / 20, 0, img_y / 40, startMenu);
+	displayImage(img_x / 4, img_y / 10, 0, img_y /3 + img_y / 12, title);
+	
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
 
