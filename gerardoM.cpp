@@ -23,6 +23,7 @@
 #define DEG2RAD 3.14159/180.0
 void drawSquare (int width, int height, int dirX, int dirY, int choice);
 void boxText(Rect r);
+int changeLineDir();
 extern void postScores(char*);
 void creditsGerardo(Rect r)
 {
@@ -112,21 +113,43 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
 void drawLine() {
     glPushMatrix();
     for(int i=0;i<10;i++) {
+    int randsign=rand()%2;
+    int randXPos= randsign ? (rand()%10) : -(rand()%10) ;
     glLineWidth(7);
-    glBegin(GL_LINES);
+    glBegin(GL_LINE_STRIP);
         glColor3f(0.0,0.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
+        glVertex2f(100+randXPos,200-(i*50));
+        glVertex2f(100+randXPos,150-(i*50));
         glEnd();
         glLineWidth(2);
-        glBegin(GL_LINES);
-        glColor3f(1.0,1.0,1.0);
-        glVertex2f(100,200);
-        glVertex2f(200,200);
+        glBegin(GL_LINE_STRIP);
+            glColor3f(1.0,1.0,1.0);
+            glVertex2f(100 + randXPos,200-(i*50));
+            glVertex2f(100+ randXPos,150-(i*50));
+        glEnd();
     }
     glEnd();
     glPopMatrix();
     glLineWidth(1);
+    glFlush();
+}
+
+int changeLineDir() {
+    //storing the location of the line
+    int vertices[10][2]= {
+        100, 200, //vertex 1
+        200, 200, //vertex 2
+        100, 200, //vertex 3
+        200, 200, //vertex 4
+    };
+    for(int i=0;i<10;i++){
+        for(int j=0;j<10;j++) {
+            int randPos= rand()%100;
+            vertices[i][1]=i*randPos;
+            std::cout<<vertices[i][1]<<std::endl;
+            return vertices[i][1];
+        }
+    }
 }
 void BulletColor(int n){
     switch(n)
