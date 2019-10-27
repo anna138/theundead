@@ -161,7 +161,7 @@ int main()
 			case GameState::highscores:{
 				Rect r2;
 				getScores(filename);
-				highScoreBoard(r2, gl.xres, gl.yres, imageTexture);
+				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
 				state = GameState::end;
 				break;
 			}
