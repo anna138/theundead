@@ -368,7 +368,7 @@ void waterBubbles(int offset_x, int offset_y)
 		y = offset_y;
 	}
 
-	glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
+	glColor3ub(gvars::waterColors[1][0], gvars::waterColors[1][1],gvars::waterColors[1][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
 
@@ -381,7 +381,7 @@ void waterBubbles(int offset_x, int offset_y)
 	w = 2; 
 	h = 2;
 
-	glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
+	glColor3ub(gvars::waterColors[2][0], gvars::waterColors[2][1],gvars::waterColors[2][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
 

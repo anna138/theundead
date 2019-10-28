@@ -92,6 +92,7 @@ extern void drawLine();
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
+extern void waterBubbles(int, int);
 extern void boxText(Rect r);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int y, int x,int dirX, int dirY);
@@ -909,7 +910,9 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		grassVines(b->angle, b->pos[0], b->pos[1]);
+		//grassVines(b->angle, b->pos[0], b->pos[1]);
+
+		waterBubbles(b->pos[0], b->pos[1]);
 
 		b->pos[0] += 10;
 		//b->pos[1] += 10;
