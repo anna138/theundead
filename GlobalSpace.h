@@ -27,6 +27,7 @@ namespace gvars{
     extern int waterColors[][3];
     extern int grassColors[][3];
     extern int lightningColors[][3];
+    extern int bullet_position;
     enum class GameState{
         startup,
         menu,
