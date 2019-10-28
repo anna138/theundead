@@ -93,6 +93,7 @@ extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
 extern void boxText(Rect r);
+extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int y, int x,int dirX, int dirY);
 extern void highScoreBoard(Rect, int, int, unsigned int);
@@ -112,7 +113,7 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
-	populateWithRand(array, 11, 0, 20);
+    lighting( 11, 10, 20);
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable
