@@ -754,24 +754,26 @@ void physics()
 				//convert angle to a vector
 				Flt xdir = cos(rad);
 				Flt ydir = sin(rad);
-				b->pos[0] += xdir*20.0f;
-				b->pos[1] += ydir*20.0f;
+				b->pos[0] += xdir;
+				b->pos[1] += ydir;
 				b->vel[0] += xdir*6.0f;
 				b->vel[1] += ydir*6.0f;
 				
 				
-				//FIRE BULLETS
-				/*
+				/*FIRE BULLETS
+				
 				b->row = rand() % 6;
 				b->color[0] = fireColors[b->row][0];
 				b->color[1] = fireColors[b->row][1];
 				b->color[2] = fireColors[b->row][2];
 				*/
+				//Bullets for all
+				/*
 				b->row = 1;
 				b->color[0] = lightningColors[b->row][0];
 				b->color[1] = lightningColors[b->row][1];
 				b->color[2] = lightningColors[b->row][2];
-
+				*/
 				g.nbullets++;
 			}
 		}
@@ -811,9 +813,9 @@ void render()
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
 
-	movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
+	/*movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
 		g.zombie.angle, g.zombie.zombieImageTexture);
-	/*enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
+	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
 	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
 		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
@@ -908,6 +910,9 @@ void render()
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
 		grassVines(b->angle, b->pos[0], b->pos[1]);
+
+		b->pos[0] += 10;
+		//b->pos[1] += 10;
 	}
     
 }

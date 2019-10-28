@@ -243,11 +243,11 @@ void runLogoIntro(unsigned int logoIntroTexture)
 	r.center = 0;
 	ggprint16(&r, 0, 0x00c0c0c0, "Undead Games Presents"); 
 	std::fflush(stdout); 
-	//displayImage(300, 300, 20, 0, logoIntroTexture);
+
 }
 void movingEyes(int * eye, int * location)
 {
-	int width = eye[0]*2; //, height = eye[1];
+	int width = eye[0]*2;
 	int offset_x = location[0], offset_y = location[1];
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
@@ -280,8 +280,8 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 */
 void fireCircles(int row, int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 50, 
-		h = 50;
+	int x = 300, y = 300, w = 5, 
+		h = 5;
 	if(offset_x && offset_y){
 		x = offset_x;
 		y = offset_y;
@@ -308,7 +308,7 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	float y_angle = sin(angle);
 
 	glPushMatrix();
-	//glRotatef(0, 0.45, 0, 0);
+
 	glLineWidth(7);
 	glBegin(GL_LINES);
 	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
@@ -330,15 +330,6 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 
 void grassVines(float angle, int offset_x, int offset_y){
 	
-	/*
-	float x_angle = cos(angle);
-	float y_angle = sin(angle);
-
-	offset_y = 0;
-	offset_x = 0;
-
-	int y = x_angle + offset_y + offset_x + y_angle + angle;
-	*/
 	int width = 5, height = 5;
 
 	glPushMatrix();
@@ -360,13 +351,45 @@ void grassVines(float angle, int offset_x, int offset_y){
 
 	glColor3ub(gvars::grassColors[2][0], gvars::grassColors[2][1],gvars::grassColors[2][2]);
 	
-	glVertex2i(-width + offset_x, height + offset_y + 15);
-	glVertex2i(width + offset_x, -height + offset_y + 15);
-	glVertex2i(width + offset_x, height + offset_y + 15);
-	glVertex2i(-width + offset_x, -height + offset_y + 15);
+	glVertex2i(-width + offset_x, height + offset_y);
+	glVertex2i(width + offset_x, -height + offset_y);
+	glVertex2i(width + offset_x, height + offset_y);
+	glVertex2i(-width + offset_x, -height + offset_y);
 	
 	glEnd();
 	angle = offset_x + angle;
+}
+
+void waterBubbles(int offset_x, int offset_y)
+{
+	int x = 300, y = 300, w = 5, 
+		h = 5;
+	if(offset_x && offset_y){
+		x = offset_x;
+		y = offset_y;
+	}
+
+	glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
+	glPushMatrix();
+	glBegin(GL_TRIANGLE_FAN);
+
+	for (int i = 0; i < 360; i+=40) {
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * (w) + x, 
+			sin(degInRad) * (h) + y);
+	}
+
+		glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
+	glPushMatrix();
+	glBegin(GL_TRIANGLE_FAN);
+
+	for (int i = 0; i < 360; i+=40) {
+		float degInRad = i * DEG2RAD;
+		glVertex2f(cos(degInRad) * (w) + x, 
+			sin(degInRad) * (h) + y);
+	}
+	glEnd();
+	
 }
 
 void creditsAnna(Rect r)
