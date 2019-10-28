@@ -19,6 +19,7 @@ namespace gvars{
     extern const float MINIMUM_ASTEROID_SIZE;
     extern const double physicsRate;
     extern const double oobillion;
+    extern int array[11];
     extern int changeColor;
     extern Global gl;
     extern int yourCurrentScore;
