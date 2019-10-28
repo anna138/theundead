@@ -38,5 +38,9 @@ namespace gvars{
         end
     };
     extern GameState state;
+<<<<<<< HEAD
 }
-
+=======
+    extern int array[11];
+}
+>>>>>>> origin

@@ -18,6 +18,10 @@
 #include "fonts.h"
 #include <math.h>
 #include "GlobalSpace.h"
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
 void drawSquare (int width, int height, int dirX, int dirY, int choice);
@@ -124,6 +128,7 @@ void populateWithRand(int * array, unsigned int size, int start, int end)
 }
 void drawLine() {
     glPushMatrix();
+<<<<<<< HEAD
     int counter=0;
     for(int i=0;i<10;i++) {
         // int randsign = rand()%2;
@@ -141,6 +146,23 @@ void drawLine() {
         glVertex2f(100 + gvars::array[counter+1],150-(50*i));
         //glEnd();
         counter++;
+=======
+    int count = 0;
+    for(int i=0;i<10;i++) {
+        glLineWidth(7);
+        glBegin(GL_LINE_LOOP);
+            glColor3f(0.0,0.0,1.0);
+            glVertex2f(100+gvars::array[count],200-(50*i));
+            glVertex2f(100+gvars::array[count+1],150-(50*i));
+            glEnd();
+            glLineWidth(2);
+            glBegin(GL_LINE_LOOP);
+                glColor3f(1.0,1.0,1.0);
+                glVertex2f(100+gvars::array[count],200-(50*i));
+                glVertex2f(100+gvars::array[count+1],150-(50*i));
+            glEnd();
+            count++;
+>>>>>>> origin
         glEnd();
     }
     glPopMatrix();
@@ -155,3 +177,17 @@ void lighting( int size, int start, int end){
     }
 }
 
+void BulletColor(int n){
+    switch(n)
+    {
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+    }
+
+}

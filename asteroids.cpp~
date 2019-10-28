@@ -113,7 +113,11 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
+<<<<<<< HEAD
     lighting( 11, 10, 20);
+=======
+	populateWithRand(array, 11, 0, 20);
+>>>>>>> origin
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable
