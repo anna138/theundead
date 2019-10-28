@@ -913,9 +913,9 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		//grassVines(b->angle, b->pos[0], b->pos[1]);
+		grassVines(b->angle, b->pos[0], b->pos[1]);
 
-		waterBubbles(b->pos[0], b->pos[1]);
+		//waterBubbles(b->pos[0], b->pos[1]);
 
 		b->pos[0] += 10;
 		//b->pos[1] += 10;
