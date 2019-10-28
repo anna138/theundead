@@ -362,8 +362,7 @@ void grassVines(float angle, int offset_x, int offset_y){
 
 void waterBubbles(int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 5, 
-		h = 5;
+	int x = 300, y = 300, w = 5, h = 5;
 	if(offset_x && offset_y){
 		x = offset_x;
 		y = offset_y;
@@ -379,7 +378,10 @@ void waterBubbles(int offset_x, int offset_y)
 			sin(degInRad) * (h) + y);
 	}
 
-		glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
+	w = 2; 
+	h = 2;
+
+	glColor3ub(gvars::waterColors[0][0], gvars::waterColors[0][1],gvars::waterColors[0][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
 
