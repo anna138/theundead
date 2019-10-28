@@ -94,9 +94,11 @@ extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
 extern void waterBubbles(int, int);
 extern void boxText(Rect r);
+extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int y, int x,int dirX, int dirY);
-extern void highScoreBoard(Rect r, int w, int h, unsigned int imageTexture);
+extern void highScoreBoard(Rect, int, int, unsigned int);
+extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 //==========================================================================
@@ -112,6 +114,7 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
+    lighting( 11, 10, 20);
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable

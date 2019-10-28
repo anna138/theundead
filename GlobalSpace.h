@@ -38,4 +38,5 @@ namespace gvars{
         end
     };
     extern GameState state;
+    extern int array[11];
 }

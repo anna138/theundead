@@ -17,7 +17,9 @@
 #include "log.h"
 #include "fonts.h"
 #include <math.h>
+#include "GlobalSpace.h"
 #define DEG2RAD 3.14159/180.0
+//void drawlight(int x1, int y1,int x2,int y2,int displace);
 void drawSquare (int width, int height, int dirX, int dirY, int choice);
 void boxText(Rect r);
 extern void postScores(char*);
@@ -87,13 +89,14 @@ void boxText(Rect r) {
     int posx[3]={-330, -30, 282};
     int posy[3]={-190,-190,-190};
     for(int i=0;i<3;i++) {
-    r.left=posx[i];
-    r.bot=posy[i];
-    r.center=0;
-    ggprint8b(&r,16,0x00cefdce, boxText[i].c_str());
+        r.left=posx[i];
+        r.bot=posy[i];
+        r.center=0;
+        ggprint8b(&r,16,0x00cefdce, boxText[i].c_str());
     }
 
 }
+
 void drawSquare(int x, int y, int dirX, int dirY, int choice) {
     int w=x;
     int h=y;
@@ -110,40 +113,45 @@ void drawSquare(int x, int y, int dirX, int dirY, int choice) {
     }
 
 }
-
+void populateWithRand(int * array, unsigned int size, int start, int end)
+{
+    for(unsigned int i = 0; i < size;i++){
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%(end-start)+start: 
+                        -(rand()%(end-start)+start);
+        array[i] = randXnum;
+    }
+}
 void drawLine() {
     glPushMatrix();
+    int counter=0;
     for(int i=0;i<10;i++) {
-        int randsign = rand()%2;
-        int randXnum = randsign ? rand()%10: -(rand()%10);
+        // int randsign = rand()%2;
+        // int randXnum = randsign ? rand()%10: -(rand()%10);
         glLineWidth(7);
         glBegin(GL_LINE_LOOP);
-            glColor3f(0.0,0.0,1.0);
-            glVertex2f(100+randXnum,200-(50*i));
-            glVertex2f(100+randXnum,150-(50*i));
-            glEnd();
-            glLineWidth(2);
-            glBegin(GL_LINE_LOOP);
-                glColor3f(1.0,1.0,1.0);
-                glVertex2f(100+randXnum,200-(50*i));
-                glVertex2f(100+randXnum,150-(50*i));
-            glEnd();
+        glColor3f(0.0,0.0,1.0);
+        glVertex2f(100+gvars::array[counter],200-(50*i));
+        glVertex2f(100+gvars::array[counter+1],150-(50*i));
+        glEnd();
+        glLineWidth(2);
+        glBegin(GL_LINE_LOOP);
+        glColor3f(1.0,1.0,1.0);
+        glVertex2f(100+gvars::array[counter],200-(50*i));
+        glVertex2f(100 + gvars::array[counter+1],150-(50*i));
+        //glEnd();
+        counter++;
         glEnd();
     }
     glPopMatrix();
     glLineWidth(1);
 }
-void BulletColor(int n){
-    switch(n)
-    {
-        case 1:
-            break;
-        case 2:
-            break;
-        case 3:
-            break;
-        case 4:
-            break;
-    }
 
+void lighting( int size, int start, int end){
+    for(int i=0; i<size;i++) {
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
+        gvars::array[i]=randXnum;
+    }
 }
+
