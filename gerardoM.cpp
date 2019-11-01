@@ -20,7 +20,7 @@
 #include "GlobalSpace.h"
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
-void drawSquare (int width, int height, int dirX, int dirY, int choice);
+void drawSquare (int width, int height, int dirX, int dirY);
 void boxText(Rect r);
 extern void postScores(char*);
 void creditsGerardo(Rect r)
@@ -29,11 +29,14 @@ void creditsGerardo(Rect r)
 }
 void makeButton(int x, int y, int dirX, int dirY)
 {
-    int width = x/2;
-    int height = y/6;
-    int choice=3;
-    int posx[3]={-(x / 2 +  x / 2 + x / 2), 0, (x / 2 +  x / 2 + x / 2)};
-    int posy[3]={-(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22)  + y / 13};
+    int width = x/16;
+    int height = y/26;
+    int posx[3] = {x/5,0, -(x/5)};
+    int posy[3] = {(-y/4), (-y/4), (-y/4)};
+
+    // int choice=3;
+   // int posx[3]={-(x / 2 +  x / 2 + x / 2), 0, (x / 2 +  x / 2 + x / 2)};
+    //int posy[3]={-(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22)  + y / 13};
     glPushMatrix();
 
     glBegin(GL_QUADS);
@@ -41,7 +44,7 @@ void makeButton(int x, int y, int dirX, int dirY)
     for(int i=0;i<3;i++) {
         dirX = posx[i];
         dirY = posy[i];
-        drawSquare(width, height, dirX, dirY, choice);
+        drawSquare(width, height, dirX, dirY);
     }
     glEnd();
 
@@ -50,25 +53,25 @@ void makeButton(int x, int y, int dirX, int dirY)
     for(int i=0;i<3;i++) {
         dirX = posx[i];
         dirY = posy[i];
-        drawSquare(width - 3, height - 3, dirX, dirY, choice);
+        drawSquare(width - 3, height - 3, dirX, dirY);
     }
     glEnd();
 
     glPopMatrix();
 }
 
-void changeButtonColor( int y, int x ,int dirX, int dirY) {
+void changeButtonColor( int x, int y ,int dirX, int dirY) {
 
     int width = x/2;
     int height = y/6;
-    int choice=3;
+    //int choice=3;
     int posx[3]={-300,0,300};
     int posy[3]={-185,-185,-185};
     for(int i=0;i<3;i++) {
         dirX=posx[i];
         dirY=posy[i];
         glColor3f(0.0,1.0,1.0);
-        drawSquare(width - 3, height - 3,dirX,dirY,choice);
+        drawSquare(width - 3, height - 3,dirX,dirY);
     }
 }
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -84,10 +87,11 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
     postScores(pn);
 }
-void boxText(Rect r) {
+void boxText(Rect r, int x, int y) {
     std::string boxText[3]={"Characters","Start Game","Credits"};
-    int posx[3]={-330, -30, 282};
-    int posy[3]={-190,-190,-190};
+    
+    int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
+    int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
     for(int i=0;i<3;i++) {
         r.left=posx[i];
         r.bot=posy[i];
@@ -97,19 +101,22 @@ void boxText(Rect r) {
 
 }
 
-void drawSquare(int x, int y, int dirX, int dirY, int choice) {
+void drawSquare(int x, int y, int dirX, int dirY) {
     int w=x;
     int h=y;
-    if(choice==3) {
-        glBegin(GL_QUADS);
-        glVertex2i(w+dirX, -h+dirY);
-        glPushMatrix();
+    glBegin(GL_QUADS);
+    glVertex2i(w+dirX, -h+dirY);
+    glPushMatrix();
 
-        glVertex2i(w+dirX, h+dirY);
-        glVertex2i(-w+dirX, h+dirY);
-        glVertex2i(-w+dirX, -h+dirY);
-        glEnd();
-        glPopMatrix();
+    glVertex2i(w+dirX, h+dirY);
+    glVertex2i(-w+dirX, h+dirY);
+    glVertex2i(-w+dirX, -h+dirY);
+    glEnd();
+    glPopMatrix();
+    if(w > dirX - dirX && w < dirY + h ) {
+        if(h>dirY - dirY && h < dirY+h) {
+            printf("WAYYYYYYYYYY");
+        }
     }
 
 }
@@ -118,7 +125,7 @@ void populateWithRand(int * array, unsigned int size, int start, int end)
     for(unsigned int i = 0; i < size;i++){
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%(end-start)+start: 
-                        -(rand()%(end-start)+start);
+            -(rand()%(end-start)+start);
         array[i] = randXnum;
     }
 }
