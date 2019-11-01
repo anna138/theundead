@@ -93,10 +93,10 @@ extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
 extern void waterBubbles(int, int);
-extern void boxText(Rect r);
+extern void boxText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
-extern void changeButtonColor( int y, int x,int dirX, int dirY);
+extern void changeButtonColor( int , int ,int dirX, int dirY);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
@@ -152,13 +152,14 @@ int main()
 			}
 			case GameState::menu:{
 				Rect r;
-				int x=200,y=200,dirX=0,dirY=0;
+				//int x=200,y=200,dirX=0,dirY=0;
+				int dirX=0,dirY=0;
 				glClear(GL_COLOR_BUFFER_BIT);
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
-				makeButton(x,y,dirX,dirY);
-				//changeButtonColor( y, x, dirX,dirY);
+				makeButton(gl.xres,gl.yres,dirX,dirY);
+				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
 				drawLine();
-				boxText(r);
+				boxText(r,gl.xres,gl.yres);
 				break;
 			}
 			case GameState::game:{
