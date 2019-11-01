@@ -21,6 +21,10 @@ namespace gvars{
     Global gl;
     int yourCurrentScore=0;
     int array[11];
+<<<<<<< HEAD
+    //int bullet_position = rand() % 75 + 35;
+=======
+>>>>>>> 7462bafa3cb478ae55213f2786cf16f9bc035a8f
     int fireColors[5][3] = {{128, 0, 0}, 
         {255, 80, 66}, {255, 0, 0}, {245, 18, 0}, {255, 174, 66}};
     int lightningColors[2][3] = {{0, 0, 255}, {255, 255, 255}};
