@@ -92,8 +92,12 @@ extern void drawLine();
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
+<<<<<<< HEAD
+extern void boxText(Rect r);
+=======
 extern void waterBubbles(int, int);
 extern void boxText(Rect r, int, int );
+>>>>>>> origin
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int , int ,int dirX, int dirY);

@@ -5,8 +5,8 @@ LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lssl -lcrypto #-lXrandr
 
 all: asteroids
 
-asteroids: manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp lab3sget.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o GlobalSpace.o
-	g++ $(CFLAGS) asteroids.cpp Global.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp lab3sget.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o GlobalSpace.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
+asteroids: manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o GlobalSpace.o
+	g++ $(CFLAGS) asteroids.cpp Global.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o GlobalSpace.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
 
 Global.o: Global.cpp
 	g++ -c Global.cpp 

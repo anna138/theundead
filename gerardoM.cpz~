@@ -20,7 +20,11 @@
 #include "GlobalSpace.h"
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
+<<<<<<< HEAD
+void drawSquare (int width, int height, int dirX, int dirY, int choice);
+=======
 void drawSquare (int width, int height, int dirX, int dirY);
+>>>>>>> origin
 void boxText(Rect r);
 extern void postScores(char*);
 void creditsGerardo(Rect r)
