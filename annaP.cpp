@@ -30,6 +30,7 @@
  * Determine a fix
  * Apply and Test
 */
+using namespace gvars;
 
 typedef float Vec[3];
 int scores[5];
@@ -38,7 +39,6 @@ char pagename[256] = "~mbal/3350/lab7/scores.txt";
 const float DEG2RAD = 3.14159 / 180;
 int showTitle = 1000000;
 
-using namespace gvars;
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
@@ -50,20 +50,18 @@ int bestScore, int yourScore);
 extern void readScores(char * filename);
 
 /*Function Definitions*/
-void startMenu(Rect r, int y, int x, int img_x, int img_y, 
-	unsigned int startMenu, unsigned int title)
+void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenu, unsigned int title)
 {
-	
 	int eyeLeft[2] = {img_x / 100, img_y / 50};
 	int eyeRight[2] = {-img_x / 100, img_y / 50};
 	int leftLocation[2] = {img_x - (img_x - img_x / 23), 
 		img_y - (img_y - img_y / 25)};
 	int rightLocation[2] = {(img_x - img_x / 25) - img_x, 
 		img_y - (img_y - img_y / 25)};
-
+	
 	displayImage(img_x / 8, img_y / 4 + img_y / 20, 0, img_y / 40, startMenu);
 	displayImage(img_x / 4, img_y / 10, 0, img_y /3 + img_y / 12, title);
-	
+
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
 
@@ -73,13 +71,13 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y,
 
 	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press M for Menu Screen During Gameplay");
+		"Press M for Menu Screen During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press C for Credits During Gameplay");
+		"Press C for Credits During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press G for GameOver Screen During Gameplay");
+		"Press G for GameOver Screen During Gameplay");
 	ggprint8b(& r, 16, 0x00ff0000,
-			  "Press H for Highscores Screen During Gameplay");
+		"Press H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 {
@@ -89,7 +87,7 @@ void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 	r2.left = w / 2 - 225;
 	r2.center = 0;
 	ggprint8b(& r2, 16, 0x00ff0000,
-			  "Press M to Toggle back to Menu");
+		"Press M to Toggle back to Menu");
 	r2.bot = h / 2 - 100;
 	r2.left = 0 - 25;
 	r2.center = 0;
@@ -108,16 +106,14 @@ void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 		ggprint16(& r2, 50, 0x00ff0000, buf);
 	}
 }
-void displayGameOverScore(Rect r2, int w, int h, 
-	unsigned int imageTexture, int currentScore)
+void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int currentScore)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	displayBackground(w, h, imageTexture);
 	r2.bot = h / 2 - 25;
 	r2.left = -w / 2 + 25;
 	r2.center = 0;
-	ggprint16(& r2, 16, 0x00ff0000,
-			  "Press M to go back to Menu");
+	ggprint16(& r2, 16, 0x00ff0000, "Press M to go back to Menu");
 	displaycurrentscore(r2, h, w, scores[0], currentScore);
 }
 void getScores(char *filename)
@@ -141,8 +137,7 @@ void getScores(char *filename)
 		}
 	}
 }
-void displayImage(int width_x, int height_y, int offset_x, 
-	int offset_y, unsigned int texture)
+void displayImage(int width_x, int height_y, int offset_x, int offset_y, unsigned int texture)
 {
 	int width = width_x;
 	int height = height_y;
@@ -167,7 +162,7 @@ void displayImage(int width_x, int height_y, int offset_x,
 	glDisable(GL_ALPHA_TEST);
 }
 void movingImages(int width_x, int height_y, Vec img_pos, 
-	float img_angle, unsigned int texture)
+float img_angle, unsigned int texture)
 {
 	int width = width_x / 2;
 	int height = height_y / 2;
@@ -215,7 +210,7 @@ void displayBackground(int w, int h, unsigned int texture)
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glDisable(GL_ALPHA_TEST);
 }
-void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 			unsigned int texture)
+void spinningIntro(int width_x, int height_y, int offset_x, int offset_y, 		unsigned int texture)
 {
 	glTranslatef(10, 0, 0);
 	//glRotatef(0.0, 0.45f, 0.0f, 0.0f);
@@ -241,13 +236,13 @@ void runLogoIntro(unsigned int logoIntroTexture)
 	r.bot = -215;
 	r.left = -95;
 	r.center = 0;
-	ggprint16(&r, 0, 0x00c0c0c0, "Undead Games Presents"); 
+	ggprint16(& r, 0, 0x00c0c0c0, "Undead Games Presents"); 
 	std::fflush(stdout); 
 
 }
 void movingEyes(int * eye, int * location)
 {
-	int width = eye[0]*2;
+	int width = eye[0] * 2;
 	int offset_x = location[0], offset_y = location[1];
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
@@ -255,21 +250,17 @@ void movingEyes(int * eye, int * location)
 	glBegin(GL_TRIANGLE_FAN);
 	for (int i = 0; i < 360; i++) {
 		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (width / 2) + offset_x, 
-			sin(degInRad) * (width / 2) + offset_y);
+		glVertex2f(cos(degInRad) * (width / 2) + offset_x, sin(degInRad) * (width / 2) + offset_y);
 	}
 	glEnd();
 	glPopMatrix();
 }
-void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, 
-	float enemy_angle, int xres, int yres)
+void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
 {
-	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) 
-		% yres;
-	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) 
-		% xres;
+	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres;
+	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres;
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
-	/*if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
+	/* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
 	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
 }
 /*Anna 
@@ -280,9 +271,9 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos,
 */
 void fireCircles(int row, int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 5, 
-		h = 5;
-	if(offset_x && offset_y){
+	int x = 300, y = 300, w = 5, h = 5;
+	
+	if (offset_x && offset_y) {
 		x = offset_x;
 		y = offset_y;
 	}
@@ -293,8 +284,7 @@ void fireCircles(int row, int offset_x, int offset_y)
 
 	for (int i = 0; i < 360; i+=40) {
 		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (w) + x, 
-			sin(degInRad) * (h) + y);
+		glVertex2f(cos(degInRad) * (w) + x, sin(degInRad) * (h) + y);
 	}
 	glEnd();
 	
@@ -313,16 +303,14 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	glBegin(GL_LINES);
 	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
 	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*(20  + offset_x), 
-		y_angle*(20 + offset_y));
+    glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
 	glEnd();
 
 	glLineWidth(2);
 	glBegin(GL_LINES);
 	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
 	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*(20  + offset_x), 
-		y_angle*(20 + offset_y));
+    glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
 	
 	glEnd();
 	
@@ -363,7 +351,7 @@ void grassVines(float angle, int offset_x, int offset_y){
 void waterBubbles(int offset_x, int offset_y)
 {
 	int x = 300, y = 300, w = 5, h = 5;
-	if(offset_x && offset_y){
+	if (offset_x && offset_y) {
 		x = offset_x;
 		y = offset_y;
 	}
@@ -374,8 +362,7 @@ void waterBubbles(int offset_x, int offset_y)
 
 	for (int i = 0; i < 360; i+=40) {
 		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (w) + x, 
-			sin(degInRad) * (h) + y);
+		glVertex2f(cos(degInRad) * (w) + x, sin(degInRad) * (h) + y);
 	}
 
 	w = 2; 
@@ -387,8 +374,7 @@ void waterBubbles(int offset_x, int offset_y)
 
 	for (int i = 0; i < 360; i+=40) {
 		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (w) + x, 
-			sin(degInRad) * (h) + y);
+		glVertex2f(cos(degInRad) * (w) + x, sin(degInRad) * (h) + y);
 	}
 	glEnd();
 	
