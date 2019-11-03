@@ -101,6 +101,9 @@ extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void grassRazorLeaf(float, int, int);
+extern void grassRazerMove(int);
+extern void switchBullets(float, int, int, int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -828,6 +831,14 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
 
+
+
+	for(int i = 0; i< gvars::MAX_SKULLS;i++){		
+		Skull *s = &g.skulls[i];		
+		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);		
+		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);		
+
+ 	}
 	//-------------------------------------------------------------------------
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
@@ -929,12 +940,16 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		grassVines(b->angle, b->pos[0], b->pos[1]);
+		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
 
-		b->pos[0] += 10;
+		//b->pos[0] += 10;
 		//b->pos[1] += 10;
+		int choice = 1;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
+		b->pos[1] += .25;
+
 	}
     
 }
