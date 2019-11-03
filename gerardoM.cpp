@@ -23,20 +23,18 @@
 void drawSquare (int width, int height, int dirX, int dirY);
 void boxText(Rect r);
 extern void postScores(char*);
+using namespace gvars;
 void creditsGerardo(Rect r)
 {
     ggprint8b(&r, 16, 0x00004C00, "Gerardo Martinez Flores");
 }
+//this is the makebutton that dynamically changes when the window change size
 void makeButton(int x, int y, int dirX, int dirY)
 {
     int width = x/16;
     int height = y/26;
     int posx[3] = {x/5,0, -(x/5)};
     int posy[3] = {(-y/4), (-y/4), (-y/4)};
-
-    // int choice=3;
-   // int posx[3]={-(x / 2 +  x / 2 + x / 2), 0, (x / 2 +  x / 2 + x / 2)};
-    //int posy[3]={-(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22) + y / 13, -(y / 2 + y / 3 + y / 7 + y / 22)  + y / 13};
     glPushMatrix();
 
     glBegin(GL_QUADS);
@@ -60,18 +58,24 @@ void makeButton(int x, int y, int dirX, int dirY)
     glPopMatrix();
 }
 
-void changeButtonColor( int x, int y ,int dirX, int dirY) {
+void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
 
-    int width = x/2;
-    int height = y/6;
-    //int choice=3;
-    int posx[3]={-300,0,300};
-    int posy[3]={-185,-185,-185};
-    for(int i=0;i<3;i++) {
-        dirX=posx[i];
-        dirY=posy[i];
+    int width = x/16;
+    int height = y/26;
+    int posx[3] = {x/5,0, -(x/5)};
+    int posy[3] = {(-y/4), (-y/4), (-y/4)};
+    if( choice == 2) {
+        dirX=posx[1];
+        dirY=posy[1];
         glColor3f(0.0,1.0,1.0);
         drawSquare(width - 3, height - 3,dirX,dirY);
+    }
+    //the boxes are backwards in the array
+    if( choice == 3) {
+        dirX=posx[0];
+        dirY=posy[0];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width -3, height - 3,dirX,dirY);
     }
 }
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -113,12 +117,6 @@ void drawSquare(int x, int y, int dirX, int dirY) {
     glVertex2i(-w+dirX, -h+dirY);
     glEnd();
     glPopMatrix();
-    if(w > dirX - dirX && w < dirY + h ) {
-        if(h>dirY - dirY && h < dirY+h) {
-            printf("WAYYYYYYYYYY");
-        }
-    }
-
 }
 void populateWithRand(int * array, unsigned int size, int start, int end)
 {
@@ -161,4 +159,3 @@ void lighting( int size, int start, int end){
         gvars::array[i]=randXnum;
     }
 }
-
