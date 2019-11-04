@@ -42,12 +42,18 @@ int showTitle = 1000000;
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
+void waterBubbles(int offset_x, int offset_y);
+void lightningShots(float angle, int offset_x, int offset_y);
+void grassRazorLeaf(float angle, int offset_x, int offset_y);
+void grassRazorMove(int x);
+void waterBubbleMove(int y);
 void displayBackground(int w, int h, unsigned int texture);
+void displayElementSelection(unsigned int * imageTexture, int choice);
 void displayImage(int width_x, int height_y, int offset_x,
 int offset_y, unsigned int texture);
-extern void displaycurrentscore(Rect r, int h, int w, 
-int bestScore, int yourScore);
+extern void displaycurrentscore(Rect r, int h, int w, int bestScore, int yourScore);
 extern void readScores(char * filename);
+
 
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenu, unsigned int title)
@@ -390,14 +396,32 @@ void waterBubbles(int offset_x, int offset_y)
 
 /*Functions for Different Bullet Movements*/
 
-void grassRazorMove(int x){
+void grassRazorMove(int x)
+{
 	x *= 20;
 }
-void waterBubbleMove(int y){
+void waterBubbleMove(int y)
+{
 	y  += .15;
 }
 
 /* Function to Decide Which Type of Element to use */
+void displayElementSelection(unsigned int * imageTexture, int choice){
+	switch(choice){
+		case 0:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 1:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 2: 
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 3:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+	}
+}
 void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
 	switch(choice){
 		case 0:

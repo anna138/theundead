@@ -49,7 +49,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Set Up Images
 
-Image img[8] = {
+Image img[9] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
@@ -57,7 +57,8 @@ Image img[8] = {
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
 		"./images/title.png",
-		"./images/zombie.png"
+		"./images/zombie.png", 
+		"./images/water.png"
 };
 
 
@@ -353,6 +354,22 @@ void init_opengl(void)
 		GL_RGB, GL_UNSIGNED_BYTE, img[6].data);
 
 	titleImageTexture = gl.titleTexture;
+
+		//Image - Start Menu Zombie
+	
+	glGenTextures(1, &gl.startTexture);
+	int w8 = img[8].width;
+	int h8 = img[8].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.startTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w8, h8, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[8].data);
+
+	waterImageTexture = gl.waterTexture;
 }
 
 void normalize2d(Vec v)
@@ -838,7 +855,7 @@ void render()
 
 	//-------------------------------------------------------------------------
 
-	movingImages(50,50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
+	movingImages(50, 50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
 	Flt rad;
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
