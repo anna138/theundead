@@ -31,6 +31,8 @@
 #include "Zombie.h"
 
 
+
+
 unsigned int bloodBackgroundTexture; 
 //image for zombie
 // unsigned int startMenuTexture; 
@@ -88,30 +90,30 @@ extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
-extern void grassRazorMove(int);
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
-extern void grassRazorLeaf(float, int, int);
 extern void grassVines(float, int, int);
 extern void waterBubbles(int, int);
-extern void switchBullets(float, int, int, int, int);
 extern void boxText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
-extern void changeButtonColor( int , int ,int dirX, int dirY);
+extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void grassRazorLeaf(float, int, int);
+extern void grassRazerMove(int);
+extern void switchBullets(float, int, int, int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
 
+	X11_wrapper x11(0, 0);
 
 int main()
 {
 	//set up the x11 window
-	X11_wrapper x11(0, 0);
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
@@ -509,7 +511,10 @@ int check_keys(XEvent *e)
 	} else {
 		return 0;
 	}
-	if (shift){}
+    int choice=0;
+	int dirX=0;
+    int dirY=0;
+    if (shift){}
 	switch (key) {
 		case XK_Escape:
             return 1;
@@ -517,11 +522,23 @@ int check_keys(XEvent *e)
 		case XK_m:
 			state = GameState::menu;
 			break;
-        case XK_space:
-			state = GameState::game;
-            break;
-		case XK_c:
+		case XK_space:
+		    choice=2;
+		    if(state != GameState::game) {
+				    state = GameState::game;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+			x11.swapBuffers();
+		    sleep(1);
+		    }
+		    break;
+			case XK_c:
+		    choice =3;
+		    if(state != GameState::credits){
 			state = GameState::credits;
+			changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+			x11.swapBuffers();
+		    sleep(1);
+		    }
 			break;
 		case XK_h:
 			state = GameState::highscores;
@@ -821,8 +838,8 @@ void render()
 	r.left = 10;
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+//	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
+//	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
     creditManvir(r);
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsAnna(r);
@@ -831,6 +848,14 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
 
+
+
+	for(int i = 0; i< gvars::MAX_SKULLS;i++){		
+		Skull *s = &g.skulls[i];		
+		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);		
+		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);		
+
+ 	}
 	//-------------------------------------------------------------------------
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
@@ -840,16 +865,10 @@ void render()
 		g.zombie.angle, g.zombie.zombieImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
+	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
+		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
+	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
 
-	
-	for(int i = 0; i< gvars::MAX_SKULLS;i++){
-		Skull *s = &g.skulls[i];
-		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);
-		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);
-		
-	}
-
-	
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
@@ -938,22 +957,16 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
+		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
-		//b->pos[0] -= 0.95;
-		/*fire water grass lightning*/
-		int choice = 1;
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
-		b->pos[1] += .25;
-		/* 
-		Razor Leaf with Razor Movement
 
-		grassRazorLeaf(b->angle, b->pos[0], b->pos[1]);
-		grassRazorMove(b->pos[0]);
-		*/
-		
-		//b->pos[0] *= 10;
+		//b->pos[0] += 10;
 		//b->pos[1] += 10;
+		int choice = 1;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
+		b->pos[1] += .25;
+
 	}
     
 }
