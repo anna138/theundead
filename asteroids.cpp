@@ -31,8 +31,6 @@
 #include "Zombie.h"
 
 
-
-
 unsigned int bloodBackgroundTexture; 
 //image for zombie
 // unsigned int startMenuTexture; 
@@ -89,10 +87,13 @@ extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
+extern void grassRazorMove(int);
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
+extern void grassRazorLeaf(float, int, int);
 extern void grassVines(float, int, int);
 extern void waterBubbles(int, int);
+extern void switchBullets(float, int, int, int, int);
 extern void boxText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
@@ -822,10 +823,16 @@ void render()
 		g.zombie.angle, g.zombie.zombieImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
-	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
-		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
 
+	
+	for(int i = 0; i< gvars::MAX_SKULLS;i++){
+		Skull *s = &g.skulls[i];
+		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);
+		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);
+		
+	}
+
+	
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
@@ -914,11 +921,21 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
+		//b->pos[0] -= 0.95;
+		/*fire water grass lightning*/
+		int choice = 1;
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
+		b->pos[1] += .25;
+		/* 
+		Razor Leaf with Razor Movement
 
-		b->pos[0] += 10;
+		grassRazorLeaf(b->angle, b->pos[0], b->pos[1]);
+		grassRazorMove(b->pos[0]);
+		*/
+		
+		//b->pos[0] *= 10;
 		//b->pos[1] += 10;
 	}
     

@@ -7,13 +7,18 @@
 #include "Macros.h"
 #include <ctime>
 #include "GlobalSpace.h"
+#include <iostream>
 
 using namespace gvars;
+
+/*Extern Prototypes*/ 
+extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle, unsigned int texture);
 
 class Game {
 public:
 	Trooper trooper;
 	Skull skull;
+	Skull *skulls = new Skull[gvars::MAX_SKULLS];
 	Zombie zombie;
 	Asteroid *asteroid;
 	Bullet *barr;
@@ -24,11 +29,16 @@ public:
 	bool mouseThrustOn;
 public:
 	Game() {
-		asteroid = NULL;
 		barr = new Bullet[MAX_BULLETS];
+
+		asteroid = NULL;
+
+		
 		nasteroids = 0;
 		nbullets = 0;
+
 		mouseThrustOn = false;
+
 		//build 10 asteroids...
 		for (int j=0; j<10; j++) {
 			Asteroid *a = new Asteroid;
@@ -60,7 +70,12 @@ public:
 			asteroid = a;
 			++nasteroids;
 		}
-
+		
+		for (int i=0; i < gvars::MAX_SKULLS; i++) {
+			Skull * s  = &skulls[i];
+			s->pos[0] = 200*(pow(-1, i)*i); 
+			s->pos[1] = 200*(pow(-1, i)*i);
+		}
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
 	~Game() {
