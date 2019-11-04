@@ -96,7 +96,7 @@ extern void waterBubbles(int, int);
 extern void boxText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
-extern void changeButtonColor( int , int ,int dirX, int dirY);
+extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
@@ -105,11 +105,11 @@ extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float e
 // M A I N
 //==========================================================================
 
+	X11_wrapper x11(0, 0);
 
 int main()
 {
 	//set up the x11 window
-	X11_wrapper x11(0, 0);
 	logOpen();
 	init_opengl();
 	srand(time(NULL));
@@ -491,7 +491,10 @@ int check_keys(XEvent *e)
 	} else {
 		return 0;
 	}
-	if (shift){}
+    int choice=0;
+	int dirX=0;
+    int dirY=0;
+    if (shift){}
 	switch (key) {
 		case XK_Escape:
             return 1;
@@ -500,10 +503,22 @@ int check_keys(XEvent *e)
 			state = GameState::menu;
 			break;
         case XK_space:
-			state = GameState::game;
+            choice=2;
+            if(state != GameState::game) {
+			    state = GameState::game;
+		        changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+                x11.swapBuffers();
+            sleep(1);
+            }
             break;
 		case XK_c:
-			state = GameState::credits;
+            choice =3;
+            if(state != GameState::credits){
+                state = GameState::credits;
+                changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+                x11.swapBuffers();
+            sleep(1);
+            }
 			break;
 		case XK_h:
 			state = GameState::highscores;
@@ -803,8 +818,8 @@ void render()
 	r.left = 10;
 	r.center = 0;
 	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
+//	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
+//	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
     creditManvir(r);
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsAnna(r);
