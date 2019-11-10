@@ -29,6 +29,8 @@
 #include "Game.h"
 #include "X11.h"
 #include "Zombie.h"
+#include "Texture.h"
+#include "BlenderObj.h"
 
 
 
@@ -127,7 +129,10 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-
+	//creating a blender object
+	//Blender obj;
+	Texture t("images/hitler.png",0,0,0,gl.xres, gl.yres);
+	
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -167,7 +172,9 @@ int main()
 				break;
 			}
 			case GameState::game:{
-				render();
+				glClear(GL_COLOR_BUFFER_BIT);
+				t.Display_Picture(sizeX,sizeY, movex, movey);
+				//render();
 				break;
 			}
 			case GameState::highscores:{
@@ -545,6 +552,20 @@ int check_keys(XEvent *e)
 			break;
 		case XK_g:
 			state = GameState::endgamescore;
+			break;
+		case XK_w:
+			movey++;
+			break;
+		case XK_s:
+			movey--;
+			break;
+		case XK_a:
+			movex == -gl.xres/2 ? movex = gl.xres/2: movex--;
+			sizeX = -200;
+			break;
+		case XK_d:
+			movex == gl.xres/2 ? movex = -gl.xres/2: movex++;
+			sizeX = 200;
 			break;
 		case XK_Down:
 			break;

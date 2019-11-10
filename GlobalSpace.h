@@ -36,6 +36,10 @@ namespace gvars{
     extern int grassColors[][3];
     extern int lightningColors[][3];
     extern int bullet_position;
+    extern int movex;
+    extern int movey;
+    extern int sizeX;
+    extern int sizeY;
     enum class GameState{
         startup,
         menu,

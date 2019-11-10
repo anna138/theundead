@@ -36,4 +36,8 @@ namespace gvars{
     int grassColors[3][3] = {{5, 115, 52}, {30, 120, 62}, {104, 120, 30}};
     int waterColors[3][3] = {{0, 0, 255}, {77, 166, 255}, {255, 255, 255}}; 
     GameState state;
+    int movex = 0;
+    int movey = 0;
+    int sizeX = 200;
+    int sizeY = 200;
 } // namespace GVars
