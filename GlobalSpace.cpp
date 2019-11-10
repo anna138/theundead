@@ -40,4 +40,5 @@ namespace gvars{
     int movey = 0;
     int sizeX = 200;
     int sizeY = 200;
+    int playerdir = 0;
 } // namespace GVars

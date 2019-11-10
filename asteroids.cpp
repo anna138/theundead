@@ -131,7 +131,9 @@ int main()
 	int done=0;
 	//creating a blender object
 	//Blender obj;
-	Texture t("images/hitler.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler_eyes_c("images/hitler_eyes_closed.png",0,0,0,gl.xres,gl.yres);
+	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
 	
 	while (!done) {
 		while (x11.getXPending()) {
@@ -173,7 +175,19 @@ int main()
 			}
 			case GameState::game:{
 				glClear(GL_COLOR_BUFFER_BIT);
-				t.Display_Picture(sizeX,sizeY, movex, movey);
+				glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+				glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
+				if(playerdir == 0){
+					if(timeCurrent.tv_sec%7 == 0){
+						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey);
+					}else{
+						hitler.Display_Picture(sizeX,sizeY, movex, movey);
+					}
+				}else if(playerdir == 1){
+					hitler_br.Display_Picture(sizeX, sizeY, movex, movey);
+				
+				}
 				//render();
 				break;
 			}
@@ -532,19 +546,19 @@ int check_keys(XEvent *e)
 		case XK_space:
 		    choice=2;
 		    if(state != GameState::game) {
-				    state = GameState::game;
+				state = GameState::game;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
-			x11.swapBuffers();
+				x11.swapBuffers();
 		    sleep(1);
 		    }
 		    break;
 			case XK_c:
 		    choice =3;
 		    if(state != GameState::credits){
-			state = GameState::credits;
-			changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
-			x11.swapBuffers();
-		    sleep(1);
+				state = GameState::credits;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+				x11.swapBuffers();
+				sleep(1);
 		    }
 			break;
 		case XK_h:
@@ -555,16 +569,20 @@ int check_keys(XEvent *e)
 			break;
 		case XK_w:
 			movey++;
+			playerdir = 0;
 			break;
 		case XK_s:
 			movey--;
+			playerdir = 1;
 			break;
 		case XK_a:
-			movex == -gl.xres/2 ? movex = gl.xres/2: movex--;
+			playerdir = 0;
+			movex == -gl.xres/2 ? movex = gl.xres/2: movex-=5;
 			sizeX = -200;
 			break;
 		case XK_d:
-			movex == gl.xres/2 ? movex = -gl.xres/2: movex++;
+			playerdir = 0;
+			movex == gl.xres/2 ? movex = -gl.xres/2: movex+=5;
 			sizeX = 200;
 			break;
 		case XK_Down:

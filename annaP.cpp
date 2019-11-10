@@ -473,13 +473,13 @@ void Texture::Display_Picture(int xres, int yres, int offx, int offy){
 	glColor4ub(255,255,255,255);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex2i(-width+offx,height+offy); 
+        glVertex3i(-width+offx,height, offy); 
         glTexCoord2f(0, 1);
-        glVertex2i(-width+offx,-height+offy); 
+        glVertex3i(-width+offx,-height, offy); 
         glTexCoord2f(1, 1);
-        glVertex2i(width+offx, -height+offy);      
+        glVertex3i(width+offx, -height, offy);      
         glTexCoord2f(1,0);
-        glVertex2i(width+offx,height+offy);
+        glVertex3i(width+offx,height, offy);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);

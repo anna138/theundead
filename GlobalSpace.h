@@ -40,6 +40,7 @@ namespace gvars{
     extern int movey;
     extern int sizeX;
     extern int sizeY;
+    extern int playerdir;
     enum class GameState{
         startup,
         menu,
