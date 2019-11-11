@@ -12,5 +12,9 @@ public:
 	unsigned int bbTexture;
 	unsigned int logoTexture;
 	unsigned int titleTexture;
+	unsigned int fireTexture; 
+    unsigned int grassTexture;
+    unsigned int waterTexture;
+    unsigned int lightningTexture; 
 	Global();
 };

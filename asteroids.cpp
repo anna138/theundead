@@ -29,6 +29,8 @@
 #include "Game.h"
 #include "X11.h"
 #include "Zombie.h"
+#include "Texture.h"
+#include "BlenderObj.h"
 
 
 
@@ -51,7 +53,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 //-----------------------------------------------------------------------------
 // Set Up Images
 
-Image img[8] = {
+Image img[9] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
 		"./images/trooper.png",
@@ -59,7 +61,8 @@ Image img[8] = {
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
 		"./images/title.png",
-		"./images/zombie.png"
+		"./images/zombie.png", 
+		"./images/water.png"
 };
 
 
@@ -89,6 +92,7 @@ extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
+extern void scoreboard(Rect r);
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
@@ -101,6 +105,9 @@ extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void grassRazorLeaf(float, int, int);
+extern void grassRazerMove(int);
+extern void switchBullets(float, int, int, int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -123,7 +130,12 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-
+	//creating a blender object
+	//Blender obj;
+	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler_eyes_c("images/hitler_eyes_closed.png",0,0,0,gl.xres,gl.yres);
+	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
+	
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -163,7 +175,26 @@ int main()
 				break;
 			}
 			case GameState::game:{
-				render();
+                Rect r;
+				glClear(GL_COLOR_BUFFER_BIT);
+				scoreboard(r);
+				glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
+				if(playerdir == 0){
+					if(timeCurrent.tv_sec%7 == 0){
+						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey);
+					}else{
+						hitler.Display_Picture(sizeX,sizeY, movex, movey);
+					}
+				}else if(playerdir == 1){
+					hitler_br.Display_Picture(sizeX, sizeY, movex, movey);
+				
+				}
+				glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				//render();
 				break;
 			}
 			case GameState::highscores:{
@@ -352,6 +383,22 @@ void init_opengl(void)
 		GL_RGB, GL_UNSIGNED_BYTE, img[6].data);
 
 	titleImageTexture = gl.titleTexture;
+
+		//Image - Start Menu Zombie
+	
+	glGenTextures(1, &gl.startTexture);
+	int w8 = img[8].width;
+	int h8 = img[8].height;
+
+	glBindTexture(GL_TEXTURE_2D, gl.startTexture);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w8, h8, 0,
+		GL_RGB, GL_UNSIGNED_BYTE, img[8].data);
+
+	waterImageTexture = gl.waterTexture;
 }
 
 void normalize2d(Vec v)
@@ -525,6 +572,24 @@ int check_keys(XEvent *e)
 			break;
 		case XK_g:
 			state = GameState::endgamescore;
+			break;
+		case XK_w:
+			movey++;
+			playerdir = 0;
+			break;
+		case XK_s:
+			movey--;
+			playerdir = 1;
+			break;
+		case XK_a:
+			playerdir = 0;
+			movex == -gl.xres/2 ? movex = gl.xres/2: movex-=5;
+			sizeX = -200;
+			break;
+		case XK_d:
+			playerdir = 0;
+			movex == gl.xres/2 ? movex = -gl.xres/2: movex+=5;
+			sizeX = 200;
 			break;
 		case XK_Down:
 			break;
@@ -828,6 +893,14 @@ void render()
 	ggprint8b(&r, 16, 0x00ffff00, "\n");
     creditsKevin(r);
 
+
+
+	for(int i = 0; i< gvars::MAX_SKULLS;i++){		
+		Skull *s = &g.skulls[i];		
+		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);		
+		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);		
+
+ 	}
 	//-------------------------------------------------------------------------
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
@@ -846,7 +919,7 @@ void render()
 
 	//-------------------------------------------------------------------------
 
-	movingImages(50,50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
+	movingImages(50, 50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
 	Flt rad;
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
 		int i;
@@ -929,12 +1002,16 @@ void render()
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		
 		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		grassVines(b->angle, b->pos[0], b->pos[1]);
+		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
 
-		b->pos[0] += 10;
+		//b->pos[0] += 10;
 		//b->pos[1] += 10;
+		int choice = 1;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
+		b->pos[1] += .25;
+
 	}
     
 }

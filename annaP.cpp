@@ -13,6 +13,8 @@
 #include <fstream>
 #include <unistd.h>
 #include "GlobalSpace.h"
+#include "Texture.h"
+#include "Image.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -42,12 +44,18 @@ int showTitle = 1000000;
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
+void waterBubbles(int offset_x, int offset_y);
+void lightningShots(float angle, int offset_x, int offset_y);
+void grassRazorLeaf(float angle, int offset_x, int offset_y);
+void grassRazorMove(int x);
+void waterBubbleMove(int y);
 void displayBackground(int w, int h, unsigned int texture);
+void displayElementSelection(unsigned int * imageTexture, int choice);
 void displayImage(int width_x, int height_y, int offset_x,
 int offset_y, unsigned int texture);
-extern void displaycurrentscore(Rect r, int h, int w, 
-int bestScore, int yourScore);
+extern void displaycurrentscore(Rect r, int h, int w, int bestScore, int yourScore);
 extern void readScores(char * filename);
+
 
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenu, unsigned int title)
@@ -269,6 +277,8 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_an
 	-size of circle
 	-draw a circle
 */
+
+/* Elemental Bullets*/
 void fireCircles(int row, int offset_x, int offset_y)
 {
 	int x = 300, y = 300, w = 5, h = 5;
@@ -292,7 +302,7 @@ void fireCircles(int row, int offset_x, int offset_y)
 
 /* Anna, you need to fix where the lightning's position is*/
 
-void lightningShoots(float angle, int offset_x, int offset_y){
+void lightningShots(float angle, int offset_x, int offset_y){
 	
 	float x_angle = cos(angle);
 	float y_angle = sin(angle);
@@ -316,12 +326,12 @@ void lightningShoots(float angle, int offset_x, int offset_y){
 	
 }
 
-void grassVines(float angle, int offset_x, int offset_y){
+void grassRazorLeaf(float angle, int offset_x, int offset_y){
 	
 	int width = 5, height = 5;
 
 	glPushMatrix();
-	
+
 	glLineWidth(4);
 
 	glBegin(GL_POLYGON);
@@ -348,9 +358,12 @@ void grassVines(float angle, int offset_x, int offset_y){
 	angle = offset_x + angle;
 }
 
+void grassVines(float, int, int){
+	;
+}
 void waterBubbles(int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 5, h = 5;
+	int x = 300, y = 300, w = 7, h = 7;
 	if (offset_x && offset_y) {
 		x = offset_x;
 		y = offset_y;
@@ -360,27 +373,146 @@ void waterBubbles(int offset_x, int offset_y)
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
 
-	for (int i = 0; i < 360; i+=40) {
-		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (w) + x, sin(degInRad) * (h) + y);
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 360; i+=40) {
+			float degInRad = i * DEG2RAD;
+			glVertex2f(cos(degInRad) * (w) + (x), sin(degInRad) * (h) + (y));
+		}
 	}
-
-	w = 2; 
-	h = 2;
+	w = 3; 
+	h = 3;
 
 	glColor3ub(gvars::waterColors[2][0], gvars::waterColors[2][1],gvars::waterColors[2][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
 
-	for (int i = 0; i < 360; i+=40) {
-		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (w) + x, sin(degInRad) * (h) + y);
+	for (int j = 0; j < 3; j++) {
+		for (int i = 0; i < 360; i+=40) {
+			float degInRad = i * DEG2RAD;
+			glVertex2f(cos(degInRad) * (w) + (x), sin(degInRad) * (h) + (y));
+		}
 	}
 	glEnd();
 	
 }
 
+/*Functions for Different Bullet Movements*/
+
+void grassRazorMove(int x)
+{
+	x *= 20;
+}
+void waterBubbleMove(int y)
+{
+	y  += .15;
+}
+
+/* Function to Decide Which Type of Element to use */
+void displayElementSelection(unsigned int * imageTexture, int choice){
+	switch(choice){
+		case 0:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 1:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 2: 
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+		case 3:
+			displayImage(100, 100, 0 , 0, imageTexture[choice]);
+			break;
+	}
+}
+void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
+	switch(choice){
+		case 0:
+			fireCircles(row, offset_x, offset_y);
+			break;
+		case 1:
+			waterBubbles(offset_x, offset_y);
+			//waterBubbleMove(y);
+			break;
+		case 2: 
+			grassRazorLeaf(angle, offset_x, offset_y);
+			//grassRazorMove(x);
+			break;
+		case 3:
+			lightningShots(angle, offset_x, offset_y);
+			break;
+	}
+}
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
 }
+
+Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):w(w1), h(h1), x(x1), y(y1), z(z1){
+	img = new Image(fname);
+	w = img->width;
+	h = img->height;
+	unsigned char * tpimage = buildAlphaData();
+    glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
+}
+
+void Texture::Display_Picture(int xres, int yres, int offx, int offy){
+    int width = xres/2;
+	int height = yres/2;
+    glPushMatrix();
+    //glColor3f(1.0,1.0,1.0);
+    glBindTexture(GL_TEXTURE_2D, id);
+    glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0);
+        glVertex3i(-width+offx,height, offy); 
+        glTexCoord2f(0, 1);
+        glVertex3i(-width+offx,-height, offy); 
+        glTexCoord2f(1, 1);
+        glVertex3i(width+offx, -height, offy);      
+        glTexCoord2f(1,0);
+        glVertex3i(width+offx,height, offy);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+unsigned char* Texture::buildAlphaData()
+{
+	//add 4th component to RGB stream...
+	int i;
+	unsigned char *newdata, *ptr;
+	unsigned char *data = (unsigned char *)img->data;
+	newdata = (unsigned char *)malloc(img->width * img->height * 4);
+	ptr = newdata;
+	unsigned char a,b,c;
+	//use the first pixel in the image as the transparent color.
+	unsigned char t0 = *(data+0);
+	unsigned char t1 = *(data+1);
+	unsigned char t2 = *(data+2);
+	for (i=0; i<img->width * img->height * 3; i+=3) {
+		a = *(data+0);
+		b = *(data+1);
+		c = *(data+2);
+		*(ptr+0) = a;
+		*(ptr+1) = b;
+		*(ptr+2) = c;
+		*(ptr+3) = 1;
+		if (a==t0 && b==t1 && c==t2)
+			*(ptr+3) = 0;
+		//-----------------------------------------------
+		ptr += 4;
+		data += 3;
+	}
+	
+	return newdata;
+}
+

@@ -6,14 +6,23 @@ namespace gvars{
     typedef float Matrix[4][4];
     int img_x;
     int img_y;
+    int xres = 1920;
+    int yres = 1080;
     unsigned int imageTexture; 
     unsigned int startMenuTexture; 
     unsigned int trooperImageTexture; 
     unsigned int villainImageTexture; 
-    unsigned int titleImageTexture; 
+    unsigned int skullImageTexture;
+    unsigned int zombieImageTexture;
+    unsigned int titleImageTexture;
+    unsigned int fireImageTexture; 
+    unsigned int grassImageTexture;
+    unsigned int waterImageTexture;
+    unsigned int lightningImageTexture; 
     const float timeslice = 1.0f;
     const float gravity = -0.2f;
-    const int MAX_BULLETS = 11;
+    const int MAX_BULLETS = 20;
+    const int MAX_SKULLS = 2;
     const float MINIMUM_ASTEROID_SIZE = 60.0;
     const double physicsRate = 1.0 / 60.0;
     const double oobillion = 1.0 / 1e9;
@@ -27,4 +36,9 @@ namespace gvars{
     int grassColors[3][3] = {{5, 115, 52}, {30, 120, 62}, {104, 120, 30}};
     int waterColors[3][3] = {{0, 0, 255}, {77, 166, 255}, {255, 255, 255}}; 
     GameState state;
+    int movex = 0;
+    int movey = 0;
+    int sizeX = 200;
+    int sizeY = 200;
+    int playerdir = 0;
 } // namespace GVars
