@@ -159,3 +159,14 @@ void lighting( int size, int start, int end){
         gvars::array[i]=randXnum;
     }
 }
+
+void scoreboard(Rect r) {
+//    glClear(GL_COLOR_BUFFER_BIT);
+    r.bot =(gl.yres/2)-20;
+    r.left=10;
+    r.center=0;
+    ggprint8b(&r, 16, 0x00ff0000,"WASD to move");
+}
+void healthBar() {
+
+}

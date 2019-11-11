@@ -92,6 +92,7 @@ extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
 extern void drawLine();
+extern void scoreboard(Rect r);
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
@@ -174,13 +175,15 @@ int main()
 				break;
 			}
 			case GameState::game:{
+                Rect r;
 				glClear(GL_COLOR_BUFFER_BIT);
+				scoreboard(r);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-				glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
+                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
 				map.Display_Picture(gl.xres, gl.yres, 0,-1);
 				if(playerdir == 0){
-					if(timeCurrent.tv_sec%7 == 0){
+					if(timeCurrent.tv_sec%5 == 0){
 						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
 					}else{
 						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
@@ -189,6 +192,9 @@ int main()
 					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
 				
 				}
+				glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 				//render();
 				break;
 			}
@@ -550,7 +556,7 @@ int check_keys(XEvent *e)
 				state = GameState::game;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
-		    sleep(1);
+		    	sleep(1);
 		    }
 		    break;
 			case XK_c:
