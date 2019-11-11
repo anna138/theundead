@@ -134,7 +134,7 @@ int main()
 	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
 	Texture hitler_eyes_c("images/hitler_eyes_closed.png",0,0,0,gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
-	
+	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -178,14 +178,15 @@ int main()
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
+				map.Display_Picture(gl.xres, gl.yres, 0,-1);
 				if(playerdir == 0){
 					if(timeCurrent.tv_sec%7 == 0){
-						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey);
+						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
 					}else{
-						hitler.Display_Picture(sizeX,sizeY, movex, movey);
+						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
 					}
 				}else if(playerdir == 1){
-					hitler_br.Display_Picture(sizeX, sizeY, movex, movey);
+					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
 				
 				}
 				//render();
