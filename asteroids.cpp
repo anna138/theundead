@@ -80,6 +80,7 @@ int check_keys(XEvent *e);
 void physics();
 void render();
 void renderCredits();
+
 extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
@@ -107,7 +108,7 @@ extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTextur
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
-extern void switchBullets(float, int, int, int, int);
+extern void switchBullets(float, int, int, int, int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -133,8 +134,9 @@ int main()
 	//creating a blender object
 	//Blender obj;
 	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
-	Texture hitler_eyes_c("images/hitler_eyes_closed.png",0,0,0,gl.xres,gl.yres);
+	Texture hitler_eyes_c("images/hitler_eyes_closed.png", 0 , 0 , 0 , gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
+	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
 	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
 	while (!done) {
 		while (x11.getXPending()) {
@@ -175,13 +177,16 @@ int main()
 				break;
 			}
 			case GameState::game:{
-                Rect r;
+                
+				//Rect r;
+				
 				glClear(GL_COLOR_BUFFER_BIT);
-				scoreboard(r);
+				//scoreboard(r);
+				
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
-				map.Display_Picture(gl.xres, gl.yres, 0,-1);
+                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
+				map.Display_Picture(gl.xres, gl.yres, 0, -1);
 				if(playerdir == 0){
 					if(timeCurrent.tv_sec%5 == 0){
 						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
@@ -191,10 +196,18 @@ int main()
 				}else if(playerdir == 1){
 					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
 				
+				} /*Anna's addition*/
+				else if(playerdir == 3) {
+					//if(timeCurrent.tv_sec % 10 == 0){
+					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);
+					//}
+					/*playerdir = 0;*/
 				}
-				glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				render();
+				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+				//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				
 				//render();
 				break;
 			}
@@ -385,7 +398,7 @@ void init_opengl(void)
 
 	titleImageTexture = gl.titleTexture;
 
-		//Image - Start Menu Zombie
+	//Image - Water
 	
 	glGenTextures(1, &gl.startTexture);
 	int w8 = img[8].width;
@@ -440,8 +453,9 @@ void check_mouse(XEvent *e)
 				if (g.nbullets < MAX_BULLETS) {
 					Bullet *b = &g.barr[g.nbullets];
 					timeCopy(&b->time, &bt);
-					b->pos[0] = g.trooper.pos[0];
-					b->pos[1] = g.trooper.pos[1];
+					/*b->pos[0] = g.trooper.pos[0];
+					b->pos[1] = g.trooper.pos[1];*/
+					b->pos[0]= movex; b->pos[1] = movey;
 					b->vel[0] = g.trooper.vel[0];
 					b->vel[1] = g.trooper.vel[1];
 					//convert trooper angle to radians
@@ -558,8 +572,9 @@ int check_keys(XEvent *e)
 				x11.swapBuffers();
 		    	sleep(1);
 		    }
+			playerdir = 3;
 		    break;
-			case XK_c:
+		case XK_c:
 		    choice =3;
 		    if(state != GameState::credits){
 				state = GameState::credits;
@@ -877,7 +892,9 @@ void physics()
 
 void render()
 { 
-    Rect r;
+    /*
+	Anna Commented
+	Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
   
 	r.bot = gl.yres - 20;
@@ -906,20 +923,25 @@ void render()
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
+*/
+
 
 	/*movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
 		g.zombie.angle, g.zombie.zombieImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
+/*
+Anna Commented
 	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
 		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
-
+*/
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
 	//-------------------------------------------------------------------------
-
+/*
+Anna commented
 	movingImages(50, 50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
 	Flt rad;
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
@@ -975,11 +997,12 @@ void render()
 			glEnd();
 			a = a->next;
 			
-			
+			*/
 			/*movingImages(30, 30, a->pos, a->angle, g.villain.skullImageTexture);*/
-			
+			/*
+			Anna Commented
 		}
-	}
+	}*/
 	//-------------------------------------------------------------------------
 	//Draw the bullets
 	
@@ -1006,12 +1029,15 @@ void render()
 		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
-
+		
 		//b->pos[0] += 10;
 		//b->pos[1] += 10;
-		int choice = 1;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
-		b->pos[1] += .25;
+		/*int choice = 1;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice, waterImageTexture);		*/
+		fireCircles(b->row, b->pos[0], b->pos[1]);
+		//b->pos[1] += .25;
+
+		std::cout << "I am poo poo " << std::endl;
 
 	}
     
