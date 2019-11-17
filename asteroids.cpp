@@ -108,7 +108,7 @@ extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTextur
 extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
-extern void switchBullets(float, int, int, int, int, int);
+extern void switchBullets(float, int, int, int, int);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -183,10 +183,10 @@ int main()
 				glClear(GL_COLOR_BUFFER_BIT);
 				//scoreboard(r);
 				
-				glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
-				map.Display_Picture(gl.xres, gl.yres, 0, -1);
+				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
+				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
+                //glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
+				//map.Display_Picture(gl.xres, gl.yres, 0, -1);
 				if(playerdir == 0){
 					if(timeCurrent.tv_sec%5 == 0){
 						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
@@ -1032,12 +1032,12 @@ Anna commented
 		
 		//b->pos[0] += 10;
 		//b->pos[1] += 10;
-		/*int choice = 1;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice, waterImageTexture);		*/
-		fireCircles(b->row, b->pos[0], b->pos[1]);
+		int choice = 1;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
+		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 
-		std::cout << "I am poo poo " << std::endl;
+		//std::cout << "I am poo poo " << std::endl;
 
 	}
     

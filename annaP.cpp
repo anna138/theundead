@@ -84,13 +84,13 @@ void Texture::Display_Picture(int xres, int yres, int offx, int offy){
 	glColor4ub(255,255,255,255);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+offx,height, offy); 
+        glVertex3i(-width+offx,height+offy, offy); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+offx,-height, offy); 
+        glVertex3i(-width+offx,-height+offy, offy); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+offx, -height, offy);      
+        glVertex3i(width+offx, -height+offy, offy);      
         glTexCoord2f(1,0);
-        glVertex3i(width+offx,height, offy);
+        glVertex3i(width+offx,height+offy, offy);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -495,28 +495,40 @@ void displayElementSelection(unsigned int * imageTexture, int choice){
 			break;
 	}
 }
-void switchBullets(float angle, int row, int offset_x, int offset_y, int choice, int water){
-	switch(choice){
-		case 0:
-			fireCircles(row, offset_x, offset_y);
-			break;
-		case 1:
-			waterBubbles(offset_x, offset_y);
-			displayImage(100, 100, gvars::xres/2 - 150, -(gvars::yres/2 - 150), water);
-			//waterBubbleMove(y);
-			break;
-		case 2: 
-			grassRazorLeaf(angle, offset_x, offset_y);
-			//grassRazorMove(x);
-			break;
-		case 3:
-			lightningShots(angle, offset_x, offset_y);
-			break;
-	}
-}
+
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
 }
+
+// This is my Friday code. 
+void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
+	Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
+	Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
+	Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
+	Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
+	switch(choice){
+		case 0:
+			fireCircles(row, offset_x, offset_y);
+			fire.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+			break;
+		case 1:
+			waterBubbles(offset_x, offset_y);
+			waterBubbleMove(offset_y);
+			water.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+			//gl.yres / 2 - 200);
+			break;
+		case 2: 
+			grassRazorLeaf(angle, offset_x, offset_y);
+			grassRazorMove(offset_x);
+			grass.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+			break;
+		case 3:
+			lightningShots(angle, offset_x, offset_y);
+			light.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+			break;
+	}
+}
+
 
 
