@@ -109,6 +109,7 @@ extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float e
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
+extern void showAttack(int choice);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -556,7 +557,7 @@ int check_keys(XEvent *e)
     int choice=0;
 	int dirX=0;
     int dirY=0;
-    if (shift){}
+	if (shift){}
 	switch (key) {
 		case XK_Escape:
             return 1;
@@ -596,6 +597,10 @@ int check_keys(XEvent *e)
 		case XK_s:
 			movey--;
 			playerdir = 1;
+			break;
+		case XK_e:
+			std::cout << "Me Work" << std::endl;
+			gvars::attack = (gvars::attack + 1) % 4;
 			break;
 		case XK_a:
 			playerdir = 0;
@@ -892,6 +897,8 @@ void physics()
 
 void render()
 { 
+
+	showAttack(gvars::attack);
     /*
 	Anna Commented
 	Rect r;
@@ -1032,8 +1039,8 @@ Anna commented
 		
 		//b->pos[0] += 10;
 		//b->pos[1] += 10;
-		int choice = 1;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
+		int choice = gvars::attack;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 

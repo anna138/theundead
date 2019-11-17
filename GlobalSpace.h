@@ -8,6 +8,7 @@ namespace gvars{
     typedef float Matrix[4][4];
     extern int img_x;
     extern int img_y;
+    extern int attack;
     extern int xres;
     extern int yres;
     extern unsigned int imageTexture; 

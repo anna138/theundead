@@ -47,8 +47,8 @@ void fireCircles(int, int, int);
 void waterBubbles(int offset_x, int offset_y);
 void lightningShots(float angle, int offset_x, int offset_y);
 void grassRazorLeaf(float angle, int offset_x, int offset_y);
-void grassRazorMove(int x);
-void waterBubbleMove(int y);
+void grassRazorMove(int & x);
+void waterBubbleMove(int & y);
 void displayBackground(int w, int h, unsigned int texture);
 void displayElementSelection(unsigned int * imageTexture, int choice);
 void displayImage(int width_x, int height_y, int offset_x,
@@ -84,13 +84,13 @@ void Texture::Display_Picture(int xres, int yres, int offx, int offy){
 	glColor4ub(255,255,255,255);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+offx,height+offy, offy); 
+        glVertex3i(-width+offx,height+offy, 0); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+offx,-height+offy, offy); 
+        glVertex3i(-width+offx,-height+offy, 0); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+offx, -height+offy, offy);      
+        glVertex3i(width+offx, -height+offy, 0);      
         glTexCoord2f(1,0);
-        glVertex3i(width+offx,height+offy, offy);
+        glVertex3i(width+offx,height+offy, 0);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -469,13 +469,18 @@ void waterBubbles(int offset_x, int offset_y)
 
 /*Functions for Different Bullet Movements*/
 
-void grassRazorMove(int x)
+void grassRazorMove(int & x)
 {
 	x *= 20;
 }
-void waterBubbleMove(int y)
+void waterBubbleMove(int & y)
 {
 	y  += .15;
+}
+void fireWaveMove(int & x, int & y)
+{
+	y  += .15;
+	x  *= 0.7;
 }
 
 /* Function to Decide Which Type of Element to use */
@@ -501,31 +506,51 @@ void creditsAnna(Rect r)
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
 }
 
+void writing(Rect r, std::string sentence)
+{
+	ggprint8b(& r, 16, 0x00004C00, sentence.c_str());  
+}
 // This is my Friday code. 
+Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
+Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
+Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
+Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
+
 void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
-	Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
-	Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
-	Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
-	Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
 	switch(choice){
 		case 0:
 			fireCircles(row, offset_x, offset_y);
-			fire.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+			fireWaveMove(offset_x, offset_y);
 			break;
 		case 1:
 			waterBubbles(offset_x, offset_y);
 			waterBubbleMove(offset_y);
-			water.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
 			//gl.yres / 2 - 200);
 			break;
 		case 2: 
 			grassRazorLeaf(angle, offset_x, offset_y);
 			grassRazorMove(offset_x);
-			grass.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
 			break;
 		case 3:
 			lightningShots(angle, offset_x, offset_y);
-			light.Display_Picture(100, 150, gl.xres / 2 - 100, 0);
+
+			break;
+	}
+}
+void showAttack(int choice) 
+{
+	switch(choice){
+		case 0:
+			fire.Display_Picture(70, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 1:
+			water.Display_Picture(30, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 2: 
+			grass.Display_Picture(30, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 3:
+			light.Display_Picture(30, 35, gl.xres / 2 - 60, -(gl.yres / 2 - 100));
 			break;
 	}
 }
