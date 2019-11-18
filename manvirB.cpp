@@ -69,7 +69,8 @@ double xp = t;
 double yp = t;
 int angle = 5;
 float z = 0.005;
-void chaos_equations(){
+void chaos_equations()
+{
 	//draw dots
 	glTranslatef(0,0,z);
 	glPushMatrix();
@@ -119,7 +120,8 @@ void chaos_equations(){
 }
 
 TypeObj::TypeObj(int idx, int x, int y, int z,int tx, 
-		int ty,int tz, int mID){
+		int ty,int tz, int mID)
+{
 	id = idx;
 	matID = mID;
 	size = 3;
@@ -133,7 +135,8 @@ TypeObj::TypeObj(int idx, int x, int y, int z,int tx,
 	textureCoord[2] = tz;
 }
 TypeObj::TypeObj(int idx, int x, int y, int x1, int y1,
-		int t0, int t1,int t2, int t3, int mID){
+		int t0, int t1,int t2, int t3, int mID)
+{
 	id = idx;
 	matID = mID;
 	size = 4;
@@ -166,7 +169,8 @@ Material::Material(std::string name, std::vector<float> & s,
 }
 
 
-void Blender::readObj(const std::string fn){
+void Blender::readObj(const std::string fn)
+{
 
     std::ifstream fin(fn.c_str());
 
@@ -245,7 +249,8 @@ void Blender::readObj(const std::string fn){
     }
 
 }
-void Blender::readMaterial(const std::string fname){
+void Blender::readMaterial(const std::string fname)
+{
     std::ifstream fin("./images/"+fname);
     if(!fin.is_open()){
         std::cout << "could not open file:"<< "./images/"+fname << std::endl;
@@ -313,7 +318,8 @@ void Blender::readMaterial(const std::string fname){
                     ambient, ns, ni, d, illumn, textureID));
     }
 }
-void Blender::renderObj(float x, float y, float z){
+void Blender::renderObj(float x, float y, float z)
+{
     int prevMat = -1;
     int currmat = 0;
     glPushMatrix();
@@ -418,7 +424,8 @@ void Blender::renderObj(float x, float y, float z){
     ang += 0.1;
 
 }
-int Blender::loadTexture(std::string fname){
+int Blender::loadTexture(std::string fname)
+{
     fname = "./images/" + fname;
     Image img(fname.c_str());
     unsigned int id;
@@ -432,7 +439,8 @@ int Blender::loadTexture(std::string fname){
             GL_RGB,GL_UNSIGNED_BYTE, img.data);
     return id;
 }
-Blender::Blender(){
+Blender::Blender()
+{
     ang = 1.0;
 }
 
