@@ -167,6 +167,48 @@ void scoreboard(Rect r) {
     r.center=0;
     ggprint8b(&r, 16, 0x00ff0000,"This is working?");
 }
-void healthBar() {
 
+void drawVine() {
+    glPushMatrix();
+    int counter=0;
+    for(int i=0;i<10;i++) {
+        glLineWidth(7);
+        glBegin(GL_LINE_LOOP);
+        glColor3f(0.0,0.3,0.2);
+        glVertex2f(100+gvars::arrayVine[counter],200-(50*i));
+        glVertex2f(100+gvars::arrayVine[counter+1],150-(50*i));
+        glEnd();
+        glLineWidth(2);
+        glBegin(GL_LINE_LOOP);
+        glColor3f(0.0,0.6,0.37);
+        glVertex2f(100+gvars::arrayVine[counter],200-(50*i));
+        glVertex2f(100 + gvars::arrayVine[counter+1],150-(50*i));
+        //glEnd();
+        counter++;
+        glEnd();
+    }
+    glPopMatrix();
+    glLineWidth(1);
 }
+//This is my Friday code.
+void renderVine( int size, int start, int end){
+    for(int i=0; i<size;i++) {
+        int randsign = rand()%2;
+        int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
+        gvars::arrayVine[i]=randXnum;
+        std::cout << gvars::arrayVine[i] << std::endl;
+    }
+    gvars::arrayVine[0]= 10;//randXnum;
+    gvars::arrayVine[1]= 10;//randXnum;
+    gvars::arrayVine[2]= 10;//randXnum;
+    gvars::arrayVine[3]= 10;//randXnum;
+    gvars::arrayVine[4]= 10;//randXnum;
+    gvars::arrayVine[5]= 10;//randXnum;
+    gvars::arrayVine[6]= 10;//randXnum;
+    gvars::arrayVine[7]= 10;//randXnum;
+    gvars::arrayVine[8]= 10;//randXnum;
+    gvars::arrayVine[9]= 10;//randXnum;
+    gvars::arrayVine[10]= 10;//randXnum;
+    
+}
+

@@ -91,6 +91,7 @@ extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
 extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
+extern void drawVine();
 extern void drawLine();
 extern void scoreboard(Rect r);
 extern void lightningShoots(float, int, int);
@@ -101,6 +102,7 @@ extern void boxText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
+extern void renderVine(int size, int start, int end);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
@@ -121,7 +123,8 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
-    lighting( 11, 10, 20);
+   // lighting( 11, 10, 20);
+    renderVine(11,10,20);
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable
@@ -170,8 +173,9 @@ int main()
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
 				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
-				drawLine();
-				boxText(r,gl.xres,gl.yres);
+				//drawLine();
+				drawVine();
+                boxText(r,gl.xres,gl.yres);
 				break;
 			}
 			case GameState::game:{

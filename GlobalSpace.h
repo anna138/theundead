@@ -28,6 +28,7 @@ namespace gvars{
     extern const double physicsRate;
     extern const double oobillion;
     extern int array[11];
+    extern int arrayVine[11];
     extern int changeColor;
     extern Global gl;
     extern int yourCurrentScore;
