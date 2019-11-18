@@ -138,6 +138,7 @@ int main()
 	Texture hitler_eyes_c("images/hitler_eyes_closed.png", 0 , 0 , 0 , gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
 	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
+	
 	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
 	while (!done) {
 		while (x11.getXPending()) {
@@ -897,7 +898,7 @@ void physics()
 
 void render()
 { 
-
+	//Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
 	showAttack(gvars::attack);
     /*
 	Anna Commented
@@ -931,10 +932,10 @@ void render()
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
 */
+	/*zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
 
-
-	/*movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
-		g.zombie.angle, g.zombie.zombieImageTexture);
+	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
+	//	g.zombie.angle, g.zombie.zombieImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
 /*
