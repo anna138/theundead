@@ -726,3 +726,16 @@ void set_to_non_blocking(const int sock)
         exit(EXIT_FAILURE);
     }
 }
+//This is my Friday code.
+//this function will grab turn the scene into a 2.5D isometric scene.
+void isometricScene()
+{
+	glMatrixMode(GL_PROJECTION); glLoadIdentity();
+	glOrtho(-100,100,-100,100, -1000, 1000);
+	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+	//rotate the x-axis by 30 degrees
+	glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
+	//rotate the y-axis by 45 degres
+	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
+	glScalef(1.0f,1.0f,-1.0f);
+}
