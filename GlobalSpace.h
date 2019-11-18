@@ -8,7 +8,6 @@ namespace gvars{
     typedef float Matrix[4][4];
     extern int img_x;
     extern int img_y;
-    extern int attack;
     extern int xres;
     extern int yres;
     extern unsigned int imageTexture; 
@@ -29,6 +28,7 @@ namespace gvars{
     extern const double physicsRate;
     extern const double oobillion;
     extern int array[11];
+    extern int arrayVine[11];
     extern int changeColor;
     extern Global gl;
     extern int yourCurrentScore;

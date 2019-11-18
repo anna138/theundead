@@ -6,7 +6,6 @@ namespace gvars{
     typedef float Matrix[4][4];
     int img_x;
     int img_y;
-    int attack = 0;
     int xres = 1920;
     int yres = 1080;
     unsigned int imageTexture; 
@@ -31,6 +30,9 @@ namespace gvars{
     Global gl;
     int yourCurrentScore=0;
     int array[11];
+    int arrayVine[11];
+
+
     int fireColors[5][3] = {{128, 0, 0}, 
         {255, 80, 66}, {255, 0, 0}, {245, 18, 0}, {255, 174, 66}};
     int lightningColors[2][3] = {{0, 0, 255}, {255, 255, 255}};
