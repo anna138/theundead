@@ -15,5 +15,6 @@ class Texture{
         Texture(const char*, int, int, int, int, int);
         void Display_Picture(int, int, int , int);
 		unsigned char* buildAlphaData();
+        int getID();
 
 };

@@ -58,11 +58,15 @@ extern void readScores(char * filename);
 
 
 
-Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):w(w1), h(h1), x(x1), y(y1), z(z1){
+Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):
+w(w1), h(h1), x(x1), y(y1), z(z1){
 	img = new Image(fname);
 	w = img->width;
 	h = img->height;
 	unsigned char * tpimage = buildAlphaData();
+	delete [] img->data; 
+	img->data = new unsigned char[w*h*4];
+	img->data = tpimage; 
     glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
 //	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -126,7 +130,9 @@ unsigned char* Texture::buildAlphaData()
 	
 	return newdata;
 }
-
+int Texture::getID(){
+	return id;
+}
 
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenu, unsigned int title)
@@ -246,7 +252,7 @@ float img_angle, unsigned int texture)
 	int width = width_x / 2;
 	int height = height_y / 2;
 	glPushMatrix();
-	glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(1.0, 1.0, 1.0);
 
 	glTranslatef(img_pos[0], img_pos[1], img_pos[2]);
 	glTranslatef(0, 0, 0);
@@ -273,7 +279,7 @@ void displayBackground(int w, int h, unsigned int texture)
 	int width = w / 2;
 	int height = h / 2;
 	glPushMatrix();
-	glColor3f(1.0, 1.0, 1.0);
+	//glColor3f(1.0, 1.0, 1.0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glBegin(GL_QUADS);
 	glTexCoord2f(1, 1);
