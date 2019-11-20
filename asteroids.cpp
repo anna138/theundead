@@ -110,6 +110,7 @@ extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
 extern void showAttack(int choice);
+extern void isometricScene(); 
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -132,10 +133,13 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
+	
 	//creating a blender object
-	//Blender obj;
-	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
-	Texture hitler_eyes_c("images/hitler_eyes_closed.png", 0 , 0 , 0 , gl.xres,gl.yres);
+	Blender b;
+    b.readObj("./images/cube2.obj");
+	Texture hitler("images/hitler_sprite/hitler_front.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler_eyes_c("images/hitler_sprite/hitler_frnt_ec.png", 0 , 0 , 0 ,
+						 gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
 	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
 	
@@ -171,7 +175,8 @@ int main()
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
 				glClear(GL_COLOR_BUFFER_BIT);
-				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
+				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
+								 startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
 				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
 				drawLine();
@@ -180,32 +185,44 @@ int main()
 			}
 			case GameState::game:{
                 
-				//Rect r;
 				
-				glClear(GL_COLOR_BUFFER_BIT);
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glEnable(GL_DEPTH_TEST);
+				float intensity[] = {1,1,1,1.0};
+				glLightfv(GL_LIGHT0, GL_DIFFUSE, intensity);
+				float pos[] = {50,100.1,0.0,1.0};
+				glLightfv(GL_LIGHT0, GL_POSITION, pos);
+				
+
 				//scoreboard(r);
-				
 				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
                 //glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
 				//map.Display_Picture(gl.xres, gl.yres, 0, -1);
+				isometricScene();
+
+				
 				if(playerdir == 0){
 					if(timeCurrent.tv_sec%5 == 0){
-						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
+						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex,
+													 movey-1);
 					}else{
 						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
 					}
 				}else if(playerdir == 1){
 					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
 				
-				} /*Anna's addition*/
+				} 
 				else if(playerdir == 3) {
 					//if(timeCurrent.tv_sec % 10 == 0){
 					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);
 					//}
-					/*playerdir = 0;*/
+					
 				}
-				render();
+				b.renderObj(0, 0, 0);
+				//render();
 				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
@@ -229,7 +246,8 @@ int main()
 			}
 			case GameState::endgamescore:{
 				Rect r3;	
-				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, rand()%10);
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
+										rand()%10);
 				state = GameState::end;
 				break;
 			}

@@ -24,7 +24,9 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <fstream>
-//
+#include "GlobalSpace.h"
+using gvars::gl;
+
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
@@ -325,14 +327,12 @@ void Blender::renderObj(float x, float y, float z)
     glPushMatrix();
     //glTranslatef(x, y, z);
     glTranslatef(0,0,-4);
+	glScalef(50,50,50);
     
     glRotatef(x,1.0,0.0,0.0);
     glRotatef(y,0.0,1.0,0.0);
     glRotatef(z,0.0,0.0,1.0);
-    //glRotatef(x,1.0,0,0);
-    //glRotatef(y,0.0,1.0,0);
-   // glRotatef(z,0.0,0,1.0);
-    //std::cout << mats[0]->matname << mats[1]->matname << std::endl; 
+
     bool checkTexture;
     for(unsigned int i = 0; i < faces.size(); i++){
 
@@ -418,10 +418,7 @@ void Blender::renderObj(float x, float y, float z)
 
     }
     glPopMatrix();
-    if(ang > 360)
-        ang = -360;
-    
-    ang += 0.1;
+
 
 }
 int Blender::loadTexture(std::string fname)
@@ -441,7 +438,7 @@ int Blender::loadTexture(std::string fname)
 }
 Blender::Blender()
 {
-    ang = 1.0;
+    
 }
 
 /**************************************
@@ -731,7 +728,8 @@ void set_to_non_blocking(const int sock)
 void isometricScene()
 {
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
-	glOrtho(-100,100,-100,100, -1000, 1000);
+	glOrtho(-gl.xres,gl.xres,-gl.yres,gl.yres, -1000, 1000);
+	//glOrtho(-100, 100, -100, 100, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	//rotate the x-axis by 30 degrees
 	glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
