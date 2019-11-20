@@ -137,8 +137,8 @@ int main()
 	//creating a blender object
 	Blender b;
     b.readObj("./images/cube2.obj");
-	Texture hitler("images/hitler_sprite/hitler_front.png",0,0,0,gl.xres, gl.yres);
-	Texture hitler_eyes_c("images/hitler_sprite/hitler_frnt_ec.png", 0 , 0 , 0 ,
+	Texture hitler("images/hitler_sprite/hilter_walk.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler_eyes_c("images/hitler_sprite/hilter_walk2.png", 0 , 0 , 0 ,
 						 gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
 	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
@@ -205,9 +205,10 @@ int main()
 
 				
 				if(playerdir == 0){
-					if(timeCurrent.tv_sec%5 == 0){
+					//if(timeCurrent.tv_sec%2 == 0){
+					if((movex/5)%5 < 2){
 						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex,
-													 movey-1);
+													 movey-1);					 
 					}else{
 						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
 					}
@@ -217,9 +218,7 @@ int main()
 				} 
 				else if(playerdir == 3) {
 					//if(timeCurrent.tv_sec % 10 == 0){
-					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);
-					//}
-					
+					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);	
 				}
 				b.renderObj(0, 0, 0);
 				//render();

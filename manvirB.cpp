@@ -732,7 +732,7 @@ void isometricScene()
 	//glOrtho(-100, 100, -100, 100, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	//rotate the x-axis by 30 degrees
-	glRotatef(30.0f, 1.0f, 0.0f, 0.0f);
+	glRotatef(35.0f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,1.0f,-1.0f);
