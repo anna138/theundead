@@ -543,7 +543,6 @@ void MainCharacter::setFace(int f)
     face = f;
 }
 
-
 /**************************************
  * communicate with the server
  * ***********************************/
@@ -838,5 +837,5 @@ void isometricScene()
 	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-	glScalef(1.0f,1.0f,-1.0f);
+	glScalef(1.0f,2.0f,-1.0f);
 }
