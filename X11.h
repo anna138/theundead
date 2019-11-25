@@ -65,7 +65,7 @@ public:
 		set_title();
 		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
 		glXMakeCurrent(dpy, win, glc);
-		show_mouse_cursor(0);
+		show_mouse_cursor(1);
 		
 	}
 	~X11_wrapper() {

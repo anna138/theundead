@@ -25,6 +25,7 @@
 #include <openssl/err.h>
 #include <fstream>
 #include "GlobalSpace.h"
+#include "MainCharacter.h"
 using gvars::gl;
 
 #define PORT 443
@@ -440,6 +441,108 @@ Blender::Blender()
 {
     
 }
+/***************************
+ * Main character class for rendering 
+ * and controlling the hero of this game.
+ * 
+ * *************************/
+
+MainCharacter::MainCharacter()
+{
+    pos[0] = 0;
+    pos[1] = 0;
+    pos[2] = 0;
+    face = 0;
+	hitler = new Texture[8];
+    // hitler[0].set("images/hitler_sprite/hitler_front.png");
+    // hitler[1].set("images/hitler_sprite/hitler_back.png");
+    // hitler[2].set("images/hitler_sprite/hitler_back_side.png");
+    // hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
+    // hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
+    // hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
+    // hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
+    // hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    hitler[0].set("images/wizard/wiz_s.png");
+    hitler[1].set("images/wizard/wiz_sw.png");
+    hitler[2].set("images/wizard/wiz_w.png");
+    hitler[3].set("images/wizard/wiz_nw.png");
+    hitler[4].set("images/wizard/wiz_n.png");
+    hitler[5].set("images/wizard/wiz_ne.png");
+    hitler[6].set("images/wizard/wiz_e.png");
+    hitler[7].set("images/wizard/wiz_se.png");
+}
+MainCharacter::~MainCharacter(){
+    delete [] hitler;
+}
+
+void MainCharacter::calFace()
+{
+    if(mousepos[1] >= 0){
+        if(angle >= 0){
+            face = 5;
+            if(angle < 40)
+                face = 6;
+            else if(angle >= 80)
+                face = 4;
+            
+        }else{
+            face = 2;
+            if(angle <= -80)
+                face = 4;
+            else if(angle <= -40)
+                face = 3;
+        }
+
+    }else{
+        if(angle >= 0){
+            face = 1;
+            if(angle < 40)
+                face = 2;
+            else if(angle >= 80)
+                face = 0;
+        }else{
+            face = 6;
+            if(angle <= -80)
+                face = 0;
+            else if(angle <= -40)
+                face = 7;
+        }
+
+    }
+
+
+}
+void MainCharacter::characterRender()
+{
+    int width = 100;
+	int height = 100;
+    glPushMatrix();
+	glRotatef(0, 0.0, 1.0, 0.0);
+	glTranslatef(0, 100, 0);
+    glBindTexture(GL_TEXTURE_2D, hitler[face].getID());
+    glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0);
+        glVertex3i(-width+pos[0],height, pos[2]); 
+        glTexCoord2f(0, 1);
+        glVertex3i(-width+pos[0],-height, pos[2]); 
+        glTexCoord2f(1, 1);
+        glVertex3i(width+pos[0], -height, pos[2]);      
+        glTexCoord2f(1,0);
+        glVertex3i(width+pos[0],height, pos[2]);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+
+void MainCharacter::setFace(int f)
+{
+    face = f;
+}
+
 
 /**************************************
  * communicate with the server
@@ -728,11 +831,11 @@ void set_to_non_blocking(const int sock)
 void isometricScene()
 {
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
-	glOrtho(-gl.xres,gl.xres,-gl.yres,gl.yres, -1000, 1000);
+	glOrtho(-gl.xres,gl.xres,-gl.yres,gl.yres, -gl.xres*50, gl.yres*50);
 	//glOrtho(-100, 100, -100, 100, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	//rotate the x-axis by 30 degrees
-	glRotatef(35.0f, 1.0f, 0.0f, 0.0f);
+	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,1.0f,-1.0f);
