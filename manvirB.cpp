@@ -27,15 +27,16 @@
 #include "GlobalSpace.h"
 #include "MainCharacter.h"
 using gvars::gl;
+using gvars::arrow_keys;
 
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
-struct Vec
+struct Vec3
 {
 	float x, y, z;
-	Vec(){ z = (0), y = (0), x = (0);}
-	Vec(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+	Vec3(){ z = (0), y = (0), x = (0);}
+	Vec3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
 	void setPoints(float x1, float y1, float z1)
 	{
 		x = x1;
@@ -44,7 +45,7 @@ struct Vec
 	}
 };
 const int MAX_PARTICLES = 10000;
-Vec particles[MAX_PARTICLES];
+Vec3 particles[MAX_PARTICLES];
 
 void creditManvir(Rect r)
 {
@@ -453,6 +454,7 @@ MainCharacter::MainCharacter()
     pos[1] = 0;
     pos[2] = 0;
     face = 0;
+    dir = Direction::S;
 	hitler = new Texture[8];
     // hitler[0].set("images/hitler_sprite/hitler_front.png");
     // hitler[1].set("images/hitler_sprite/hitler_back.png");
@@ -477,28 +479,46 @@ MainCharacter::~MainCharacter(){
 
 void MainCharacter::calFace()
 {
-    if(mousepos[1] >= pos[2]){
-        face = 2;
-        if(angle <= 40)
-            face = 6;
-        else if(angle <= 80)
-            face = 5;
-        else if(angle <= 100)
-            face = 5;
-        else if(angle <= 140)
-            face = 3;
-    }else{
-        face = 2;
-        if(angle <= 40)
-            face = 6;
-        else if(angle <= 80)
-            face = 7;
-        else if(angle <= 100)
-            face = 0;
-        else if(angle <= 140)
-            face = 1;
+    int sum = arrow_keys[0]+arrow_keys[1]+arrow_keys[2]+arrow_keys[3];
+    if (sum == 1) {
+        if(arrow_keys[0]){
+            dir = Direction::N;
+            pos[2] += 5;
+        }else if(arrow_keys[1]){
+            dir = Direction::S;
+            pos[2] -= 5;
+        }else if(arrow_keys[2]){
+            dir = Direction::W;
+            pos[0] -= 5; 
+        }else {
+            dir = Direction::E;
+            pos[0] += 5; 
+        }
+        return;
     }
-
+    if (sum == 2) {
+        if(arrow_keys[0]){
+            if(arrow_keys[2]){
+                dir = Direction::NW;
+                pos[0] -= 5; 
+                pos[2] += 7;
+            }else if(arrow_keys[3]){
+                dir = Direction::NE;
+                pos[0] += 5; 
+                pos[2] += 5;
+            }
+        }else if(arrow_keys[1]){
+            if(arrow_keys[2]){
+                dir = Direction::SW;
+                pos[0] -= 5; 
+                pos[2] -= 5;
+            }else if(arrow_keys[3]){
+                dir = Direction::SE;
+                pos[0] += 5; 
+                pos[2] -= 5;
+            }
+        }
+    }
 
 }
 void MainCharacter::characterRender()
@@ -508,7 +528,7 @@ void MainCharacter::characterRender()
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
-    glBindTexture(GL_TEXTURE_2D, hitler[face].getID());
+    glBindTexture(GL_TEXTURE_2D, hitler[(int)dir].getID());
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
@@ -826,11 +846,11 @@ void isometricScene()
 	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-	glScalef(1.0f,2.0f,-1.0f);
+	glScalef(1.0f,1.0f,-1.0f);
 }
 int keysym_to_arrow_key(KeySym keysym) 
 {
-    switch(keysym) {
+    switch (keysym) {
         case XK_Up:
             return 0;
         case XK_Down:
@@ -844,7 +864,7 @@ int keysym_to_arrow_key(KeySym keysym)
 }
 void arrowInputMap(XEvent *e )
 {
-    int arrow_keys[4];
+    
     switch(e->type) {
         case KeyPress: {
             KeySym keysym = XLookupKeysym(&e->xkey, 0);
@@ -862,7 +882,8 @@ void arrowInputMap(XEvent *e )
         } break;
     }
     if(gvars::state == gvars::GameState::game){
-        gvars::hero.calFace(arrow_keys);
+
+        gvars::hero.calFace();
     }
 
 

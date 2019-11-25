@@ -54,18 +54,7 @@ namespace gvars{
         endgamescore,
         end
     };
-    enum class Direction{
-        S,
-        SW,
-        W,
-        NW,
-        N,
-        NE,
-        E,
-        SE,
-        end
-    };
-    
     extern GameState state;
+    extern int arrow_keys[4];
 }
 

@@ -490,24 +490,24 @@ void check_mouse(XEvent *e)
 		if (++ct < 10)
 			return;		
 
-		hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
-		hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1)); 
-		std::cout << "x: " << hero.mousepos[0] << " and y: " << hero.mousepos[1] << std::endl << std::flush;
-		double v1[2] = {(double)(gl.xres>>1)-hero.pos[0],0};
-		double v2[2] = {hero.mousepos[0]-hero.pos[0], hero.mousepos[1]-hero.pos[2]};
-		hero.angle = acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2)))*(180/PI);
-		//std::cout << "acos: " << acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2))) << std::endl;
+		// hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
+		// hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1)); 
+		// std::cout << "x: " << hero.mousepos[0] << " and y: " << hero.mousepos[1] << std::endl << std::flush;
+		// double v1[2] = {(double)(gl.xres>>1)-hero.pos[0],0};
+		// double v2[2] = {hero.mousepos[0]-hero.pos[0], hero.mousepos[1]-hero.pos[2]};
+		// hero.angle = acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2)))*(180/PI);
+		// //std::cout << "acos: " << acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2))) << std::endl;
  		
-		std::cout << "mag: " << (VecMag(v1)*VecMag(v2)) << " dot: " << VecDot(v1, v2) << std::endl << std::flush;
- 		std::cout << "px: " << hero.pos[0] << " py: " << hero.pos[2] << std::endl;
-		std::cout << "v1: " << v1[0] << " v1: " << v1[1] << std::endl << std::flush;
- 		std::cout << "v2: " << v2[0] << " v2: " << v2[1] << std::endl << std::flush;
+		// std::cout << "mag: " << (VecMag(v1)*VecMag(v2)) << " dot: " << VecDot(v1, v2) << std::endl << std::flush;
+ 		// std::cout << "px: " << hero.pos[0] << " py: " << hero.pos[2] << std::endl;
+		// std::cout << "v1: " << v1[0] << " v1: " << v1[1] << std::endl << std::flush;
+ 		// std::cout << "v2: " << v2[0] << " v2: " << v2[1] << std::endl << std::flush;
 
 
-		//hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
+		// //hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
 
-		std::cout << "this is the angle in degrees:" << hero.angle << std::endl << std::flush;
-		hero.calFace();
+		// std::cout << "this is the angle in degrees:" << hero.angle << std::endl << std::flush;
+		//hero.calFace();
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
@@ -552,21 +552,21 @@ int check_keys(XEvent *e)
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
 
-	if (e->type == KeyRelease) {
-		gl.keys[key]=0;
-		if (key == XK_Shift_L || key == XK_Shift_R)
-			shift=0;
-		return 0;
-	}
-	if (e->type == KeyPress) {
-		gl.keys[key]=1;
-		if (key == XK_Shift_L || key == XK_Shift_R) {
-			shift=1;
-			return 0;
-		}
-	} else {
-		return 0;
-	}
+	// if (e->type == KeyRelease) {
+	// 	gl.keys[key]=0;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R)
+	// 		shift=0;
+	// 	return 0;
+	// }
+	// if (e->type == KeyPress) {
+	// 	gl.keys[key]=1;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R) {
+	// 		shift=1;
+	// 		return 0;
+	// 	}
+	// } else {
+	// 	return 0;
+	// }
 	arrowInputMap(e);
 
     int choice=0;
@@ -605,38 +605,38 @@ int check_keys(XEvent *e)
 		case XK_g:
 			state = GameState::endgamescore;
 			break;
-		case XK_w:
-			hero.pos[2]+=5;
-			hero.setFace(1);
-			break;
-		case XK_s:
-			hero.pos[2]-=5;
-			hero.setFace(0);
-			break;
+		// case XK_w:
+		// 	hero.pos[2]+=5;
+		// 	hero.setFace(1);
+		// 	break;
+		// case XK_s:
+		// 	hero.pos[2]-=5;
+		// 	hero.setFace(0);
+		// 	break;
 		case XK_e:
 			gvars::attack = (gvars::attack + 1) % 4;
 			break;
-		case XK_a:
+		// case XK_a:
 			
-			hero.setFace(3);
-			hero.pos[0]-=5;
-			break;
-		case XK_d:
-			hero.setFace(5);
-			hero.pos[0]+=5;
-			break;
-		case XK_Down:
-			movey-=5;
-			break;
-		case XK_Up:
-			movey+=5;
-			break;
-		case XK_Left:
-			movex-=5;
-			break;
-		case XK_Right:
-			movex+=5;
-			break;
+		// 	hero.setFace(3);
+		// 	hero.pos[0]-=5;
+		// 	break;
+		// case XK_d:
+		// 	hero.setFace(5);
+		// 	hero.pos[0]+=5;
+		// 	break;
+		// case XK_Down:
+		// 	movey-=5;
+		// 	break;
+		// case XK_Up:
+		// 	movey+=5;
+		// 	break;
+		// case XK_Left:
+		// 	movex-=5;
+		// 	break;
+		// case XK_Right:
+		// 	movex+=5;
+		// 	break;
 		case XK_equal:
 			break;
 		case XK_minus:
