@@ -848,6 +848,16 @@ void isometricScene()
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,1.0f,-1.0f);
 }
+void orthoScene()
+{
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+    glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_DEPTH_TEST);
+}
+
 int keysym_to_arrow_key(KeySym keysym) 
 {
     switch (keysym) {
