@@ -33,7 +33,7 @@
 #include "BlenderObj.h"
 
 
-
+using namespace gvars;
 
 unsigned int bloodBackgroundTexture; 
 //image for zombie
@@ -60,7 +60,7 @@ Image img[9] = {
 		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
-		"./images/title.png",
+		"./images/curse_of_undead.png",
 		"./images/zombie.png", 
 		"./images/water.png"
 };
@@ -105,11 +105,18 @@ extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
-extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
 extern void showAttack(int choice);
+extern void isometricScene(); 
+extern void dyingAnimation(Vec enemy_pos);
+extern void fireballAttack(int * fire_pos);
+extern void flicker(int * fire_pos);
+extern void drawCircle(float cx, float cy, float r, int num_segments);
+extern GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -132,17 +139,22 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-	//creating a blender object
-	//Blender obj;
-	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
 	
-
-	Texture hitler_eyes_c("images/hitler_eyes_closed.png", 0 , 0 , 0 , gl.xres,gl.yres);
+	//creating a blender object
+	Blender b;
+    b.readObj("./images/cube2.obj");
+	Texture hitler("images/hitler_sprite/hitler_front.png",0,0,0,gl.xres, gl.yres);
+	Texture hitler_eyes_c("images/hitler_sprite/hitler_frnt_ec.png", 0 , 0 , 0 ,
+	gl.xres,gl.yres);
 	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
 	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
-	
+	Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
+	Texture skull("images/ghost_skull.png",0,0,0,gl.xres,gl.yres);
+	Texture fireball("images/fireb1.png",0,0,0,gl.xres,gl.yres);
+	Texture fireball2("images/fireb2.png",0,0,0,gl.xres,gl.yres);
 	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
-	Texture hud("images/hud_full_screen.png", 0,0,0, gl.xres, gl.yres);
+	Texture hud("images/hud.png", 0,0,0, gl.xres, gl.yres);
+	int width = 50, height = 50, offx = 200, offy = 200;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -174,7 +186,8 @@ int main()
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
 				glClear(GL_COLOR_BUFFER_BIT);
-				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
+				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
+								 startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
 				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
 				drawLine();
@@ -183,38 +196,77 @@ int main()
 			}
 			case GameState::game:{
                 
-				//Rect r;
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glEnable(GL_DEPTH_TEST);
+				float intensity[] = {1,1,1,1.0};
+				glLightfv(GL_LIGHT0, GL_DIFFUSE, intensity);
+				float pos[] = {50,100.1,0.0,0.5};
+				glLightfv(GL_LIGHT0, GL_POSITION, pos);
 				
-				glClear(GL_COLOR_BUFFER_BIT);
+
 				//scoreboard(r);
-				
 				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
                 //glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
 				//map.Display_Picture(gl.xres, gl.yres, 0, -1);
+				showAttack(gvars::attack);
+				/*zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, g.zombie.pos[0], g.zombie.pos[1]);
+
+				zombieAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, gl.xres, gl.yres);*/
+
+				skull.Display_Picture(g.skull.size[0] / 2, g.skull.size[0] / 2, g.skull.pos[0], g.skull.pos[1]);
+				//dyingAnimation(g.skull.pos);
+				skullAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
+
+				isometricScene();
+				b.renderObj(0, 0, 0);
+				if(timeCurrent.tv_sec%4  < 2) {
+					fireball2.Display_Picture(sizeX,sizeY, fireArray[0], fireArray[1]);
+					//flicker(gvars::fireArray);
+					//fireballAttack(gvars::fireArray);
+				} else {
+					fireball.Display_Picture(sizeX,sizeY, fireArray[0], fireArray[1]);
+					//flicker(gvars::fireArray);
+					//fireballAttack(gvars::fireArray);
+				}
 				if(playerdir == 0){
 					if(timeCurrent.tv_sec%5 == 0){
-						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey-1);
+						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex,
+						movey-1);
 					}else{
 						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
 					}
 				}else if(playerdir == 1){
 					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
 				
-				} /*Anna's addition*/
+				} 
 				else if(playerdir == 3) {
 					//if(timeCurrent.tv_sec % 10 == 0){
 					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);
 					//}
-					/*playerdir = 0;*/
+					
 				}
+				glBegin(GL_QUADS);
+
+				glVertex3i(width + offx, -height + offy, height + offy);
+				glVertex3i(width + offx, height + offy,  -height + offy);
+				glVertex3i(-width + offx, height + offy,  -height + offy);
+				glVertex3i(-width + offx, -height + offy,  height + offy);
+
+				glEnd();
+				glDisable(GL_LIGHTING);
+				glDisable(GL_LIGHT0);
+				glDisable(GL_DEPTH_TEST);
 				render();
-				//hud.Display_Picture(gl.xres, gl.yres, 0,0);
+				
 				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
 				
 				//render();
+				//hud.Display_Picture(gl.xres, gl.yres, 0, 0);
 				break;
 			}
 			case GameState::highscores:{
@@ -233,7 +285,8 @@ int main()
 			}
 			case GameState::endgamescore:{
 				Rect r3;	
-				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, rand()%10);
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
+										rand()%10);
 				state = GameState::end;
 				break;
 			}
@@ -260,7 +313,7 @@ void init_opengl(void)
 	//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
 	//glOrtho(-4,4,-4,4, -1,1);
 	glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
-	//
+	
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_FOG);
@@ -902,8 +955,8 @@ void physics()
 
 void render()
 { 
-	Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
-	showAttack(gvars::attack);
+	/*Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
+	showAttack(gvars::attack);*/
     /*
 	Anna Commented
 	Rect r;
@@ -935,13 +988,13 @@ void render()
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
-*/
+*/ /*
 	zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
 
 	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
 		//g.zombie.angle, zombie.getID());
-	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
-		gl.xres, gl.yres);
+	skullAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
+		gl.xres, gl.yres);*/
 /*
 Anna Commented
 	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
@@ -1017,7 +1070,8 @@ Anna commented
 	}*/
 	//-------------------------------------------------------------------------
 	//Draw the bullets
-	
+	//draw_circle(100, 8);
+	//drawCircle(260.0, 260.0, 100.0, 6);
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		/*//Log("draw bullet...\n");

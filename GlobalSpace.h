@@ -29,6 +29,7 @@ namespace gvars{
     extern const double physicsRate;
     extern const double oobillion;
     extern int array[11];
+    extern int arrayVine[11];
     extern int changeColor;
     extern Global gl;
     extern int yourCurrentScore;
@@ -41,6 +42,7 @@ namespace gvars{
     extern int movey;
     extern int sizeX;
     extern int sizeY;
+    extern int fireArray[];
     extern int playerdir;
     enum class GameState{
         startup,

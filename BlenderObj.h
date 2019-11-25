@@ -41,7 +41,6 @@ class Blender{
         std::vector<TypeObj*> faces;
         std::vector<Vect*> vt;
         std::vector<Material*> mats;
-        float ang;
     public:
         Blender();
         void readObj(const std::string);

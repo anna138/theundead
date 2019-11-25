@@ -145,7 +145,7 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMen
 		img_y - (img_y - img_y / 25)};
 	
 	displayImage(img_x / 8, img_y / 4 + img_y / 20, 0, img_y / 40, startMenu);
-	displayImage(img_x / 4, img_y / 10, 0, img_y /3 + img_y / 12, title);
+	displayImage(img_x / 3, img_y / 8, 0, img_y /3 + img_y / 12, title);
 
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
@@ -335,18 +335,42 @@ void movingEyes(int * eye, int * location)
 	glBegin(GL_TRIANGLE_FAN);
 	for (int i = 0; i < 360; i++) {
 		float degInRad = i * DEG2RAD;
-		glVertex2f(cos(degInRad) * (width / 2) + offset_x, sin(degInRad) * (width / 2) + offset_y);
+		glVertex2d(cos(degInRad) * (width / 2) + offset_x, sin(degInRad) * (width / 2) + offset_y);
 	}
 	glEnd();
 	glPopMatrix();
 }
-void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
+void dyingAnimation(Vec enemy_pos)
+{
+	enemy_pos[1] = -((int)(enemy_pos[1]) - 0.5);
+	enemy_pos[0] = -1 * (int)(enemy_pos[0]);
+}
+void flicker(int * fire_pos)
+{
+	fire_pos[1] = -1 * (int)(fire_pos[1]);
+	fire_pos[0] = -1 * (int)(fire_pos[0]);
+}
+void fireballAttack(int * fire_pos){
+	fire_pos[1] = -(((int)(fire_pos[1])) - 0.5);
+	std::cout << fire_pos[0] << std::endl;
+	if(fire_pos[0] % 6 > 6)
+		fire_pos[0] = -1 * (((int)(fire_pos[0])) - 100);
+	else
+		fire_pos[0] = -1 * (((int)(fire_pos[0])) + 100);
+}
+void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
 {
 	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres;
 	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres;
 	enemy_angle = trooper_angle*0.5 + enemy_angle;
 	/* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
 	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
+}
+void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
+{
+	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres;
+	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres;
+	enemy_angle = trooper_angle*0.5 + enemy_angle;
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -356,6 +380,7 @@ void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_an
 */
 
 /* Elemental Bullets*/
+
 void fireCircles(int row, int offset_x, int offset_y)
 {
 	int x = 300, y = 300, w = 5, h = 5;
@@ -376,7 +401,92 @@ void fireCircles(int row, int offset_x, int offset_y)
 	glEnd();
 	
 }
+GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex)
+{
+  GLfloat vertex[4]; 
+  GLfloat texcoord[2];
+  
+  const GLfloat delta_angle = 2.0*M_PI/num_vertex;
+  
+  /*glColor3ub(gvars::fireColors[1][0], gvars::fireColors[1][1],gvars::fireColors[1][2]);*/
 
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D,0);
+  glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_REPLACE);
+  glBegin(GL_TRIANGLE_FAN);
+  
+  //draw the vertex at the center of the circle
+  texcoord[0] = 0.5;
+  texcoord[1] = 0.5;
+  glTexCoord2fv(texcoord);
+  
+  vertex[0] = vertex[1] = vertex[2] = 0.0;
+  vertex[3] = 1.0;        
+  glVertex4fv(vertex);
+  
+  for(unsigned int i = 0; i < num_vertex ; i++)
+  {
+    texcoord[0] = (std::cos(delta_angle*i) + 1.0)*0.5;
+    texcoord[1] = (std::sin(delta_angle*i) + 1.0)*0.5;
+    glTexCoord2fv(texcoord);
+    
+    vertex[0] = std::cos(delta_angle*i) * radius;
+    vertex[1] = std::sin(delta_angle*i) * radius;
+    vertex[2] = 0.0;
+    vertex[3] = 1.0;
+    glVertex4fv(vertex);
+  }
+  
+  texcoord[0] = (1.0 + 1.0)*0.5;
+  texcoord[1] = (0.0 + 1.0)*0.5;
+  glTexCoord2fv(texcoord);
+  
+  vertex[0] = 1.0 * radius;
+  vertex[1] = 0.0 * radius;
+  vertex[2] = 0.0;
+  vertex[3] = 1.0;
+  glVertex4fv(vertex);
+  glEnd();
+  
+  glDisable(GL_TEXTURE_2D);
+  
+}
+
+void drawCircle(float cx, float cy, float r, int num_segments) 
+{ 
+	float theta = 2 * 3.1415926 / float(num_segments); 
+	float tangetial_factor = tanf(theta);//calculate the tangential factor 
+
+	float radial_factor = cosf(theta);//calculate the radial factor 
+	
+	float x = r;//we start at angle = 0 
+
+	float y = 0; 
+    
+	glBegin(GL_LINE_LOOP); 
+	for(int ii = 0; ii < num_segments; ii++) 
+	{ 
+		glVertex2f(x + cx, y + cy);//output vertex 
+        
+		//calculate the tangential vector 
+		//remember, the radial vector is (x, y) 
+		//to get the tangential vector we flip those coordinates and negate one of them 
+
+		float tx = -y; 
+		float ty = x; 
+        
+		//add the tangential vector 
+
+		x += tx * tangetial_factor; 
+		y += ty * tangetial_factor; 
+        
+		//correct using the radial factor 
+
+		x *= radial_factor; 
+		y *= radial_factor; 
+	} 
+	glEnd(); 
+}
 /* Anna, you need to fix where the lightning's position is*/
 
 void lightningShots(float angle, int offset_x, int offset_y){
@@ -415,10 +525,10 @@ void grassRazorLeaf(float angle, int offset_x, int offset_y){
 
 	glColor3ub(gvars::grassColors[0][0], gvars::grassColors[0][1],gvars::grassColors[0][2]);
 	
-	glVertex2i(-width + offset_x, height + offset_y);
-	glVertex2i(width + offset_x, -height + offset_y);
-	glVertex2i(width + offset_x, height + offset_y);
-	glVertex2i(-width + offset_x, -height + offset_y);
+	glVertex3i(-width + offset_x, height + offset_y, height + offset_y);
+	glVertex3i(width + offset_x, -height + offset_y, height + offset_y);
+	glVertex3i(width + offset_x, height + offset_y, height + offset_y);
+	glVertex3i(-width + offset_x, -height + offset_y, height + offset_y);
 	
 	glEnd();
 	
@@ -426,10 +536,10 @@ void grassRazorLeaf(float angle, int offset_x, int offset_y){
 
 	glColor3ub(gvars::grassColors[2][0], gvars::grassColors[2][1],gvars::grassColors[2][2]);
 	
-	glVertex2i(-width + offset_x, height + offset_y);
-	glVertex2i(width + offset_x, -height + offset_y);
-	glVertex2i(width + offset_x, height + offset_y);
-	glVertex2i(-width + offset_x, -height + offset_y);
+	glVertex3i(-width + offset_x, height + offset_y, height + offset_y);
+	glVertex3i(width + offset_x, -height + offset_y, height + offset_y);
+	glVertex3i(width + offset_x, height + offset_y, height + offset_y);
+	glVertex3i(-width + offset_x, -height + offset_y, height + offset_y);
 	
 	glEnd();
 	angle = offset_x + angle;
