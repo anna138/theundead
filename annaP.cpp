@@ -95,7 +95,7 @@ void Texture::Display_Picture(int xres, int yres, int offx, int offy){
 	int height = yres/2;
     glPushMatrix();
     //glColor3f(1.0,1.0,1.0);
-	glRotatef(318, 0.0, 1.0, 0.0);
+	//glRotatef(318, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
     glBindTexture(GL_TEXTURE_2D, id);
     glEnable(GL_ALPHA_TEST);

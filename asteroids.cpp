@@ -110,6 +110,7 @@ extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
 extern void showAttack(int choice);
 extern void isometricScene(); 
+extern void arrowInputMap(XEvent *);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -488,24 +489,23 @@ void check_mouse(XEvent *e)
 		int ydiff = savey - ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2);
 		if (++ct < 10)
 			return;		
-		//std::cout << "savex: " << savex << "and savey: " << savey << std::endl << std::flush;
-		// std::cout << "e->xbutton.y: " << (int)((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1))<< std::endl << std::flush;
-		// std::cout << "e->xbutton.x: " << (int)((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1))<< std::endl << std::flush;
+
 		hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
 		hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1)); 
 		std::cout << "x: " << hero.mousepos[0] << " and y: " << hero.mousepos[1] << std::endl << std::flush;
-		// if(hero.mousepos[0] != -1000){
-		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
-		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1));
-		// }else{
-		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/hero.mousepos[1])+1)*(hero.mousepos[1]/2));
-		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/hero.mousepos[0])-1)*(hero.mousepos[0]/2));
-		// }
-		hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
-		// double temp = (hero.mousepos[0]*hero.pos[0]+hero.mousepos[1]*hero.pos[2])/
-		// 					sqrt((pow(hero.pos[0],2)+pow(hero.pos[2], 2))*
-		// 					(pow(hero.mousepos[0], 2)+pow(hero.mousepos[1], 2)));
-		// hero.angle = acos(temp);
+		double v1[2] = {(double)(gl.xres>>1)-hero.pos[0],0};
+		double v2[2] = {hero.mousepos[0]-hero.pos[0], hero.mousepos[1]-hero.pos[2]};
+		hero.angle = acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2)))*(180/PI);
+		//std::cout << "acos: " << acos((double)VecDot(v1, v2)/(double)(VecMag(v1)*VecMag(v2))) << std::endl;
+ 		
+		std::cout << "mag: " << (VecMag(v1)*VecMag(v2)) << " dot: " << VecDot(v1, v2) << std::endl << std::flush;
+ 		std::cout << "px: " << hero.pos[0] << " py: " << hero.pos[2] << std::endl;
+		std::cout << "v1: " << v1[0] << " v1: " << v1[1] << std::endl << std::flush;
+ 		std::cout << "v2: " << v2[0] << " v2: " << v2[1] << std::endl << std::flush;
+
+
+		//hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
+
 		std::cout << "this is the angle in degrees:" << hero.angle << std::endl << std::flush;
 		hero.calFace();
 		if (xdiff > 0) {
@@ -567,6 +567,8 @@ int check_keys(XEvent *e)
 	} else {
 		return 0;
 	}
+	arrowInputMap(e);
+
     int choice=0;
 	int dirX=0;
     int dirY=0;

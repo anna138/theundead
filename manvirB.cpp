@@ -477,37 +477,26 @@ MainCharacter::~MainCharacter(){
 
 void MainCharacter::calFace()
 {
-    if(mousepos[1] >= 0){
-        if(angle >= 0){
-            face = 5;
-            if(angle < 40)
-                face = 6;
-            else if(angle >= 80)
-                face = 4;
-            
-        }else{
-            face = 2;
-            if(angle <= -80)
-                face = 4;
-            else if(angle <= -40)
-                face = 3;
-        }
-
-    }else{
-        if(angle >= 0){
-            face = 1;
-            if(angle < 40)
-                face = 2;
-            else if(angle >= 80)
-                face = 0;
-        }else{
+    if(mousepos[1] >= pos[2]){
+        face = 2;
+        if(angle <= 40)
             face = 6;
-            if(angle <= -80)
-                face = 0;
-            else if(angle <= -40)
-                face = 7;
-        }
-
+        else if(angle <= 80)
+            face = 5;
+        else if(angle <= 100)
+            face = 5;
+        else if(angle <= 140)
+            face = 3;
+    }else{
+        face = 2;
+        if(angle <= 40)
+            face = 6;
+        else if(angle <= 80)
+            face = 7;
+        else if(angle <= 100)
+            face = 0;
+        else if(angle <= 140)
+            face = 1;
     }
 
 
@@ -838,4 +827,44 @@ void isometricScene()
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,2.0f,-1.0f);
+}
+int keysym_to_arrow_key(KeySym keysym) 
+{
+    switch(keysym) {
+        case XK_Up:
+            return 0;
+        case XK_Down:
+            return 1;
+        case XK_Left:
+            return 2;
+        case XK_Right:
+            return 3;
+    }
+    return -1;
+}
+void arrowInputMap(XEvent *e )
+{
+    int arrow_keys[4];
+    switch(e->type) {
+        case KeyPress: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 1;
+        } break;
+        case KeyRelease: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 0;
+        } break;
+    }
+    if(gvars::state == gvars::GameState::game){
+        gvars::hero.calFace(arrow_keys);
+    }
+
+
+
 }
