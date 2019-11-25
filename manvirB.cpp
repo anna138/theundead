@@ -543,7 +543,6 @@ void MainCharacter::setFace(int f)
     face = f;
 }
 
-
 /**************************************
  * communicate with the server
  * ***********************************/

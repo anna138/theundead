@@ -192,9 +192,16 @@ int main()
 				glEnable(GL_LIGHT0);
 				glEnable(GL_DEPTH_TEST);
 				float intensity[] = {1,1,1,1.0};
+<<<<<<< HEAD
 				glLightfv(GL_LIGHT0, GL_DIFFUSE, intensity);
 				float pos[] = {50,100.1,0.0,0.5};
+=======
+				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
+				float pos[] = {(float)movex,(float)movey,0.0,.5};
+				//float lights[] = {0, 0, 1.0, 1.0};
+>>>>>>> origin
 				glLightfv(GL_LIGHT0, GL_POSITION, pos);
+				//glLightfv(GL_LIGHT0, GL_POSITION, lights);
 				
 
 				//scoreboard(r);
@@ -630,6 +637,16 @@ int check_keys(XEvent *e)
 			hero.pos[0]+=5;
 			break;
 		case XK_Down:
+			movey-=5;
+			break;
+		case XK_Up:
+			movey+=5;
+			break;
+		case XK_Left:
+			movex-=5;
+			break;
+		case XK_Right:
+			movex+=5;
 			break;
 		case XK_equal:
 			break;
