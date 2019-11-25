@@ -46,4 +46,5 @@ namespace gvars{
     int sizeX = 200;
     int sizeY = 200;
     int playerdir = 0;
+    MainCharacter hero;
 } // namespace GVars

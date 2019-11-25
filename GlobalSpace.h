@@ -1,5 +1,6 @@
 #pragma once
 #include <GL/glx.h>
+#include "MainCharacter.h"
 #include "Global.h"
 
 //define all global variables here that go
@@ -44,6 +45,7 @@ namespace gvars{
     extern int sizeY;
     extern int fireArray[];
     extern int playerdir;
+    extern MainCharacter hero;
     enum class GameState{
         startup,
         menu,

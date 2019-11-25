@@ -4,8 +4,7 @@
 //date:    2014 - 2018
 //mod spring 2015: added constructors
 //This program is a game starting point for a 3350 project.
-//
-//
+
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
@@ -143,15 +142,7 @@ int main()
 	//creating a blender object
 	Blender b;
     b.readObj("./images/cube2.obj");
-	Texture hitler("images/hitler_sprite/hitler_front.png",0,0,0,gl.xres, gl.yres);
-	Texture hitler_eyes_c("images/hitler_sprite/hitler_frnt_ec.png", 0 , 0 , 0 ,
-	gl.xres,gl.yres);
-	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
-	Texture hitler_sh("images/hilter_villain_shooting.png",0,0,0,gl.xres,gl.yres);
-	Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
-	Texture skull("images/ghost_skull.png",0,0,0,gl.xres,gl.yres);
-	Texture fireball("images/fireb1.png",0,0,0,gl.xres,gl.yres);
-	Texture fireball2("images/fireb2.png",0,0,0,gl.xres,gl.yres);
+	
 	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
 	Texture hud("images/hud.png", 0,0,0, gl.xres, gl.yres);
 	int width = 50, height = 50, offx = 200, offy = 200;
@@ -211,56 +202,10 @@ int main()
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
                 //glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
 				//map.Display_Picture(gl.xres, gl.yres, 0, -1);
-				showAttack(gvars::attack);
-				/*zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, g.zombie.pos[0], g.zombie.pos[1]);
-
-				zombieAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, gl.xres, gl.yres);*/
-
-				skull.Display_Picture(g.skull.size[0] / 2, g.skull.size[0] / 2, g.skull.pos[0], g.skull.pos[1]);
-				//dyingAnimation(g.skull.pos);
-				skullAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
-
 				isometricScene();
+				hero.characterRender();
 				b.renderObj(0, 0, 0);
-				if(timeCurrent.tv_sec%4  < 2) {
-					fireball2.Display_Picture(sizeX,sizeY, fireArray[0], fireArray[1]);
-					//flicker(gvars::fireArray);
-					//fireballAttack(gvars::fireArray);
-				} else {
-					fireball.Display_Picture(sizeX,sizeY, fireArray[0], fireArray[1]);
-					//flicker(gvars::fireArray);
-					//fireballAttack(gvars::fireArray);
-				}
-				if(playerdir == 0){
-					if(timeCurrent.tv_sec%5 == 0){
-						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex,
-						movey-1);
-					}else{
-						hitler.Display_Picture(sizeX,sizeY, movex, movey-1);
-					}
-				}else if(playerdir == 1){
-					hitler_br.Display_Picture(sizeX, sizeY, movex, movey-1);
-				
-				} 
-				else if(playerdir == 3) {
-					//if(timeCurrent.tv_sec % 10 == 0){
-					hitler_sh.Display_Picture(sizeX, sizeY, movex, movey-1);
-					//}
-					
-				}
-				glBegin(GL_QUADS);
-
-				glVertex3i(width + offx, -height + offy, height + offy);
-				glVertex3i(width + offx, height + offy,  -height + offy);
-				glVertex3i(-width + offx, height + offy,  -height + offy);
-				glVertex3i(-width + offx, -height + offy,  height + offy);
-
-				glEnd();
-				glDisable(GL_LIGHTING);
-				glDisable(GL_LIGHT0);
-				glDisable(GL_DEPTH_TEST);
-				render();
-				
+				//render();
 				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
@@ -549,9 +494,26 @@ void check_mouse(XEvent *e)
 		int ydiff = savey - ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2);
 		if (++ct < 10)
 			return;		
-		// std::cout << "savex: " << savex << std::endl << std::flush;
-		// std::cout << "e->xbutton.y: " << ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2)<< std::endl;
-		//std::flush;
+		//std::cout << "savex: " << savex << "and savey: " << savey << std::endl << std::flush;
+		// std::cout << "e->xbutton.y: " << (int)((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1))<< std::endl << std::flush;
+		// std::cout << "e->xbutton.x: " << (int)((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1))<< std::endl << std::flush;
+		hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
+		hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1)); 
+		std::cout << "x: " << hero.mousepos[0] << " and y: " << hero.mousepos[1] << std::endl << std::flush;
+		// if(hero.mousepos[0] != -1000){
+		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
+		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1));
+		// }else{
+		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/hero.mousepos[1])+1)*(hero.mousepos[1]/2));
+		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/hero.mousepos[0])-1)*(hero.mousepos[0]/2));
+		// }
+		hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
+		// double temp = (hero.mousepos[0]*hero.pos[0]+hero.mousepos[1]*hero.pos[2])/
+		// 					sqrt((pow(hero.pos[0],2)+pow(hero.pos[2], 2))*
+		// 					(pow(hero.mousepos[0], 2)+pow(hero.mousepos[1], 2)));
+		// hero.angle = acos(temp);
+		std::cout << "this is the angle in degrees:" << hero.angle << std::endl << std::flush;
+		hero.calFace();
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
@@ -595,7 +557,7 @@ int check_keys(XEvent *e)
 	//keyboard input?
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-	//Log("key: %i\n", key);
+
 	if (e->type == KeyRelease) {
 		gl.keys[key]=0;
 		if (key == XK_Shift_L || key == XK_Shift_R)
@@ -603,7 +565,6 @@ int check_keys(XEvent *e)
 		return 0;
 	}
 	if (e->type == KeyPress) {
-		//std::cout << "press" << std::endl;
 		gl.keys[key]=1;
 		if (key == XK_Shift_L || key == XK_Shift_R) {
 			shift=1;
@@ -631,7 +592,7 @@ int check_keys(XEvent *e)
 				x11.swapBuffers();
 		    	sleep(1);
 		    }
-			playerdir = 3;
+			hero.setFace(7);
 		    break;
 		case XK_c:
 		    choice =3;
@@ -649,26 +610,24 @@ int check_keys(XEvent *e)
 			state = GameState::endgamescore;
 			break;
 		case XK_w:
-			movey++;
-			playerdir = 0;
+			hero.pos[2]+=5;
+			hero.setFace(1);
 			break;
 		case XK_s:
-			movey--;
-			playerdir = 1;
+			hero.pos[2]-=5;
+			hero.setFace(0);
 			break;
 		case XK_e:
-			std::cout << "Me Work" << std::endl;
 			gvars::attack = (gvars::attack + 1) % 4;
 			break;
 		case XK_a:
-			playerdir = 0;
-			movex == -gl.xres/2 ? movex = gl.xres/2: movex-=5;
-			sizeX = -200;
+			
+			hero.setFace(3);
+			hero.pos[0]-=5;
 			break;
 		case XK_d:
-			playerdir = 0;
-			movex == gl.xres/2 ? movex = -gl.xres/2: movex+=5;
-			sizeX = 200;
+			hero.setFace(5);
+			hero.pos[0]+=5;
 			break;
 		case XK_Down:
 			break;

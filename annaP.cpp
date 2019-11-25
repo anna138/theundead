@@ -56,7 +56,9 @@ int offset_y, unsigned int texture);
 extern void displaycurrentscore(Rect r, int h, int w, int bestScore, int yourScore);
 extern void readScores(char * filename);
 
-
+Texture::Texture()
+{
+}
 
 Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):
 w(w1), h(h1), x(x1), y(y1), z(z1){
@@ -69,36 +71,57 @@ w(w1), h(h1), x(x1), y(y1), z(z1){
 	img->data = tpimage; 
     glGenTextures(1, &id);
 	glBindTexture(GL_TEXTURE_2D, id);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
 		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
 }
+Texture::~Texture()
+{
+	delete img;
+}
+void Texture::set(const char*fname)
+{
+	img = new Image(fname);
+	w = img->width;
+	h = img->height;
+	unsigned char * tpimage = buildAlphaData();
+    glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
 
+}
 void Texture::Display_Picture(int xres, int yres, int offx, int offy){
     int width = xres/2;
 	int height = yres/2;
     glPushMatrix();
     //glColor3f(1.0,1.0,1.0);
+	glRotatef(318, 0.0, 1.0, 0.0);
+	glTranslatef(0, 100, 0);
     glBindTexture(GL_TEXTURE_2D, id);
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+offx,height+offy, 0); 
+        glVertex3i(-width+offx,height, offy); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+offx,-height+offy, 0); 
+        glVertex3i(-width+offx,-height, offy); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+offx, -height+offy, 0);      
+        glVertex3i(width+offx, -height, offy);      
         glTexCoord2f(1,0);
-        glVertex3i(width+offx,height+offy, 0);
+        glVertex3i(width+offx,height, offy);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
+}
+int Texture::getID()
+{
+	return id;
 }
 unsigned char* Texture::buildAlphaData()
 {
