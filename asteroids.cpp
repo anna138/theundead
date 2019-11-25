@@ -141,11 +141,11 @@ int main()
 	
 	//creating a blender object
 	Blender b;
-    b.readObj("./images/cube2.obj");
+    b.readObj("./images/map.obj");
 	
 	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
 	Texture hud("images/hud.png", 0,0,0, gl.xres, gl.yres);
-	int width = 50, height = 50, offx = 200, offy = 200;
+	//int width = 50, height = 50, offx = 200, offy = 200;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();

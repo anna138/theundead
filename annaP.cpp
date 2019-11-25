@@ -153,9 +153,6 @@ unsigned char* Texture::buildAlphaData()
 	
 	return newdata;
 }
-int Texture::getID(){
-	return id;
-}
 
 /*Function Definitions*/
 void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMenu, unsigned int title)
