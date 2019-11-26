@@ -70,11 +70,43 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
         glColor3f(0.0,1.0,1.0);
         drawSquare(width - 3, height - 3,dirX,dirY);
     }
+    if( choice == 1) {
+        dirX=posx[2];
+        dirY=posy[2];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width - 3, height - 3,dirX,dirY);
+    }
     //the boxes are backwards in the array
     if( choice == 3) {
         dirX=posx[0];
         dirY=posy[0];
         glColor3f(0.0,1.0,1.0);
+        drawSquare(width -3, height - 3,dirX,dirY);
+    }
+}
+void characterChoice( int x, int y ,int dirX, int dirY, int choice) {
+
+    int width = x/16;
+    int height = y/26;
+    int posx[3] = {x/5,0, -(x/5)};
+    int posy[3] = {(-y/4), (-y/4), (-y/4)};
+    if( choice == 3) {
+        dirX=posx[1];
+        dirY=posy[1];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width - 3, height - 3,dirX,dirY);
+    }
+    if( choice == 1) {
+        dirX=posx[2];
+        dirY=posy[2];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width - 3, height - 3,dirX,dirY);
+    }
+    //the boxes are backwards in the array
+    if( choice == 4) {
+        dirX=posx[0];
+        dirY=posy[0];
+        glColor3f(1.0,0.0,0.0);
         drawSquare(width -3, height - 3,dirX,dirY);
     }
 }
@@ -104,6 +136,19 @@ void boxText(Rect r, int x, int y) {
     }
 
 }
+void characterText(Rect r, int x, int y) {
+    std::string boxText[3]={"Hilter","Hitler Cousin","Hitler BFF"};
+    
+    int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
+    int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
+    for(int i=0;i<3;i++) {
+        r.left=posx[i];
+        r.bot=posy[i];
+        r.center=0;
+        ggprint8b(&r,16,0x00cefdce, boxText[i].c_str());
+    }
+
+}
 
 void drawSquare(int x, int y, int dirX, int dirY) {
     int w=x;
@@ -115,6 +160,7 @@ void drawSquare(int x, int y, int dirX, int dirY) {
     glVertex2i(w+dirX, h+dirY);
     glVertex2i(-w+dirX, h+dirY);
     glVertex2i(-w+dirX, -h+dirY);
+    glVertex2i(w+dirX, h+dirY);
     glEnd();
     glPopMatrix();
 }
@@ -211,4 +257,40 @@ void renderVine( int size, int start, int end){
     gvars::arrayVine[10]= 10;//randXnum;
     
 }
+struct Box {
+    float x, y;
+    float w,h;
+    float vx, vy;
+};
+void characterSelect(){
 
+}
+/*
+float sweptAABB(Box b1, Box b2, float &normalx, float &normaly){
+    glReadPixels(200,150,100,100)
+    float xInvEntry, yInvEntry;
+    float xInvExit, yInvExit;
+//Find the distance between the objects on the near and far side for both x and y
+    if(b1.vx > 0.0f) {
+        xInvEntry =b2.x-(b1.x+b1.w);
+        xInvExit=(b2.x+b2.w)-b1.x;
+    }
+    else
+    {
+        xInvEntry=(b2.x+b2.w)-b1.x;
+        xInvExit=b2.x-(b1.x+b1.w);
+
+    }
+    if(b1.vy>0.0f)
+    {
+        yInvEntry=b2.y-(b1.y+b1.h);
+        yInvExit=(b2.y+b2.h)-b1.y;
+
+    }
+    else 
+    {
+        yInvEntry=(b2.y+b2.h)-b1.y;
+        yInvExit=b2.y-(b1.y+b1.h);
+    }
+
+}*/

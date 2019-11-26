@@ -50,6 +50,7 @@ namespace gvars{
         menu,
         game,
         credits,
+        characterSelect,
         highscores,
         endgamescore,
         end

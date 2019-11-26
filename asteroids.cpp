@@ -99,9 +99,11 @@ extern void fireCircles(int, int, int);
 extern void grassVines(float, int, int);
 extern void waterBubbles(int, int);
 extern void boxText(Rect r, int, int );
+extern void characterText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
+extern void characterChoice( int , int ,int dirX, int dirY, int choice);
 extern void renderVine(int size, int start, int end);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
@@ -186,6 +188,22 @@ int main()
 				//drawLine();
 				drawVine();
                 boxText(r,gl.xres,gl.yres);
+				break;
+			}
+
+            case GameState::characterSelect:{
+				Rect r;
+				//int x=200,y=200,dirX=0,dirY=0;
+				int dirX=0,dirY=0;
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
+				//startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
+				//				 startMenuTexture, titleImageTexture);
+				makeButton(gl.xres,gl.yres,dirX,dirY);
+				//changeButtonColor( gl.xres,gl.yres, dirX, dirY);
+				//drawLine();
+				//drawVine();
+                characterText(r,gl.xres,gl.yres);
 				break;
 			}
 			case GameState::game:{
@@ -576,6 +594,24 @@ int check_keys(XEvent *e)
 				state = GameState::credits;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
+				sleep(1);
+		    }
+			break;
+		case XK_t:
+		    choice =1;
+		    if(state != GameState::characterSelect){
+				state = GameState::characterSelect;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+				x11.swapBuffers();
+				sleep(1);
+		    }
+			break;
+		case XK_p:
+		    choice =4;
+		    if(state != GameState::characterSelect){
+				state = GameState::characterSelect;
+				characterChoice( gl.xres,gl.yres, dirX,dirY, choice);
+				//x11.swapBuffers();
 				sleep(1);
 		    }
 			break;
