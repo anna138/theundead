@@ -91,12 +91,15 @@ Texture character3;
 
 
 void characterChoice() {
+	glPushAttrib( GL_CURRENT_BIT );
+	glColor4f(1.0f,0.0f,0.0f,1.0f);
 		character1.set("./images/villain.png");
 		character1.Display_Picture( 400, 400, 600, 0);
 		character2.set("./images/hitler_sprite/hitler_front.png");
 		character2.Display_Picture( 400, 400, -600, 0);
 		character3.set("./images/wizard/wiz_s.png");
 		character3.Display_Picture( 400, 400, 0, 0);
+		glPopAttrib();
     
 }
 
