@@ -454,22 +454,22 @@ MainCharacter::MainCharacter()
     pos[2] = 0;
     face = 0;
 	hitler = new Texture[8];
-    // hitler[0].set("images/hitler_sprite/hitler_front.png");
-    // hitler[1].set("images/hitler_sprite/hitler_back.png");
-    // hitler[2].set("images/hitler_sprite/hitler_back_side.png");
-    // hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
-    // hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
-    // hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
-    // hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
-    // hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
-    hitler[0].set("images/wizard/wiz_s.png");
-    hitler[1].set("images/wizard/wiz_sw.png");
-    hitler[2].set("images/wizard/wiz_w.png");
-    hitler[3].set("images/wizard/wiz_nw.png");
-    hitler[4].set("images/wizard/wiz_n.png");
-    hitler[5].set("images/wizard/wiz_ne.png");
-    hitler[6].set("images/wizard/wiz_e.png");
-    hitler[7].set("images/wizard/wiz_se.png");
+    hitler[0].set("images/hitler_sprite/hitler_front.png");
+    hitler[1].set("images/hitler_sprite/hitler_back.png");
+    hitler[2].set("images/hitler_sprite/hitler_back_side.png");
+    hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
+    hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
+    hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
+    hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
+    hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    // hitler[0].set("images/wizard/wiz_s.png");
+    // hitler[1].set("images/wizard/wiz_sw.png");
+    // hitler[2].set("images/wizard/wiz_w.png");
+    // hitler[3].set("images/wizard/wiz_nw.png");
+    // hitler[4].set("images/wizard/wiz_n.png");
+    // hitler[5].set("images/wizard/wiz_ne.png");
+    // hitler[6].set("images/wizard/wiz_e.png");
+    // hitler[7].set("images/wizard/wiz_se.png");
 }
 MainCharacter::~MainCharacter(){
     delete [] hitler;
