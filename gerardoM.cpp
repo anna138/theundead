@@ -18,6 +18,7 @@
 #include "fonts.h"
 #include <math.h>
 #include "GlobalSpace.h"
+#include "Texture.h"
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
 void drawSquare (int width, int height, int dirX, int dirY);
@@ -84,32 +85,21 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
         drawSquare(width -3, height - 3,dirX,dirY);
     }
 }
-void characterChoice( int x, int y ,int dirX, int dirY, int choice) {
+Texture character1;
+Texture character2;
+Texture character3;
 
-    int width = x/16;
-    int height = y/26;
-    int posx[3] = {x/5,0, -(x/5)};
-    int posy[3] = {(-y/4), (-y/4), (-y/4)};
-    if( choice == 3) {
-        dirX=posx[1];
-        dirY=posy[1];
-        glColor3f(0.0,1.0,1.0);
-        drawSquare(width - 3, height - 3,dirX,dirY);
-    }
-    if( choice == 1) {
-        dirX=posx[2];
-        dirY=posy[2];
-        glColor3f(0.0,1.0,1.0);
-        drawSquare(width - 3, height - 3,dirX,dirY);
-    }
-    //the boxes are backwards in the array
-    if( choice == 4) {
-        dirX=posx[0];
-        dirY=posy[0];
-        glColor3f(1.0,0.0,0.0);
-        drawSquare(width -3, height - 3,dirX,dirY);
-    }
+
+void characterChoice() {
+		character1.set("./images/villain.png");
+		character1.Display_Picture( 400, 400, 600, 0);
+		character2.set("./images/hitler_sprite/hitler_front.png");
+		character2.Display_Picture( 400, 400, -600, 0);
+		character3.set("./images/wizard/wiz_s.png");
+		character3.Display_Picture( 400, 400, 0, 0);
+    
 }
+
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     r.bot=h-h;
     r.left=w-w-25;
