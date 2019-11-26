@@ -11,9 +11,12 @@ class Texture{
         int z;
         GLuint id;
         Image *img;
-        public:
+    public:
+        Texture();
         Texture(const char*, int, int, int, int, int);
+        void set(const char*);
         void Display_Picture(int, int, int , int);
 		unsigned char* buildAlphaData();
-
+        int getID();
+        ~Texture();
 };

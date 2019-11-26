@@ -1,5 +1,6 @@
 #pragma once
 #include <GL/glx.h>
+#include "MainCharacter.h"
 #include "Global.h"
 
 //define all global variables here that go
@@ -8,6 +9,7 @@ namespace gvars{
     typedef float Matrix[4][4];
     extern int img_x;
     extern int img_y;
+    extern int attack;
     extern int xres;
     extern int yres;
     extern unsigned int imageTexture; 
@@ -42,6 +44,7 @@ namespace gvars{
     extern int sizeX;
     extern int sizeY;
     extern int playerdir;
+    extern MainCharacter hero;
     enum class GameState{
         startup,
         menu,
@@ -52,5 +55,6 @@ namespace gvars{
         end
     };
     extern GameState state;
+    extern int arrow_keys[4];
 }
 

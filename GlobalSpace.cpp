@@ -6,6 +6,7 @@ namespace gvars{
     typedef float Matrix[4][4];
     int img_x;
     int img_y;
+    int attack = 0;
     int xres = 1920;
     int yres = 1080;
     unsigned int imageTexture; 
@@ -44,4 +45,6 @@ namespace gvars{
     int sizeX = 200;
     int sizeY = 200;
     int playerdir = 0;
+    MainCharacter hero;
+    int arrow_keys[4] = {0, 0, 0, 0};
 } // namespace GVars

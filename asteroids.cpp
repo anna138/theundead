@@ -4,8 +4,7 @@
 //date:    2014 - 2018
 //mod spring 2015: added constructors
 //This program is a game starting point for a 3350 project.
-//
-//
+
 #include <cstdlib>
 #include <cstring>
 #include <unistd.h>
@@ -80,6 +79,7 @@ int check_keys(XEvent *e);
 void physics();
 void render();
 void renderCredits();
+
 extern void creditManvir(Rect r);
 extern void creditsAnna(Rect r);
 extern void creditsGerardo(Rect r);
@@ -110,6 +110,10 @@ extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float e
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
+extern void showAttack(int choice);
+extern void isometricScene(); 
+extern void orthoScene();
+extern void arrowInputMap(XEvent *);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -133,11 +137,14 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
+	//remove later
+	Rect r3;
+	displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
+						rand()%20);
+	//up to here ask manvir for removal
 	//creating a blender object
-	//Blender obj;
-	Texture hitler("images/hitler.png",0,0,0,gl.xres, gl.yres);
-	Texture hitler_eyes_c("images/hitler_eyes_closed.png",0,0,0,gl.xres,gl.yres);
-	Texture hitler_br("images/hitler_back_right.png",0,0,0,gl.xres,gl.yres);
+	Blender b;
+    b.readObj("./images/map.obj");
 	
 	while (!done) {
 		while (x11.getXPending()) {
@@ -157,6 +164,7 @@ int main()
 		//lets start the game states
 		switch (state){
 			case GameState::startup:{
+				glClear(GL_COLOR_BUFFER_BIT);
 				runLogoIntro(logoIntroTexture);
 				//render everything to the screen
 				x11.swapBuffers();
@@ -169,8 +177,10 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
-				glClear(GL_COLOR_BUFFER_BIT);
-				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres, startMenuTexture, titleImageTexture);
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
+				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
+								 startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
 				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
 				//drawLine();
@@ -179,30 +189,25 @@ int main()
 				break;
 			}
 			case GameState::game:{
-                Rect r;
-				glClear(GL_COLOR_BUFFER_BIT);
-				scoreboard(r);
-				glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-                glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0,30);
-				if(playerdir == 0){
-					if(timeCurrent.tv_sec%7 == 0){
-						hitler_eyes_c.Display_Picture(sizeX, sizeY, movex, movey);
-					}else{
-						hitler.Display_Picture(sizeX,sizeY, movex, movey);
-					}
-				}else if(playerdir == 1){
-					hitler_br.Display_Picture(sizeX, sizeY, movex, movey);
-				
-				}
-				glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+                
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				glEnable(GL_LIGHTING);
+				glEnable(GL_LIGHT0);
+				glEnable(GL_DEPTH_TEST);
+				float intensity[] = {1,1,1,1.0};
+				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
+				float pos[] = {(float)movex,(float)movey,0.0,.5};
+				glLightfv(GL_LIGHT0, GL_POSITION, pos);
+				isometricScene();
+				hero.characterRender();
+				b.renderObj(0, 0, 0);
 				//render();
 				break;
 			}
 			case GameState::highscores:{
 				Rect r2;
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
 				getScores(filename);
 				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
 				state = GameState::end;
@@ -217,7 +222,10 @@ int main()
 			}
 			case GameState::endgamescore:{
 				Rect r3;	
-				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, rand()%10);
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
+				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
+										rand()%10);
 				state = GameState::end;
 				break;
 			}
@@ -388,7 +396,7 @@ void init_opengl(void)
 
 	titleImageTexture = gl.titleTexture;
 
-		//Image - Start Menu Zombie
+	//Image - Water
 	
 	glGenTextures(1, &gl.startTexture);
 	int w8 = img[8].width;
@@ -443,8 +451,9 @@ void check_mouse(XEvent *e)
 				if (g.nbullets < MAX_BULLETS) {
 					Bullet *b = &g.barr[g.nbullets];
 					timeCopy(&b->time, &bt);
-					b->pos[0] = g.trooper.pos[0];
-					b->pos[1] = g.trooper.pos[1];
+					/*b->pos[0] = g.trooper.pos[0];
+					b->pos[1] = g.trooper.pos[1];*/
+					b->pos[0]= movex; b->pos[1] = movey;
 					b->vel[0] = g.trooper.vel[0];
 					b->vel[1] = g.trooper.vel[1];
 					//convert trooper angle to radians
@@ -479,9 +488,6 @@ void check_mouse(XEvent *e)
 		int ydiff = savey - ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2);
 		if (++ct < 10)
 			return;		
-		// std::cout << "savex: " << savex << std::endl << std::flush;
-		// std::cout << "e->xbutton.y: " << ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2)<< std::endl;
-		//std::flush;
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
@@ -525,27 +531,28 @@ int check_keys(XEvent *e)
 	//keyboard input?
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-	//Log("key: %i\n", key);
-	if (e->type == KeyRelease) {
-		gl.keys[key]=0;
-		if (key == XK_Shift_L || key == XK_Shift_R)
-			shift=0;
-		return 0;
-	}
-	if (e->type == KeyPress) {
-		//std::cout << "press" << std::endl;
-		gl.keys[key]=1;
-		if (key == XK_Shift_L || key == XK_Shift_R) {
-			shift=1;
-			return 0;
-		}
-	} else {
-		return 0;
-	}
+
+	// if (e->type == KeyRelease) {
+	// 	gl.keys[key]=0;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R)
+	// 		shift=0;
+	// 	return 0;
+	// }
+	// if (e->type == KeyPress) {
+	// 	gl.keys[key]=1;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R) {
+	// 		shift=1;
+	// 		return 0;
+	// 	}
+	// } else {
+	// 	return 0;
+	// }
+	arrowInputMap(e);
+
     int choice=0;
 	int dirX=0;
     int dirY=0;
-    if (shift){}
+	if (shift){}
 	switch (key) {
 		case XK_Escape:
             return 1;
@@ -553,23 +560,24 @@ int check_keys(XEvent *e)
 		case XK_m:
 			state = GameState::menu;
 			break;
-        case XK_space:
-            choice=2;
-            if(state != GameState::game) {
-			    state = GameState::game;
-		        changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
-                x11.swapBuffers();
-            sleep(1);
-            }
-            break;
+		case XK_space:
+		    choice=2;
+		    if(state != GameState::game) {
+				state = GameState::game;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+				x11.swapBuffers();
+		    	sleep(1);
+		    }
+			hero.setFace(7);
+		    break;
 		case XK_c:
-            choice =3;
-            if(state != GameState::credits){
-                state = GameState::credits;
-                changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
-                x11.swapBuffers();
-            sleep(1);
-            }
+		    choice =3;
+		    if(state != GameState::credits){
+				state = GameState::credits;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+				x11.swapBuffers();
+				sleep(1);
+		    }
 			break;
 		case XK_h:
 			state = GameState::highscores;
@@ -577,25 +585,8 @@ int check_keys(XEvent *e)
 		case XK_g:
 			state = GameState::endgamescore;
 			break;
-		case XK_w:
-			movey++;
-			playerdir = 0;
-			break;
-		case XK_s:
-			movey--;
-			playerdir = 1;
-			break;
-		case XK_a:
-			playerdir = 0;
-			movex == -gl.xres/2 ? movex = gl.xres/2: movex-=5;
-			sizeX = -200;
-			break;
-		case XK_d:
-			playerdir = 0;
-			movex == gl.xres/2 ? movex = -gl.xres/2: movex+=5;
-			sizeX = 200;
-			break;
-		case XK_Down:
+		case XK_e:
+			gvars::attack = (gvars::attack + 1) % 4;
 			break;
 		case XK_equal:
 			break;
@@ -880,7 +871,11 @@ void physics()
 
 void render()
 { 
-    Rect r;
+	//Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
+	showAttack(gvars::attack);
+    /*
+	Anna Commented
+	Rect r;
 	glClear(GL_COLOR_BUFFER_BIT);
   
 	r.bot = gl.yres - 20;
@@ -909,20 +904,25 @@ void render()
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
+*/
+	/*zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
 
-	/*movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
-		g.zombie.angle, g.zombie.zombieImageTexture);
+	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
+	//	g.zombie.angle, g.zombie.zombieImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
+/*
+Anna Commented
 	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
 		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
 	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
-
+*/
 	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
 	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
 
 	//-------------------------------------------------------------------------
-
+/*
+Anna commented
 	movingImages(50, 50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
 	Flt rad;
 	if (gl.keys[XK_Up] || g.mouseThrustOn) {
@@ -978,11 +978,12 @@ void render()
 			glEnd();
 			a = a->next;
 			
-			
+			*/
 			/*movingImages(30, 30, a->pos, a->angle, g.villain.skullImageTexture);*/
-			
+			/*
+			Anna Commented
 		}
-	}
+	}*/
 	//-------------------------------------------------------------------------
 	//Draw the bullets
 	
@@ -1009,12 +1010,15 @@ void render()
 		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
-
+		
 		//b->pos[0] += 10;
 		//b->pos[1] += 10;
-		int choice = 1;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);		
-		b->pos[1] += .25;
+		int choice = gvars::attack;		
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
+		//fireCircles(b->row, b->pos[0], b->pos[1]);
+		//b->pos[1] += .25;
+
+		//std::cout << "I am poo poo " << std::endl;
 
 	}
     

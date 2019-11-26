@@ -24,15 +24,19 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #include <fstream>
-//
+#include "GlobalSpace.h"
+#include "MainCharacter.h"
+using gvars::gl;
+using gvars::arrow_keys;
+
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
-struct Vec
+struct Vec3
 {
 	float x, y, z;
-	Vec(){ z = (0), y = (0), x = (0);}
-	Vec(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+	Vec3(){ z = (0), y = (0), x = (0);}
+	Vec3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
 	void setPoints(float x1, float y1, float z1)
 	{
 		x = x1;
@@ -41,7 +45,7 @@ struct Vec
 	}
 };
 const int MAX_PARTICLES = 10000;
-Vec particles[MAX_PARTICLES];
+Vec3 particles[MAX_PARTICLES];
 
 void creditManvir(Rect r)
 {
@@ -69,7 +73,8 @@ double xp = t;
 double yp = t;
 int angle = 5;
 float z = 0.005;
-void chaos_equations(){
+void chaos_equations()
+{
 	//draw dots
 	glTranslatef(0,0,z);
 	glPushMatrix();
@@ -119,7 +124,8 @@ void chaos_equations(){
 }
 
 TypeObj::TypeObj(int idx, int x, int y, int z,int tx, 
-		int ty,int tz, int mID){
+		int ty,int tz, int mID)
+{
 	id = idx;
 	matID = mID;
 	size = 3;
@@ -133,7 +139,8 @@ TypeObj::TypeObj(int idx, int x, int y, int z,int tx,
 	textureCoord[2] = tz;
 }
 TypeObj::TypeObj(int idx, int x, int y, int x1, int y1,
-		int t0, int t1,int t2, int t3, int mID){
+		int t0, int t1,int t2, int t3, int mID)
+{
 	id = idx;
 	matID = mID;
 	size = 4;
@@ -166,7 +173,8 @@ Material::Material(std::string name, std::vector<float> & s,
 }
 
 
-void Blender::readObj(const std::string fn){
+void Blender::readObj(const std::string fn)
+{
 
     std::ifstream fin(fn.c_str());
 
@@ -245,7 +253,8 @@ void Blender::readObj(const std::string fn){
     }
 
 }
-void Blender::readMaterial(const std::string fname){
+void Blender::readMaterial(const std::string fname)
+{
     std::ifstream fin("./images/"+fname);
     if(!fin.is_open()){
         std::cout << "could not open file:"<< "./images/"+fname << std::endl;
@@ -313,20 +322,19 @@ void Blender::readMaterial(const std::string fname){
                     ambient, ns, ni, d, illumn, textureID));
     }
 }
-void Blender::renderObj(float x, float y, float z){
+void Blender::renderObj(float x, float y, float z)
+{
     int prevMat = -1;
     int currmat = 0;
     glPushMatrix();
     //glTranslatef(x, y, z);
     glTranslatef(0,0,-4);
+	glScalef(50,50,50);
     
     glRotatef(x,1.0,0.0,0.0);
     glRotatef(y,0.0,1.0,0.0);
     glRotatef(z,0.0,0.0,1.0);
-    //glRotatef(x,1.0,0,0);
-    //glRotatef(y,0.0,1.0,0);
-   // glRotatef(z,0.0,0,1.0);
-    //std::cout << mats[0]->matname << mats[1]->matname << std::endl; 
+
     bool checkTexture;
     for(unsigned int i = 0; i < faces.size(); i++){
 
@@ -412,13 +420,11 @@ void Blender::renderObj(float x, float y, float z){
 
     }
     glPopMatrix();
-    if(ang > 360)
-        ang = -360;
-    
-    ang += 0.1;
+
 
 }
-int Blender::loadTexture(std::string fname){
+int Blender::loadTexture(std::string fname)
+{
     fname = "./images/" + fname;
     Image img(fname.c_str());
     unsigned int id;
@@ -432,8 +438,118 @@ int Blender::loadTexture(std::string fname){
             GL_RGB,GL_UNSIGNED_BYTE, img.data);
     return id;
 }
-Blender::Blender(){
-    ang = 1.0;
+Blender::Blender()
+{
+    
+}
+/***************************
+ * Main character class for rendering 
+ * and controlling the hero of this game.
+ * 
+ * *************************/
+
+MainCharacter::MainCharacter()
+{
+    pos[0] = 0;
+    pos[1] = 0;
+    pos[2] = 0;
+    face = 0;
+    dir = Direction::S;
+	hitler = new Texture[8];
+    // hitler[0].set("images/hitler_sprite/hitler_front.png");
+    // hitler[1].set("images/hitler_sprite/hitler_back.png");
+    // hitler[2].set("images/hitler_sprite/hitler_back_side.png");
+    // hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
+    // hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
+    // hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
+    // hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
+    // hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    hitler[0].set("images/wizard/wiz_s.png");
+    hitler[1].set("images/wizard/wiz_sw.png");
+    hitler[2].set("images/wizard/wiz_w.png");
+    hitler[3].set("images/wizard/wiz_nw.png");
+    hitler[4].set("images/wizard/wiz_n.png");
+    hitler[5].set("images/wizard/wiz_ne.png");
+    hitler[6].set("images/wizard/wiz_e.png");
+    hitler[7].set("images/wizard/wiz_se.png");
+}
+MainCharacter::~MainCharacter(){
+    delete [] hitler;
+}
+
+void MainCharacter::calFace()
+{
+    int sum = arrow_keys[0]+arrow_keys[1]+arrow_keys[2]+arrow_keys[3];
+    if (sum == 1) {
+        if(arrow_keys[0]){
+            dir = Direction::N;
+            pos[2] += 5;
+        }else if(arrow_keys[1]){
+            dir = Direction::S;
+            pos[2] -= 5;
+        }else if(arrow_keys[2]){
+            dir = Direction::W;
+            pos[0] -= 5; 
+        }else {
+            dir = Direction::E;
+            pos[0] += 5; 
+        }
+        return;
+    }
+    if (sum == 2) {
+        if(arrow_keys[0]){
+            if(arrow_keys[2]){
+                dir = Direction::NW;
+                pos[0] -= 5; 
+                pos[2] += 7;
+            }else if(arrow_keys[3]){
+                dir = Direction::NE;
+                pos[0] += 5; 
+                pos[2] += 5;
+            }
+        }else if(arrow_keys[1]){
+            if(arrow_keys[2]){
+                dir = Direction::SW;
+                pos[0] -= 5; 
+                pos[2] -= 5;
+            }else if(arrow_keys[3]){
+                dir = Direction::SE;
+                pos[0] += 5; 
+                pos[2] -= 5;
+            }
+        }
+    }
+
+}
+void MainCharacter::characterRender()
+{
+    int width = 100;
+	int height = 100;
+    glPushMatrix();
+	glRotatef(0, 0.0, 1.0, 0.0);
+	glTranslatef(0, 100, 0);
+    glBindTexture(GL_TEXTURE_2D, hitler[(int)dir].getID());
+    glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0);
+        glVertex3i(-width+pos[0],height, pos[2]); 
+        glTexCoord2f(0, 1);
+        glVertex3i(-width+pos[0],-height, pos[2]); 
+        glTexCoord2f(1, 1);
+        glVertex3i(width+pos[0], -height, pos[2]);      
+        glTexCoord2f(1,0);
+        glVertex3i(width+pos[0],height, pos[2]);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+
+void MainCharacter::setFace(int f)
+{
+    face = f;
 }
 
 /**************************************
@@ -717,4 +833,69 @@ void set_to_non_blocking(const int sock)
         perror("ERROR: fcntl(O_NONBLOCK)");
         exit(EXIT_FAILURE);
     }
+}
+//This is my Friday code.
+//this function will grab turn the scene into a 2.5D isometric scene.
+void isometricScene()
+{
+	glMatrixMode(GL_PROJECTION); glLoadIdentity();
+	glOrtho(-gl.xres,gl.xres,-gl.yres,gl.yres, -gl.xres*50, gl.yres*50);
+	//glOrtho(-100, 100, -100, 100, -1000, 1000);
+	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+	//rotate the x-axis by 30 degrees
+	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
+	//rotate the y-axis by 45 degres
+	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
+	glScalef(1.0f,1.0f,-1.0f);
+}
+void orthoScene()
+{
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+    glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_DEPTH_TEST);
+}
+
+int keysym_to_arrow_key(KeySym keysym) 
+{
+    switch (keysym) {
+        case XK_Up:
+            return 0;
+        case XK_Down:
+            return 1;
+        case XK_Left:
+            return 2;
+        case XK_Right:
+            return 3;
+    }
+    return -1;
+}
+void arrowInputMap(XEvent *e )
+{
+    
+    switch(e->type) {
+        case KeyPress: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 1;
+        } break;
+        case KeyRelease: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 0;
+        } break;
+    }
+    if(gvars::state == gvars::GameState::game){
+
+        gvars::hero.calFace();
+    }
+
+
+
 }

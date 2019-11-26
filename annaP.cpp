@@ -47,14 +47,108 @@ void fireCircles(int, int, int);
 void waterBubbles(int offset_x, int offset_y);
 void lightningShots(float angle, int offset_x, int offset_y);
 void grassRazorLeaf(float angle, int offset_x, int offset_y);
-void grassRazorMove(int x);
-void waterBubbleMove(int y);
+void grassRazorMove(int & x);
+void waterBubbleMove(int & y);
 void displayBackground(int w, int h, unsigned int texture);
 void displayElementSelection(unsigned int * imageTexture, int choice);
 void displayImage(int width_x, int height_y, int offset_x,
 int offset_y, unsigned int texture);
 extern void displaycurrentscore(Rect r, int h, int w, int bestScore, int yourScore);
 extern void readScores(char * filename);
+
+Texture::Texture()
+{
+}
+
+Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):w(w1), h(h1), x(x1), y(y1), z(z1){
+	img = new Image(fname);
+	w = img->width;
+	h = img->height;
+	unsigned char * tpimage = buildAlphaData();
+    glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
+}
+Texture::~Texture()
+{
+	delete img;
+}
+void Texture::set(const char*fname)
+{
+	img = new Image(fname);
+	w = img->width;
+	h = img->height;
+	unsigned char * tpimage = buildAlphaData();
+    glGenTextures(1, &id);
+	glBindTexture(GL_TEXTURE_2D, id);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
+
+}
+void Texture::Display_Picture(int xres, int yres, int offx, int offy){
+    int width = xres/2;
+	int height = yres/2;
+    glPushMatrix();
+    //glColor3f(1.0,1.0,1.0);
+	//glRotatef(318, 0.0, 1.0, 0.0);
+	glTranslatef(0, 100, 0);
+    glBindTexture(GL_TEXTURE_2D, id);
+    glEnable(GL_ALPHA_TEST);
+	glAlphaFunc(GL_GREATER, 0.0f);
+	glColor4ub(255,255,255,255);
+    glBegin(GL_QUADS);
+        glTexCoord2f(0, 0);
+        glVertex3i(-width+offx,height, offy); 
+        glTexCoord2f(0, 1);
+        glVertex3i(-width+offx,-height, offy); 
+        glTexCoord2f(1, 1);
+        glVertex3i(width+offx, -height, offy);      
+        glTexCoord2f(1,0);
+        glVertex3i(width+offx,height, offy);
+    glEnd();
+    glPopMatrix();
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glDisable(GL_ALPHA_TEST);
+}
+int Texture::getID()
+{
+	return id;
+}
+unsigned char* Texture::buildAlphaData()
+{
+	//add 4th component to RGB stream...
+	int i;
+	unsigned char *newdata, *ptr;
+	unsigned char *data = (unsigned char *)img->data;
+	newdata = (unsigned char *)malloc(img->width * img->height * 4);
+	ptr = newdata;
+	unsigned char a,b,c;
+	//use the first pixel in the image as the transparent color.
+	unsigned char t0 = *(data+0);
+	unsigned char t1 = *(data+1);
+	unsigned char t2 = *(data+2);
+	for (i=0; i<img->width * img->height * 3; i+=3) {
+		a = *(data+0);
+		b = *(data+1);
+		c = *(data+2);
+		*(ptr+0) = a;
+		*(ptr+1) = b;
+		*(ptr+2) = c;
+		*(ptr+3) = 1;
+		if (a==t0 && b==t1 && c==t2)
+			*(ptr+3) = 0;
+		//-----------------------------------------------
+		ptr += 4;
+		data += 3;
+	}
+	
+	return newdata;
+}
 
 
 /*Function Definitions*/
@@ -398,13 +492,18 @@ void waterBubbles(int offset_x, int offset_y)
 
 /*Functions for Different Bullet Movements*/
 
-void grassRazorMove(int x)
+void grassRazorMove(int & x)
 {
 	x *= 20;
 }
-void waterBubbleMove(int y)
+void waterBubbleMove(int & y)
 {
 	y  += .15;
+}
+void fireWaveMove(int & x, int & y)
+{
+	y  += .15;
+	x  *= 0.7;
 }
 
 /* Function to Decide Which Type of Element to use */
@@ -424,95 +523,60 @@ void displayElementSelection(unsigned int * imageTexture, int choice){
 			break;
 	}
 }
-void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
-	switch(choice){
-		case 0:
-			fireCircles(row, offset_x, offset_y);
-			break;
-		case 1:
-			waterBubbles(offset_x, offset_y);
-			//waterBubbleMove(y);
-			break;
-		case 2: 
-			grassRazorLeaf(angle, offset_x, offset_y);
-			//grassRazorMove(x);
-			break;
-		case 3:
-			lightningShots(angle, offset_x, offset_y);
-			break;
-	}
-}
+
 void creditsAnna(Rect r)
 {
 	ggprint8b(& r, 16, 0x00004C00, "Anna Poon");  
 }
 
-Texture::Texture(const char*fname, int x1, int y1, int z1, int w1, int h1):w(w1), h(h1), x(x1), y(y1), z(z1){
-	img = new Image(fname);
-	w = img->width;
-	h = img->height;
-	unsigned char * tpimage = buildAlphaData();
-    glGenTextures(1, &id);
-	glBindTexture(GL_TEXTURE_2D, id);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-//	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0,
-		GL_RGBA, GL_UNSIGNED_BYTE, tpimage);
+void writing(Rect r, std::string sentence)
+{
+	ggprint8b(& r, 16, 0x00004C00, sentence.c_str());  
+}
+// This is my Friday code. 
+Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
+Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
+Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
+Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
+
+void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
+	switch(choice){
+		case 0:
+			fireCircles(row, offset_x, offset_y);
+			fireWaveMove(offset_x, offset_y);
+			break;
+		case 1:
+			waterBubbles(offset_x, offset_y);
+			waterBubbleMove(offset_y);
+			//gl.yres / 2 - 200);
+			break;
+		case 2: 
+			grassRazorLeaf(angle, offset_x, offset_y);
+			grassRazorMove(offset_x);
+			break;
+		case 3:
+			lightningShots(angle, offset_x, offset_y);
+
+			break;
+	}
+}
+void showAttack(int choice) 
+{
+	switch(choice){
+		case 0:
+			fire.Display_Picture(70, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 1:
+			water.Display_Picture(30, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 2: 
+			grass.Display_Picture(30, 50, gl.xres / 2 - 70, -(gl.yres / 2 - 100));
+			break;
+		case 3:
+			light.Display_Picture(30, 35, gl.xres / 2 - 60, -(gl.yres / 2 - 100));
+			break;
+	}
 }
 
-void Texture::Display_Picture(int xres, int yres, int offx, int offy){
-    int width = xres/2;
-	int height = yres/2;
-    glPushMatrix();
-    //glColor3f(1.0,1.0,1.0);
-    glBindTexture(GL_TEXTURE_2D, id);
-    glEnable(GL_ALPHA_TEST);
-	glAlphaFunc(GL_GREATER, 0.0f);
-	glColor4ub(255,255,255,255);
-    glBegin(GL_QUADS);
-        glTexCoord2f(0, 0);
-        glVertex3i(-width+offx,height, offy); 
-        glTexCoord2f(0, 1);
-        glVertex3i(-width+offx,-height, offy); 
-        glTexCoord2f(1, 1);
-        glVertex3i(width+offx, -height, offy);      
-        glTexCoord2f(1,0);
-        glVertex3i(width+offx,height, offy);
-    glEnd();
-    glPopMatrix();
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glDisable(GL_ALPHA_TEST);
-}
-unsigned char* Texture::buildAlphaData()
-{
-	//add 4th component to RGB stream...
-	int i;
-	unsigned char *newdata, *ptr;
-	unsigned char *data = (unsigned char *)img->data;
-	newdata = (unsigned char *)malloc(img->width * img->height * 4);
-	ptr = newdata;
-	unsigned char a,b,c;
-	//use the first pixel in the image as the transparent color.
-	unsigned char t0 = *(data+0);
-	unsigned char t1 = *(data+1);
-	unsigned char t2 = *(data+2);
-	for (i=0; i<img->width * img->height * 3; i+=3) {
-		a = *(data+0);
-		b = *(data+1);
-		c = *(data+2);
-		*(ptr+0) = a;
-		*(ptr+1) = b;
-		*(ptr+2) = c;
-		*(ptr+3) = 1;
-		if (a==t0 && b==t1 && c==t2)
-			*(ptr+3) = 0;
-		//-----------------------------------------------
-		ptr += 4;
-		data += 3;
-	}
-	
-	return newdata;
-}
+
 
