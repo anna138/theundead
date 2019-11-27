@@ -235,7 +235,7 @@ void renderVine( int size, int start, int end){
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::arrayVine[i]=randXnum;
-        std::cout << gvars::arrayVine[i] << std::endl;
+        //std::cout << gvars::arrayVine[i] << std::endl;
     }
     gvars::arrayVine[0]= 10;//randXnum;
     gvars::arrayVine[1]= 10;//randXnum;

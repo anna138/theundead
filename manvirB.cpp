@@ -555,7 +555,6 @@ void MainCharacter::setFace(int f)
 /**************************************
  * communicate with the server
  * ***********************************/
-
 void readScores(char *pagename) 
 {
     std::fstream fout;
