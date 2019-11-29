@@ -85,12 +85,13 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
         drawSquare(width -3, height - 3,dirX,dirY);
     }
 }
-Texture character1;
-Texture character2;
-Texture character3;
+
 
 
 void characterChoice() {
+    Texture character1;
+    Texture character2;
+    Texture character3;
 	character1.set("./images/villain.png");
 	character1.Display_Picture( 400, 400, 600, 0);
 	character2.set("./images/hitler_sprite/hitler_front.png");
@@ -231,19 +232,7 @@ void renderVine( int size, int start, int end){
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::arrayVine[i]=randXnum;
-    }
-    gvars::arrayVine[0]= 10;//randXnum;
-    gvars::arrayVine[1]= 10;//randXnum;
-    gvars::arrayVine[2]= 10;//randXnum;
-    gvars::arrayVine[3]= 10;//randXnum;
-    gvars::arrayVine[4]= 10;//randXnum;
-    gvars::arrayVine[5]= 10;//randXnum;
-    gvars::arrayVine[6]= 10;//randXnum;
-    gvars::arrayVine[7]= 10;//randXnum;
-    gvars::arrayVine[8]= 10;//randXnum;
-    gvars::arrayVine[9]= 10;//randXnum;
-    gvars::arrayVine[10]= 10;//randXnum;
-    
+    }    
 }
 struct Box {
     float x, y;

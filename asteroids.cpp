@@ -120,8 +120,8 @@ extern void arrowInputMap(XEvent *);
 // M A I N
 //==========================================================================
 
-	X11_wrapper x11(0, 0);
-
+X11_wrapper x11(0, 0);
+int movez = 0;
 int main()
 {
 	//set up the x11 window
@@ -214,11 +214,11 @@ int main()
 				glEnable(GL_DEPTH_TEST);
 				float intensity[] = {1,1,1,1.0};
 				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
-				float pos[] = {(float)movex,(float)movey,0.0,.5};
+				float pos[] = {100.0f,50.0f,0.0,.5};
 				glLightfv(GL_LIGHT0, GL_POSITION, pos);
 				isometricScene();
 				hero.characterRender();
-				b.renderObj(0, 0, 0);
+				b.renderObj(0, 0, movez);
 				//render();
 				break;
 			}
@@ -471,7 +471,7 @@ void check_mouse(XEvent *e)
 					timeCopy(&b->time, &bt);
 					/*b->pos[0] = g.trooper.pos[0];
 					b->pos[1] = g.trooper.pos[1];*/
-					b->pos[0]= movex; b->pos[1] = movey;
+					//b->pos[0]= movex; b->pos[1] = movey;
 					b->vel[0] = g.trooper.vel[0];
 					b->vel[1] = g.trooper.vel[1];
 					//convert trooper angle to radians
@@ -619,6 +619,12 @@ int check_keys(XEvent *e)
 			break;
 		case XK_e:
 			gvars::attack = (gvars::attack + 1) % 4;
+			break;
+		case XK_a:
+			movez++;
+			break;
+		case XK_d:
+			movez--; 
 			break;
 		case XK_equal:
 			break;

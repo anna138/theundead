@@ -328,11 +328,12 @@ void Blender::renderObj(float x, float y, float z)
     int currmat = 0;
     glPushMatrix();
     //glTranslatef(x, y, z);
-    glTranslatef(0,0,-4);
+    //glTranslatef(0, 0,-600);
 	glScalef(50,50,50);
     
     glRotatef(x,1.0,0.0,0.0);
     glRotatef(y,0.0,1.0,0.0);
+    glRotatef(-45,0.0,1.0,0.0);
     glRotatef(z,0.0,0.0,1.0);
 
     bool checkTexture;
@@ -483,16 +484,16 @@ void MainCharacter::calFace()
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-            pos[2] += 5;
+            pos[2] += 7;
         }else if(arrow_keys[1]){
             dir = Direction::S;
-            pos[2] -= 5;
+            pos[2] -= 7;
         }else if(arrow_keys[2]){
             dir = Direction::W;
-            pos[0] -= 5; 
+            pos[0] -= 7; 
         }else {
             dir = Direction::E;
-            pos[0] += 5; 
+            pos[0] += 7; 
         }
         return;
     }
@@ -501,7 +502,7 @@ void MainCharacter::calFace()
             if(arrow_keys[2]){
                 dir = Direction::NW;
                 pos[0] -= 5; 
-                pos[2] += 7;
+                pos[2] += 5;
             }else if(arrow_keys[3]){
                 dir = Direction::NE;
                 pos[0] += 5; 
@@ -523,8 +524,8 @@ void MainCharacter::calFace()
 }
 void MainCharacter::characterRender()
 {
-    int width = 100;
-	int height = 100;
+    int width = 150;
+	int height = 150;
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
@@ -842,9 +843,9 @@ void isometricScene()
 	//glOrtho(-100, 100, -100, 100, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	//rotate the x-axis by 30 degrees
-	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
+	glRotatef(30.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
-	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
+	//glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,1.0f,-1.0f);
 }
 void orthoScene()
