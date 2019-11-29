@@ -214,11 +214,11 @@ int main()
 				glEnable(GL_DEPTH_TEST);
 				float intensity[] = {1,1,1,1.0};
 				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
-				float pos[] = {100.0f,50.0f,0.0,.5};
+				float pos[] = {100.0f,20.0f,0.0,.5};
 				glLightfv(GL_LIGHT0, GL_POSITION, pos);
 				isometricScene();
 				hero.characterRender();
-				b.renderObj(0, 0, movez);
+				b.renderObj(0, 0, -1);
 				//render();
 				break;
 			}
