@@ -13,6 +13,7 @@
 #include <X11/Xlib.h>
 #include <X11/keysym.h>
 #include <GL/glx.h>
+#include <GL/glu.h>
 #include "log.h"
 #include "fonts.h"
 #include <fstream>
@@ -30,7 +31,7 @@
 #include "Zombie.h"
 #include "Texture.h"
 #include "BlenderObj.h"
-
+#include "./Tiled/TileParser.h"
 
 
 
@@ -209,16 +210,38 @@ int main()
 			case GameState::game:{
                 
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-				glEnable(GL_LIGHTING);
-				glEnable(GL_LIGHT0);
-				glEnable(GL_DEPTH_TEST);
-				float intensity[] = {1,1,1,1.0};
-				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
-				float pos[] = {100.0f,20.0f,0.0,.5};
-				glLightfv(GL_LIGHT0, GL_POSITION, pos);
+				// glEnable(GL_LIGHTING);
+				// glEnable(GL_LIGHT0);
+				// glEnable(GL_DEPTH_TEST);
+				// float intensitygo[] = {.83,.68,.21,0.1};
+				// glLightfv(GL_LIGHT0, GL_AMBIENT, intensitygo);
+				// float posgo[] = {(float)hero.pos[0],(float)hero.pos[2],-1,0.1};
+				// glLightfv(GL_LIGHT0, GL_POSITION, posgo);
+				// float intensityr[] = {1,0,0,0.1};
+				// glLightfv(GL_LIGHT0, GL_SPECULAR, intensityr);
+				// float posr[] = {100.0f,200.0f,0.0,.01};
+				// glLightfv(GL_LIGHT0, GL_POSITION, posr);
+				// float intensityg[] = {0,1,0,.01};
+				// glLightfv(GL_LIGHT0, GL_DIFFUSE, intensityg);
+				// float posg[] = {0.0f,200.0f,0.0,.1};
+				// glLightfv(GL_LIGHT0, GL_POSITION, posg);
+
+				
 				isometricScene();
+				//glTranslatef(hero.pos[0], hero.pos[2], 0);
+				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
+				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
+				
+				Texture map;
+				map.set("./images/isometric.png");
+				map.Display_Picture(gl.xres,gl.yres,0,0);
 				hero.characterRender();
-				b.renderObj(0, 0, -1);
+				//TileParser tp("../isometricscene/isometric.tmx");
+				//gluLookAt(0,0,0,0,0,-1.5, 0, 1,0);
+				//b.renderObj(0, 0, -1);
+
+				//gluLookAt(100,100,0,0,0,0,0,1,0);
+
 				//render();
 				break;
 			}
