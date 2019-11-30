@@ -11,8 +11,11 @@ GlobalSpace.o: GlobalSpace.cpp
 TileParser.o: ./Tiled/TileParser.cpp
 	g++ -c ./Tiled/TileParser.cpp
 
-asteroids: GlobalSpace.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
-	g++ $(CFLAGS) asteroids.cpp Global.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
+pugixml.o: ./Tiled/pugixml.cpp
+	g++ -c ./Tiled/pugixml.cpp
+
+asteroids: GlobalSpace.o pugixml.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
+	g++ $(CFLAGS) asteroids.cpp Global.o pugixml.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
 
 Global.o: Global.cpp
 	g++ -c Global.cpp 

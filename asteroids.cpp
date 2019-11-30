@@ -236,7 +236,7 @@ int main()
 				map.set("./images/isometric.png");
 				map.Display_Picture(gl.xres,gl.yres,0,0);
 				hero.characterRender();
-				//TileParser tp("../isometricscene/isometric.tmx");
+				TileParser tp("../isometricscene/isometric.tmx");
 				//gluLookAt(0,0,0,0,0,-1.5, 0, 1,0);
 				//b.renderObj(0, 0, -1);
 
