@@ -27,15 +27,16 @@
 #include "GlobalSpace.h"
 #include "MainCharacter.h"
 using gvars::gl;
+using gvars::arrow_keys;
 
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
-struct Vec
+struct Vec3
 {
 	float x, y, z;
-	Vec(){ z = (0), y = (0), x = (0);}
-	Vec(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
+	Vec3(){ z = (0), y = (0), x = (0);}
+	Vec3(float x1, float y1, float z1) : x(x1), y(y1), z(z1) {}
 	void setPoints(float x1, float y1, float z1)
 	{
 		x = x1;
@@ -44,7 +45,7 @@ struct Vec
 	}
 };
 const int MAX_PARTICLES = 10000;
-Vec particles[MAX_PARTICLES];
+Vec3 particles[MAX_PARTICLES];
 
 void creditManvir(Rect r)
 {
@@ -453,15 +454,16 @@ MainCharacter::MainCharacter()
     pos[1] = 0;
     pos[2] = 0;
     face = 0;
+    dir = Direction::S;
 	hitler = new Texture[8];
-    hitler[0].set("images/hitler_sprite/hitler_front.png");
-    hitler[1].set("images/hitler_sprite/hitler_back.png");
-    hitler[2].set("images/hitler_sprite/hitler_back_side.png");
-    hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
-    hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
-    hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
-    hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
-    hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    hitler[0].set("images/hitler_sprite/hitler_s.png");
+    hitler[1].set("images/hitler_sprite/hitler_sw.png");
+    hitler[2].set("images/hitler_sprite/hitler_w.png");
+    hitler[3].set("images/hitler_sprite/hitler_nw.png");
+    hitler[4].set("images/hitler_sprite/hitler_n.png");
+    hitler[5].set("images/hitler_sprite/hitler_ne.png");
+    hitler[6].set("images/hitler_sprite/hitler_e.png");
+    hitler[7].set("images/hitler_sprite/hitler_se.png");
     // hitler[0].set("images/wizard/wiz_s.png");
     // hitler[1].set("images/wizard/wiz_sw.png");
     // hitler[2].set("images/wizard/wiz_w.png");
@@ -477,39 +479,46 @@ MainCharacter::~MainCharacter(){
 
 void MainCharacter::calFace()
 {
-    if(mousepos[1] >= 0){
-        if(angle >= 0){
-            face = 5;
-            if(angle < 40)
-                face = 6;
-            else if(angle >= 80)
-                face = 4;
-            
-        }else{
-            face = 2;
-            if(angle <= -80)
-                face = 4;
-            else if(angle <= -40)
-                face = 3;
+    int sum = arrow_keys[0]+arrow_keys[1]+arrow_keys[2]+arrow_keys[3];
+    if (sum == 1) {
+        if(arrow_keys[0]){
+            dir = Direction::N;
+            pos[2] += 5;
+        }else if(arrow_keys[1]){
+            dir = Direction::S;
+            pos[2] -= 5;
+        }else if(arrow_keys[2]){
+            dir = Direction::W;
+            pos[0] -= 5; 
+        }else {
+            dir = Direction::E;
+            pos[0] += 5; 
         }
-
-    }else{
-        if(angle >= 0){
-            face = 1;
-            if(angle < 40)
-                face = 2;
-            else if(angle >= 80)
-                face = 0;
-        }else{
-            face = 6;
-            if(angle <= -80)
-                face = 0;
-            else if(angle <= -40)
-                face = 7;
-        }
-
+        return;
     }
-
+    if (sum == 2) {
+        if(arrow_keys[0]){
+            if(arrow_keys[2]){
+                dir = Direction::NW;
+                pos[0] -= 5; 
+                pos[2] += 7;
+            }else if(arrow_keys[3]){
+                dir = Direction::NE;
+                pos[0] += 5; 
+                pos[2] += 5;
+            }
+        }else if(arrow_keys[1]){
+            if(arrow_keys[2]){
+                dir = Direction::SW;
+                pos[0] -= 5; 
+                pos[2] -= 5;
+            }else if(arrow_keys[3]){
+                dir = Direction::SE;
+                pos[0] += 5; 
+                pos[2] -= 5;
+            }
+        }
+    }
 
 }
 void MainCharacter::characterRender()
@@ -519,7 +528,7 @@ void MainCharacter::characterRender()
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
-    glBindTexture(GL_TEXTURE_2D, hitler[face].getID());
+    glBindTexture(GL_TEXTURE_2D, hitler[(int)dir].getID());
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
@@ -837,5 +846,56 @@ void isometricScene()
 	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
 	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
-	glScalef(1.0f,2.0f,-1.0f);
+	glScalef(1.0f,1.0f,-1.0f);
+}
+void orthoScene()
+{
+    glMatrixMode(GL_PROJECTION); glLoadIdentity();
+    glMatrixMode(GL_MODELVIEW);glLoadIdentity();
+    glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+    glDisable(GL_LIGHTING);
+    glDisable(GL_LIGHT0);
+    glDisable(GL_DEPTH_TEST);
+}
+
+int keysym_to_arrow_key(KeySym keysym) 
+{
+    switch (keysym) {
+        case XK_Up:
+            return 0;
+        case XK_Down:
+            return 1;
+        case XK_Left:
+            return 2;
+        case XK_Right:
+            return 3;
+    }
+    return -1;
+}
+void arrowInputMap(XEvent *e )
+{
+    
+    switch(e->type) {
+        case KeyPress: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 1;
+        } break;
+        case KeyRelease: {
+            KeySym keysym = XLookupKeysym(&e->xkey, 0);
+            int	arrow_key = keysym_to_arrow_key(keysym);
+
+            if(arrow_key != -1)
+                arrow_keys[arrow_key] = 0;
+        } break;
+    }
+    if(gvars::state == gvars::GameState::game){
+
+        gvars::hero.calFace();
+    }
+
+
+
 }

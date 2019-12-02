@@ -116,6 +116,8 @@ extern void fireballAttack(int * fire_pos);
 extern void flicker(int * fire_pos);
 extern void drawCircle(float cx, float cy, float r, int num_segments);
 extern GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex);
+extern void orthoScene();
+extern void arrowInputMap(XEvent *);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -138,14 +140,15 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 	//x11.set_mouse_position(100,100);
 	int done=0;
-	
+	//remove later
+	Rect r3;
+	displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
+						rand()%20);
+	//up to here ask manvir for removal
 	//creating a blender object
 	Blender b;
     b.readObj("./images/map.obj");
 	
-	Texture map("images/map.png", 0,0,0, gl.xres, gl.yres);
-	Texture hud("images/hud.png", 0,0,0, gl.xres, gl.yres);
-	//int width = 50, height = 50, offx = 200, offy = 200;
 	while (!done) {
 		while (x11.getXPending()) {
 			XEvent e = x11.getXNextEvent();
@@ -164,6 +167,7 @@ int main()
 		//lets start the game states
 		switch (state){
 			case GameState::startup:{
+				glClear(GL_COLOR_BUFFER_BIT);
 				runLogoIntro(logoIntroTexture);
 				//render everything to the screen
 				x11.swapBuffers();
@@ -176,7 +180,8 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
-				glClear(GL_COLOR_BUFFER_BIT);
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
 								 startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
@@ -194,30 +199,17 @@ int main()
 				float intensity[] = {1,1,1,1.0};
 				glLightfv(GL_LIGHT0, GL_SPECULAR, intensity);
 				float pos[] = {(float)movex,(float)movey,0.0,.5};
-				//float lights[] = {0, 0, 1.0, 1.0};
 				glLightfv(GL_LIGHT0, GL_POSITION, pos);
-				//glLightfv(GL_LIGHT0, GL_POSITION, lights);
-				
-
-				//scoreboard(r);
-				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-                //glFrustum(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, 1.0, 30);
-				//map.Display_Picture(gl.xres, gl.yres, 0, -1);
 				isometricScene();
 				hero.characterRender();
 				b.renderObj(0, 0, 0);
 				//render();
-				//glMatrixMode(GL_PROJECTION); glLoadIdentity();
-				//glMatrixMode(GL_MODELVIEW); glLoadIdentity();
-				//glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
-				
-				//render();
-				//hud.Display_Picture(gl.xres, gl.yres, 0, 0);
 				break;
 			}
 			case GameState::highscores:{
 				Rect r2;
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
 				getScores(filename);
 				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
 				state = GameState::end;
@@ -232,6 +224,8 @@ int main()
 			}
 			case GameState::endgamescore:{
 				Rect r3;	
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
 				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
 										rand()%10);
 				state = GameState::end;
@@ -496,26 +490,6 @@ void check_mouse(XEvent *e)
 		int ydiff = savey - ((-2*((float)e->xbutton.y/gl.yres)+1)*gl.yres/2);
 		if (++ct < 10)
 			return;		
-		//std::cout << "savex: " << savex << "and savey: " << savey << std::endl << std::flush;
-		// std::cout << "e->xbutton.y: " << (int)((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1))<< std::endl << std::flush;
-		// std::cout << "e->xbutton.x: " << (int)((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1))<< std::endl << std::flush;
-		hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
-		hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1)); 
-		std::cout << "x: " << hero.mousepos[0] << " and y: " << hero.mousepos[1] << std::endl << std::flush;
-		// if(hero.mousepos[0] != -1000){
-		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/gl.yres)+1)*(gl.yres>>1));
-		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/gl.xres)-1)*(gl.xres>>1));
-		// }else{
-		// 	hero.mousepos[1] = ((-2*((float)e->xbutton.y/hero.mousepos[1])+1)*(hero.mousepos[1]/2));
-		// 	hero.mousepos[0] = ((2*((float)e->xbutton.x/hero.mousepos[0])-1)*(hero.mousepos[0]/2));
-		// }
-		hero.angle = atan((hero.mousepos[1]-hero.pos[1])/(hero.mousepos[0]-hero.pos[1]))*180.0/PI;
-		// double temp = (hero.mousepos[0]*hero.pos[0]+hero.mousepos[1]*hero.pos[2])/
-		// 					sqrt((pow(hero.pos[0],2)+pow(hero.pos[2], 2))*
-		// 					(pow(hero.mousepos[0], 2)+pow(hero.mousepos[1], 2)));
-		// hero.angle = acos(temp);
-		std::cout << "this is the angle in degrees:" << hero.angle << std::endl << std::flush;
-		hero.calFace();
 		if (xdiff > 0) {
 			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
@@ -560,21 +534,23 @@ int check_keys(XEvent *e)
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
 
-	if (e->type == KeyRelease) {
-		gl.keys[key]=0;
-		if (key == XK_Shift_L || key == XK_Shift_R)
-			shift=0;
-		return 0;
-	}
-	if (e->type == KeyPress) {
-		gl.keys[key]=1;
-		if (key == XK_Shift_L || key == XK_Shift_R) {
-			shift=1;
-			return 0;
-		}
-	} else {
-		return 0;
-	}
+	// if (e->type == KeyRelease) {
+	// 	gl.keys[key]=0;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R)
+	// 		shift=0;
+	// 	return 0;
+	// }
+	// if (e->type == KeyPress) {
+	// 	gl.keys[key]=1;
+	// 	if (key == XK_Shift_L || key == XK_Shift_R) {
+	// 		shift=1;
+	// 		return 0;
+	// 	}
+	// } else {
+	// 	return 0;
+	// }
+	arrowInputMap(e);
+
     int choice=0;
 	int dirX=0;
     int dirY=0;
@@ -611,37 +587,8 @@ int check_keys(XEvent *e)
 		case XK_g:
 			state = GameState::endgamescore;
 			break;
-		case XK_w:
-			hero.pos[2]+=5;
-			hero.setFace(1);
-			break;
-		case XK_s:
-			hero.pos[2]-=5;
-			hero.setFace(0);
-			break;
 		case XK_e:
 			gvars::attack = (gvars::attack + 1) % 4;
-			break;
-		case XK_a:
-			
-			hero.setFace(3);
-			hero.pos[0]-=5;
-			break;
-		case XK_d:
-			hero.setFace(5);
-			hero.pos[0]+=5;
-			break;
-		case XK_Down:
-			movey-=5;
-			break;
-		case XK_Up:
-			movey+=5;
-			break;
-		case XK_Left:
-			movex-=5;
-			break;
-		case XK_Right:
-			movex+=5;
 			break;
 		case XK_equal:
 			break;

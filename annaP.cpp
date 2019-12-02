@@ -41,6 +41,16 @@ char pagename[256] = "~mbal/3350/lab7/scores.txt";
 const float DEG2RAD = 3.14159 / 180;
 int showTitle = 1000000;
 
+Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
+Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
+Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
+Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
+Texture hud_0("images/hud.png", 0,0,0, gl.xres, gl.yres);
+Texture hud_1("images/hud.png", 0,0,0, gl.xres, gl.yres);
+Texture hud_2("images/hud.png", 0,0,0, gl.xres, gl.yres);
+Texture hud_3("images/hud.png", 0,0,0, gl.xres, gl.yres);
+Texture hud_4("images/hud.png", 0,0,0, gl.xres, gl.yres);
+
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
@@ -99,7 +109,7 @@ void Texture::Display_Picture(int xres, int yres, int offx, int offy){
 	int height = yres/2;
     glPushMatrix();
     //glColor3f(1.0,1.0,1.0);
-	glRotatef(318, 0.0, 1.0, 0.0);
+	//glRotatef(318, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
     glBindTexture(GL_TEXTURE_2D, id);
     glEnable(GL_ALPHA_TEST);
@@ -388,9 +398,8 @@ void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_an
 }
 void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
 {
-	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres;
-	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres;
-	enemy_angle = trooper_angle*0.5 + enemy_angle;
+	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres / 2 - yres / 2 ;
+	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres / 2 - xres / 2 ;
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -646,11 +655,7 @@ void writing(Rect r, std::string sentence)
 {
 	ggprint8b(& r, 16, 0x00004C00, sentence.c_str());  
 }
-// This is my Friday code. 
-Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
-Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
-Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
-Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
+// This is my Friday code.
 
 void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
 	switch(choice){
@@ -690,6 +695,79 @@ void showAttack(int choice)
 			break;
 	}
 }
+/*General Collisons with Window Edges*/
+void collideWindowEdges(int * pos){
+	if (pos[0] < -gl.xres/2) {
+		pos[0] += gl.xres;
+		std::cout << " Collided Right" << std::endl;
+	}
+	else if (pos[0] > gl.xres/2) {
+		pos[0] -= gl.xres;
+		std::cout << " Collided Left" << std::endl;
+	}
+	else if (pos[1] < -gl.yres/2) {
+		pos[1] += gl.yres;
+		std::cout << " Collided Down" << std::endl;
+	}
+	else if (pos[1] > gl.yres/2) {
+		pos[1] -= gl.yres;
+		std::cout << " Collided Up" << std::endl;
+	}
+	
+}
+/* Two objects colliding to one another*/
+void A_CollidedTo_B(int * a_pos, int * b_pos){
+	if(true){
+		std::cout << "Collisions worked" << std::endl;
+	}
+}
 
+/* Main Character healing for power-ups or recovery*/
+void MainCharacter::heal(int & lifeForce, int increase){
+	lifeForce += increase;
+}
 
+void MainCharacter::damage(int & lifeForce, int decrease){
+	lifeForce -= decrease;
+}
 
+void MainCharacter::recovery(int & lifeForce, int time){
+	if(!(time % 5)){
+		lifeForce++;
+	}
+}
+
+/* Main Character Collisions Function 
+ * Activates the Hud levels using 
+ * MainCharacter Hud Level
+ */
+void showHud(int life){
+	switch(life){
+		//The lower the life, the higher the hud level
+		case 0:
+			hud_0.Display_Picture(gl.xres, gl.yres, 0, 0);
+			break;
+		case 1:
+			hud_1.Display_Picture(gl.xres, gl.yres, 0, 0);
+			break;
+		case 2: 
+			hud_2.Display_Picture(gl.xres, gl.yres, 0, 0);
+			break;
+		case 3:
+			hud_3.Display_Picture(gl.xres, gl.yres, 0, 0);
+			break;
+		case 4:
+			hud_4.Display_Picture(gl.xres, gl.yres, 0, 0);
+			break;
+		default:
+			;
+	}
+}
+bool MainCharacter::isCollide(int * pos, int & life, int decrease){
+	if(true){
+		std::cout << "Collisions worked" << std::endl;
+		damage(life, decrease);
+		showHud(life);
+	}
+	return false;
+}

@@ -56,5 +56,6 @@ namespace gvars{
         end
     };
     extern GameState state;
+    extern int arrow_keys[4];
 }
 

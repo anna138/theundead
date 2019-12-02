@@ -47,4 +47,5 @@ namespace gvars{
     int sizeY = 200;
     int playerdir = 0;
     MainCharacter hero;
+    int arrow_keys[4] = {0, 0, 0, 0};
 } // namespace GVars

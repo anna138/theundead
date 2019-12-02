@@ -60,11 +60,13 @@ public:
 		}
 		win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 			vi->depth, InputOutput, vi->visual, winops, &swa);
+		
 		// win = XCreateWindow(dpy, root, 0, 0, gl.xres, gl.yres, 0,
 		// vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
 		set_title();
 		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
 		glXMakeCurrent(dpy, win, glc);
+		XAutoRepeatOn(dpy);
 		show_mouse_cursor(1);
 		
 	}
@@ -76,7 +78,7 @@ public:
 	void set_title() {
 		//Set the window title bar.
 		XMapWindow(dpy, win);
-		XStoreName(dpy, win, "Asteroids template");
+		XStoreName(dpy, win, "Curse of the Undead");
 	}
 	void check_resize(XEvent *e) {
 		//The ConfigureNotify is sent by the
