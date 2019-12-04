@@ -1,4 +1,4 @@
-CFLAGS = -I ./include -g
+CFLAGS = -I ./include -g 
 ERRORFLAGS = -Wall -Werror -Wextra
 ##LIB    = ./libggfonts.so
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lssl -lcrypto #-lXrandr
@@ -8,8 +8,11 @@ all: asteroids
 GlobalSpace.o: GlobalSpace.cpp
 	g++ -c GlobalSpace.cpp
 
-asteroids: GlobalSpace.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
-	g++ $(CFLAGS) asteroids.cpp Global.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
+TileParser.o: ./Tiled/TileParser.cpp
+	g++ -c ./Tiled/TileParser.cpp
+
+asteroids: GlobalSpace.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
+	g++ $(CFLAGS) asteroids.cpp Global.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids 
 
 Global.o: Global.cpp
 	g++ -c Global.cpp 

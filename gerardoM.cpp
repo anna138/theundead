@@ -85,6 +85,7 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
         drawSquare(width -3, height - 3,dirX,dirY);
     }
 }
+
 Texture character1;
 Texture character2;
 Texture character3;
@@ -99,13 +100,12 @@ void characterChoice() {
 		character2.Display_Picture( 400, 400, -600, 0);
 		character3.set("./images/wizard/wiz_s.png");
 		character3.Display_Picture( 400, 400, 0, 0);
-        /*
 		character4.set("./images/hitler_sprite/hitler_glow2.png");
 		character4.Display_Picture( 400, 400, -600, 0);
 		character5.set("./images/wizard/wiz_s_glow.png");
 		character5.Display_Picture( 400, 400, 0, 0);
 		character6.set("./images/villain_glow.png");
-		character6.Display_Picture( 400, 400, 600, 0);*/
+		character6.Display_Picture( 400, 400, 600, 0);
 }
 
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -240,20 +240,7 @@ void renderVine( int size, int start, int end){
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::arrayVine[i]=randXnum;
-        std::cout << gvars::arrayVine[i] << std::endl;
-    }
-    gvars::arrayVine[0]= 10;//randXnum;
-    gvars::arrayVine[1]= 10;//randXnum;
-    gvars::arrayVine[2]= 10;//randXnum;
-    gvars::arrayVine[3]= 10;//randXnum;
-    gvars::arrayVine[4]= 10;//randXnum;
-    gvars::arrayVine[5]= 10;//randXnum;
-    gvars::arrayVine[6]= 10;//randXnum;
-    gvars::arrayVine[7]= 10;//randXnum;
-    gvars::arrayVine[8]= 10;//randXnum;
-    gvars::arrayVine[9]= 10;//randXnum;
-    gvars::arrayVine[10]= 10;//randXnum;
-    
+    }    
 }
 struct Box {
     float x, y;

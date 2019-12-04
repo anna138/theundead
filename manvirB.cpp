@@ -328,17 +328,18 @@ void Blender::renderObj(float x, float y, float z)
     int currmat = 0;
     glPushMatrix();
     //glTranslatef(x, y, z);
-    glTranslatef(0,0,-4);
-	glScalef(50,50,50);
+    //glTranslatef(0, 0,-600);
+	glScalef(500,100,500);
     
     glRotatef(x,1.0,0.0,0.0);
     glRotatef(y,0.0,1.0,0.0);
+    glRotatef(-45,0.0,1.0,0.0);
     glRotatef(z,0.0,0.0,1.0);
 
     bool checkTexture;
     for(unsigned int i = 0; i < faces.size(); i++){
 
-        glColor3f(1.0f, 0.0f, 0.0f);
+        //glColor3f(1.0f, 0.0f, 0.0f);
         currmat = faces[i]->matID;
         checkTexture = mats[currmat]->textureID != -1;
         if(mats.size() && prevMat != currmat){
@@ -456,22 +457,22 @@ MainCharacter::MainCharacter()
     face = 0;
     dir = Direction::S;
 	hitler = new Texture[8];
-    // hitler[0].set("images/hitler_sprite/hitler_front.png");
-    // hitler[1].set("images/hitler_sprite/hitler_back.png");
-    // hitler[2].set("images/hitler_sprite/hitler_back_side.png");
-    // hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
-    // hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
-    // hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
-    // hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
-    // hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
-    hitler[0].set("images/wizard/wiz_s.png");
-    hitler[1].set("images/wizard/wiz_sw.png");
-    hitler[2].set("images/wizard/wiz_w.png");
-    hitler[3].set("images/wizard/wiz_nw.png");
-    hitler[4].set("images/wizard/wiz_n.png");
-    hitler[5].set("images/wizard/wiz_ne.png");
-    hitler[6].set("images/wizard/wiz_e.png");
-    hitler[7].set("images/wizard/wiz_se.png");
+    hitler[0].set("images/hitler_sprite/hitler_front.png");
+    hitler[1].set("images/hitler_sprite/hitler_back.png");
+    hitler[2].set("images/hitler_sprite/hitler_back_side.png");
+    hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
+    hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
+    hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
+    hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
+    hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    // hitler[0].set("images/wizard/wiz_s.png");
+    // hitler[1].set("images/wizard/wiz_sw.png");
+    // hitler[2].set("images/wizard/wiz_w.png");
+    // hitler[3].set("images/wizard/wiz_nw.png");
+    // hitler[4].set("images/wizard/wiz_n.png");
+    // hitler[5].set("images/wizard/wiz_ne.png");
+    // hitler[6].set("images/wizard/wiz_e.png");
+    // hitler[7].set("images/wizard/wiz_se.png");
 }
 MainCharacter::~MainCharacter(){
     delete [] hitler;
@@ -483,16 +484,16 @@ void MainCharacter::calFace()
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-            pos[2] += 5;
+            pos[2] += 7;
         }else if(arrow_keys[1]){
             dir = Direction::S;
-            pos[2] -= 5;
+            pos[2] -= 7;
         }else if(arrow_keys[2]){
             dir = Direction::W;
-            pos[0] -= 5; 
+            pos[0] -= 7; 
         }else {
             dir = Direction::E;
-            pos[0] += 5; 
+            pos[0] += 7; 
         }
         return;
     }
@@ -501,7 +502,7 @@ void MainCharacter::calFace()
             if(arrow_keys[2]){
                 dir = Direction::NW;
                 pos[0] -= 5; 
-                pos[2] += 7;
+                pos[2] += 5;
             }else if(arrow_keys[3]){
                 dir = Direction::NE;
                 pos[0] += 5; 
@@ -523,8 +524,8 @@ void MainCharacter::calFace()
 }
 void MainCharacter::characterRender()
 {
-    int width = 100;
-	int height = 100;
+    int width = 30;
+	int height = 30;
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
@@ -532,15 +533,17 @@ void MainCharacter::characterRender()
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
+    //glColorMaterial ( GL_FRONT, GL_SPECULAR ) ;
     glBegin(GL_QUADS);
+        glNormal3f(1.0,0.0,-1.0);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+pos[0],height, pos[2]); 
+        glVertex3i(-width+pos[0],height+pos[2], pos[2]); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+pos[0],-height, pos[2]); 
+        glVertex3i(-width+pos[0],-height+pos[2], pos[2]); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+pos[0], -height, pos[2]);      
+        glVertex3i(width+pos[0], -height+pos[2], pos[2]);      
         glTexCoord2f(1,0);
-        glVertex3i(width+pos[0],height, pos[2]);
+        glVertex3i(width+pos[0],height+pos[2], pos[2]);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
@@ -555,7 +558,6 @@ void MainCharacter::setFace(int f)
 /**************************************
  * communicate with the server
  * ***********************************/
-
 void readScores(char *pagename) 
 {
     std::fstream fout;
@@ -839,13 +841,13 @@ void set_to_non_blocking(const int sock)
 void isometricScene()
 {
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
-	glOrtho(-gl.xres,gl.xres,-gl.yres,gl.yres, -gl.xres*50, gl.yres*50);
+	glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -gl.xres*50, gl.yres*50);
 	//glOrtho(-100, 100, -100, 100, -1000, 1000);
 	glMatrixMode(GL_MODELVIEW);glLoadIdentity();
 	//rotate the x-axis by 30 degrees
 	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
-	glRotatef(-45.0f, 0.0f, 1.0f, 0.0f);
+	//glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
 	glScalef(1.0f,1.0f,-1.0f);
 }
 void orthoScene()
