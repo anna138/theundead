@@ -43,5 +43,5 @@ namespace gvars{
     MainCharacter hero;
     int arrow_keys[4] = {0, 0, 0, 0};
     Image mask("images/mask.png");
-    TileParser tp("../isometricscene/map4.tmx");
+    TileParser tp("./images/map4.tmx");
 } // namespace GVars
