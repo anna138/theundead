@@ -2,6 +2,7 @@
 #include <GL/glx.h>
 #include "MainCharacter.h"
 #include "Global.h"
+#include "./Tiled/TileParser.h"
 
 //define all global variables here that go
 namespace gvars{
@@ -53,5 +54,7 @@ namespace gvars{
     };
     extern GameState state;
     extern int arrow_keys[4];
+    extern TileParser tp;
+    extern Image mask;
 }
 

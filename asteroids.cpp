@@ -31,7 +31,7 @@
 #include "Zombie.h"
 #include "Texture.h"
 #include "BlenderObj.h"
-#include "./Tiled/TileParser.h"
+
 
 
 
@@ -146,8 +146,8 @@ int main()
 						rand()%20);
 	//up to here ask manvir for removal
 	//creating a blender object
-	Blender b;
-    b.readObj("./images/map.obj");
+	// Blender b;
+    // b.readObj("./images/map.obj");
 	
 	while (!done) {
 		while (x11.getXPending()) {
@@ -227,16 +227,34 @@ int main()
 				// glLightfv(GL_LIGHT0, GL_POSITION, posg);
 
 				
-				isometricScene();
+				//isometricScene();
 				//glTranslatef(hero.pos[0], hero.pos[2], 0);
 				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
 				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
 				
 				Texture map;
-				map.set("./images/isometric.png");
-				map.Display_Picture(gl.xres,gl.yres,0,0);
+				map.set("./images/map4.png");
+				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				hero.characterRender();
-				TileParser tp("../isometricscene/isometric.tmx");
+				
+				glPushMatrix();
+				glPointSize(4);
+				glColor3ub(255,0,0);
+				glBegin(GL_POINTS);
+					// for(int i = 0; i < 32; i++){
+					// 	for(int j = 0; j <= 32; j++){
+					// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
+					// 	}
+					// }
+					glVertex2d(0,0);
+				glEnd();
+				glPopMatrix();
+				//map.set("./images/cartgrid.png");
+				//map.Display_Picture(gl.xres/2, gl.yres/2,0,0);
+				
+				// tp.draw();
+				
+
 				//gluLookAt(0,0,0,0,0,-1.5, 0, 1,0);
 				//b.renderObj(0, 0, -1);
 

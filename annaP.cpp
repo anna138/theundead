@@ -91,25 +91,25 @@ void Texture::set(const char*fname)
 
 }
 void Texture::Display_Picture(int xres, int yres, int offx, int offy){
-    int width = xres/2;
-	int height = yres/2;
+    int width = xres;
+	int height = yres;
     glPushMatrix();
     //glColor3f(1.0,1.0,1.0);
 	//glRotatef(318, 0.0, 1.0, 0.0);
-	glTranslatef(0, 100, 0);
+	//glTranslatef(0, 100, 0);
     glBindTexture(GL_TEXTURE_2D, id);
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
     glBegin(GL_QUADS);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+offx,height, offy); 
+        glVertex3i(-width+offx,height+offy, 0); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+offx,-height, offy); 
+        glVertex3i(-width+offx,-height+offy, 0); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+offx, -height, offy);      
+        glVertex3i(width+offx, -height+offy, 0);      
         glTexCoord2f(1,0);
-        glVertex3i(width+offx,height, offy);
+        glVertex3i(width+offx,height+offy, 0);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);

@@ -42,4 +42,6 @@ namespace gvars{
     GameState state;
     MainCharacter hero;
     int arrow_keys[4] = {0, 0, 0, 0};
+    Image mask("images/mask.png");
+    TileParser tp("../isometricscene/map4.tmx");
 } // namespace GVars

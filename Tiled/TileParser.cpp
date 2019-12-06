@@ -3,78 +3,34 @@
 #include <iostream>
 #include <sstream>
 #include <vector>
+#include <cmath>
 #include "pugixml.hpp"
-
-//using namespace pugi;
-
+#include "../Texture.h"
 
 TileParser::TileParser(const std::string fn)
 {
+
     parseXML(fn);
+    posx = ((width/2)-1)+.4;
+    posy = posx;
 }
 
 TileParser::~TileParser()
 {
-
+    
 }
 void TileParser::parseXML(const std::string fn)
 {
-    // std::vector<std::vector<int>> floorid;
-    // std::vector<std::vector<int>> propsid;
-    // std::string floorname;
-    // std::string propsname;
-    // std::ifstream in;
-    // int id = 0;
-    // in.open(fn.c_str());
-    // int width = 0;
-    // int height = 0;
-    // if (in.is_open()) {
-    //     std::string line;
-    //     while (std::getline(in, line)) {
-    //         if (line.find("<layer") != std::string::npos) {
-                
-    //             int pos = line.find("width=")+5;
-    //             std::string temp(line.begin()+pos+2, line.begin()+pos+4);
-    //             width = stoi(temp);
-    //             pos = line.rfind("height=")+6;
-    //             std::string temp2(line.begin()+pos+2, line.begin()+pos+4);
-    //             height = stoi(temp2);
-    //             pos = line.find("name=")+4;
-    //             std::string temp3(line.begin()+pos+2, line.end()-1);
-    //             pos = temp3.find('"');
-    //             std::string imgsrc(temp3.begin(), temp3.begin()+pos);
-    //             if(id == 0){
-    //                 floorname = imgsrc;
-    //             } else if (id == 1) {
-    //                 propsname = imgsrc;
-    //             }
-    //         } else if (line.find("<data") != std::string::npos) {
-    //             std::string word;
-    //             for (int i = 0; i < width; i++) {
-    //                 std::getline(in,line);
-    //                 std::stringstream l(line);
-    //                 std::vector<int> row;
-    //                 while (getline(l, word, ',')) {
-    //                     row.push_back(stoi(word));
-    //                 }
-    //                 if (id == 0) {
-    //                     floorid.push_back(row);
-    //                 }
-    //                 else if(id == 1) {
-    //                     propsid.push_back(row);
-    //                 }
-    //             }
-    //             id++;
-    //         }
-
-    //     }
-    //     parseImageIndex(floorname);
-    //}
     doc.load_file(fn.c_str());
     for (auto &l1:doc.children()) {
         for (auto &l2 : l1.children()) {
-            if(l2.name() == "layer")
+            std::string attri = l2.name();
+            if(attri == "layer"){
+                width = l2.attribute("width").as_int();
+                height = l2.attribute("height").as_int();
                 parseCSV(l2);
+                
+            }
         }
     }
 
@@ -82,38 +38,115 @@ void TileParser::parseXML(const std::string fn)
 void TileParser::parseCSV(pugi::xml_node & layer){
 
     for (auto& csv : layer.children()) {
-        if (csv.name() == "data") {
-            if (csv.attribute("encoding").name() == "csv") { 
+        std::string attri = csv.name();
+        if (attri == "data") {
+            std::string encoder = csv.attribute("encoding").as_string();
+            if (encoder == "csv") { 
                 std::string data = csv.text().as_string();
                 std::stringstream line(data);
                 std::string word;
-                while (getline(line, word, ',')) {
-                    row.push_back(stoi(word));
+                std::vector<std::vector<uint32_t>> t;
+                for (unsigned int i = 0; i < width; i++) {
+                    std::vector<uint32_t> temp;
+                    for (unsigned int j = 0; j < height; j++ ){
+                        getline(line, word, ',');
+                        temp.push_back(stoi(word));
+                    }
+                    t.push_back(temp);
                 }
-                if (id == 0) {
-                    floorid.push_back(row);
-                }
-                else if(id == 1) {
-                    propsid.push_back(row);
-                }
-
-
+                tiles.push_back(t);
             }
-
         }
     }
-
+}
+double TileParser::dot(double *a, double *b)
+{
+    //std::cout << "dot:" <<  (a[0]*b[0])+(a[1]*b[1]) << std::endl;
+    return (a[0]*b[0])+(a[1]*b[1]);
+}
+double TileParser::distance(double *a, double *b)
+{
+    return sqrt(pow((b[0]-a[0]), 2)+pow((b[1]-a[1]), 2));
 }
 
-void TileParser::parseImageIndex(const std::string fn) 
+bool TileParser::isWalkable(int x, int y, int dir)
 {
-    //fn = fn + ".tsx";
-    std::ifstream in(fn);
+    //x+=32;
+    //y+=64;
+    // unsigned int arrcoordx = -(y/(height))+(height>>1)-(x/width);
+    // unsigned int arrcoordy = ((x/width)+(width>>1)-(y/(height)));
+    unsigned int px; 
+    unsigned int py;
+    if(dir == 0){
+        px = -(y/(height>>1))+((height>>1)-1)-(x/(width));//-(y/(height))+(height>>1)-(x/width);
+        py = (x/(width))+((width>>1)-1)-(y/(height>>1));//((x/width)+(width>>1)-(y/(height)));
+    }else{
+        px = +((height>>1)-1  );
+        py = -(x/(width>>1))+((width>>1)-1);
+    }
+    // if(px >= width || py >= height){
+    //     return false;
+    // }
 
-    if (in.is_open()) {
-    
+    // std::cout << "value of tile: " << tiles.at(1).at(py).at(px) << std::endl;
+    // for(unsigned int i = 0; i < width; i++){
+    //     std::cout << i << " ";
+    //     for(unsigned int j = 0; j < height; j++){
+    //         if(py == j and px == i)
+    //             std::cout << "1,";
+    //         else
+    //             std::cout << tiles.at(1).at(i).at(j) << ",";
+    //     }
+    //     std::cout << std::endl;
+    // }
+    //return tiles.at(1).at(px).at(py)==0;
+    // double A[] = {-1920/2, 0};
+    // double B[] = {0, -512};
+    // double C[] = {1920/2, 0};
+    // double D[] = {0, 512};
+ 
+    // double centerpt[2] = {0, 0};
+    // double distX = .5*distance(A,C);
+    // //std::cout << "X:" << dot(A,C) << std::endl;
+    // double distY = .5*distance(B,D);
+    // double U[] = {(C[0]-A[0])/(2.0*distX), (C[1]-A[1])/(2.0*distX)};
+    // double V[] = {(D[0]-B[0])/(2.0*distY), (D[1]-B[1])/(2.0*distY)};
+    // double W[] = {x, y};
+    // double xabs = abs(dot(W,U));
+    // double yabs = abs(dot(W,V));
 
+    // return (xabs/distX + yabs/distY) <= 1;
+
+    return true;
+}
+
+bool TileParser::Walk(float x, float y){
+    posx += x;
+    posy += y;
+    std::cout << "value of tile: " << tiles.at(1).at((int)posx).at((int)posy) << std::endl;
+    for(unsigned int i = 0; i < width; i++){
+        std::cout << i << " ";
+        for(unsigned int j = 0; j < height; j++){
+            if((int)posy == j and (int)posx == i)
+                std::cout << "1,";
+            else
+                std::cout << tiles.at(1).at(i).at(j) << ",";
+        }
+        std::cout << std::endl;
+    }
+    if(tiles.at(1).at((int)posx).at((int)posy)){
+        posx -= x;
+        posy -= y;
+        return false;
+    }else{
+        return true;
     }
 
-
+    
 }
+
+
+
+
+
+
