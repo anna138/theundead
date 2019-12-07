@@ -33,7 +33,7 @@
 #include "BlenderObj.h"
 
 
-
+using namespace gvars;
 
 unsigned int bloodBackgroundTexture; 
 //image for zombie
@@ -60,7 +60,7 @@ Image img[9] = {
 		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
-		"./images/title.png",
+		"./images/curse_of_undead.png",
 		"./images/zombie.png", 
 		"./images/water.png"
 };
@@ -109,12 +109,18 @@ extern void renderVine(int size, int start, int end);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
-extern void enemyAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
 extern void switchBullets(float, int, int, int, int);
 extern void showAttack(int choice);
 extern void isometricScene(); 
+extern void dyingAnimation(Vec enemy_pos);
+extern void fireballAttack(int * fire_pos);
+extern void flicker(int * fire_pos);
+extern void drawCircle(float cx, float cy, float r, int num_segments);
+extern GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex);
 extern void orthoScene();
 extern void arrowInputMap(XEvent *);
 //==========================================================================
@@ -311,7 +317,7 @@ void init_opengl(void)
 	//glOrtho(0, gl.xres, 0, gl.yres, -1, 1);
 	//glOrtho(-4,4,-4,4, -1,1);
 	glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
-	//
+	
 	glDisable(GL_LIGHTING);
 	glDisable(GL_DEPTH_TEST);
 	glDisable(GL_FOG);
@@ -950,8 +956,8 @@ void physics()
 
 void render()
 { 
-	//Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
-	showAttack(gvars::attack);
+	/*Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
+	showAttack(gvars::attack);*/
     /*
 	Anna Commented
 	Rect r;
@@ -983,12 +989,12 @@ void render()
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
-*/
-	/*zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
+*/ /*
+	zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
 
 	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
-	//	g.zombie.angle, g.zombie.zombieImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
+		//g.zombie.angle, zombie.getID());
+	skullAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
 /*
 Anna Commented
@@ -1065,7 +1071,8 @@ Anna commented
 	}*/
 	//-------------------------------------------------------------------------
 	//Draw the bullets
-	
+	//draw_circle(100, 8);
+	//drawCircle(260.0, 260.0, 100.0, 6);
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		/*//Log("draw bullet...\n");

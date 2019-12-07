@@ -1,5 +1,5 @@
 CFLAGS = -I ./include -g 
-ERRORFLAGS = -Wall -Werror -Wextra
+ERRORFLAGS = -Wall #-Werror -Wextra
 ##LIB    = ./libggfonts.so
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lssl -lcrypto #-lXrandr
 

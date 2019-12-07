@@ -41,6 +41,12 @@ namespace gvars{
     extern int lightningColors[][3];
     extern int bullet_position;
 
+    extern int movex;
+    extern int movey;
+    extern int sizeX;
+    extern int sizeY;
+    extern int fireArray[];
+    extern int playerdir;
     extern MainCharacter hero;
     enum class GameState{
         startup,
