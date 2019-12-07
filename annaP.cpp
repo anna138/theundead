@@ -388,13 +388,119 @@ void fireballAttack(int * fire_pos){
 	else
 		fire_pos[0] = -1 * (((int)(fire_pos[0])) + 100);
 }
-void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
+void skullAI(Vec enemy_pos, int xres, int yres)
 {
-	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres;
-	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres;
-	enemy_angle = trooper_angle*0.5 + enemy_angle;
+	std::cout << "B Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
+	std::cout << "B Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
+	enemy_pos[1] = (int)((enemy_pos[1] + (hero.pos[2]*0.5)));
+	enemy_pos[0] = (int)((enemy_pos[0] + (hero.pos[0]*0.5)));
+	int angle = atan2(hero.pos[0], hero.pos[2]);
 	/* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
 	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
+	if (angle < 35 && angle > 0){ 
+		//EAST
+		enemy_pos[0] += 10;
+	} 
+	else if (angle < 90 && angle > 36){
+		// NORTHEAST
+		enemy_pos[0] += 10;
+		enemy_pos[1] += 10;
+	}
+	else if (angle < 155 && angle > 91){
+		// NORTHWEST
+		enemy_pos[0] -= 10;
+		enemy_pos[1] += 10;
+	}
+	else if (angle < 220 && angle > 155){
+		// WEST
+		enemy_pos[0] -= 10;
+	}
+	else if (angle < 270 && angle > 221){
+		// SOUTHWEST
+		enemy_pos[0] -= 10;
+		enemy_pos[1] -= 10;
+	}
+	else if (angle < 320 && angle > 271){
+		//SOUTHEAST
+		enemy_pos[0] += 10;
+		enemy_pos[1] -= 10;
+	}
+	else if (angle < 360 && angle > 321){
+		//EAST
+		enemy_pos[0] += 10;
+		enemy_pos[1] -= 10;
+	}
+	std::cout << "A Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
+	std::cout << "A Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
+
+	
+	/*
+	switch(hero.dir){
+		case MainCharacter::Direction::S:
+			enemy_pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::N:
+			enemy_pos[1] += 10;
+			break;
+		case MainCharacter::Direction::E:
+			enemy_pos[0] += 10;
+			break;
+		case MainCharacter::Direction::W: 
+			enemy_pos[0] -= 10;
+			break;
+		case MainCharacter::Direction::SW: 
+			enemy_pos[0] -= 10;
+			enemy_pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::SE: 
+			enemy_pos[0] += 10;
+			enemy_pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::NW: 
+			enemy_pos[0] -= 10;
+			enemy_pos[1] += 10;
+			break;
+		case MainCharacter::Direction::NE: 
+			enemy_pos[0] += 10;
+			enemy_pos[1] += 10;
+			break;
+		case MainCharacter::Direction::end:
+			break;
+	}*/
+}
+void bulletsTravel(float* pos){
+	switch(hero.dir){
+		case MainCharacter::Direction::S:
+			pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::N:
+			pos[1] += 10;
+			break;
+		case MainCharacter::Direction::E:
+			pos[0] += 10;
+			break;
+		case MainCharacter::Direction::W: 
+			pos[0] -= 10;
+			break;
+		case MainCharacter::Direction::SW: 
+			pos[0] -= 10;
+			pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::SE: 
+			pos[0] += 10;
+			pos[1] -= 10;
+			break;
+		case MainCharacter::Direction::NW: 
+			pos[0] -= 10;
+			pos[1] += 10;
+			break;
+		case MainCharacter::Direction::NE: 
+			pos[0] += 10;
+			pos[1] += 10;
+			break;
+		case MainCharacter::Direction::end:
+			break;
+	}
 }
 void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
 {
@@ -412,13 +518,9 @@ void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_a
 
 void fireCircles(int row, int offset_x, int offset_y)
 {
-	int x = 300, y = 300, w = 5, h = 5;
+	int x = offset_x, y = offset_y, w = 3, h = 3;
 	
-	if (offset_x && offset_y) {
-		x = offset_x;
-		y = offset_y;
-	}
-
+	std::cout << "offset" << offset_x << "  " << offset_y << std::endl;
 	glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);

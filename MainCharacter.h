@@ -7,10 +7,11 @@ class MainCharacter{
     private:
         int face;
         Texture *hitler;
-		enum class Direction{
+
+    public:
+    	enum class Direction{
 			S,SW,W,NW,N,NE,E,SE,end
     	};
-    public:
 		Direction dir;
         int pos[3];
         int tile;
