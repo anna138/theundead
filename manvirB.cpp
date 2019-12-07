@@ -493,26 +493,22 @@ void MainCharacter::calFace()
             dir = Direction::N;
 			if(tp.isWalkable(pos[0], pos[2]+ns, 0) && tp.Walk(-1.0/div, -1.0/div, tile))
             	pos[2] += ns;
-			std::cout << "N" << std::endl;
         }else if(arrow_keys[1]){
 			
             dir = Direction::S;
 			if(tp.isWalkable(pos[0], pos[2]-ns, 0)&& tp.Walk(1.0/div, 1.0/div, tile))
             	pos[2] -= ns;
 		
-			std::cout << "S" << std::endl;
 
         }else if(arrow_keys[2]){
             dir = Direction::W;
 			if(tp.isWalkable(pos[0]-we, pos[2], 0) && tp.Walk(1.0/div, -1.0/div, tile))
             	pos[0] -= we; 
-			std::cout << "W" << std::endl;
 
         }else {
             dir = Direction::E;
 			if(tp.isWalkable(pos[0]+we, pos[2], 0) && tp.Walk(-1.0/div, 1.0/div, tile))
             	pos[0] += we; 
-			std::cout << "E" << std::endl;
 
         }
         return;
@@ -532,7 +528,6 @@ void MainCharacter::calFace()
                     pos[0] -= dwe; 
                     pos[2] += dns;
                 }
-			std::cout << "NW" << std::endl;
 
             }else if(arrow_keys[3]){
 				// if(dir == Direction::N){
@@ -547,7 +542,6 @@ void MainCharacter::calFace()
                     pos[0] += dwe; 
                     pos[2] += dns;			
                 }
-				std::cout << "NE" << std::endl;
 
             }
         }else if(arrow_keys[1]){
@@ -564,7 +558,7 @@ void MainCharacter::calFace()
                     pos[0] -= dwe; 
                     pos[2] -= dns;
                 }
-			std::cout << "SW" << std::endl;
+			
 
             }else if(arrow_keys[3]){
 				// if(dir == Direction::S){
@@ -579,7 +573,6 @@ void MainCharacter::calFace()
                     pos[0] += dwe; 
                     pos[2] -= dns;
                 }
-			std::cout << "SE" << std::endl;
 
             }
         }

@@ -239,16 +239,14 @@ int main()
 				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
 				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
 				
-				Texture map;
-				map.set("./images/map4.png");
+				
+				
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				if(hero.tile == 0){
 					hero.characterRender();
-					map.set("./images/map4_1.png");
-					map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				}else{
-					map.set("./images/map4_1.png");
-					map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+				}else{		
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 					hero.characterRender();
 				}
 				// glPushMatrix();

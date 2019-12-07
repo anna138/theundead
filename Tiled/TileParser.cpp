@@ -22,12 +22,12 @@ TileParser::TileParser(const std::string fn)
                 }
             }
         }
-        for(auto &i : tiles.at(size-1)){
-            for(auto &j : i){
-                std::cout << j << ",";
-            }
-            std::cout << std::endl;
-        }
+        // for(auto &i : tiles.at(size-1)){
+        //     for(auto &j : i){
+        //         std::cout << j << ",";
+        //     }
+        //     std::cout << std::endl;
+        // }
     }
 
 
@@ -147,17 +147,17 @@ bool TileParser::Walk(float x, float y, int & code){
         posy -= y;
         return false;
     }
-    std::cout << "value of tile: " << tiles.at(2).at((int)posx).at((int)posy) << std::endl;
-    for(unsigned int i = 0; i < width; i++){
-        std::cout << i << " ";
-        for(unsigned int j = 0; j < height; j++){
-            if((int)posy == j and (int)posx == i)
-                std::cout << "1,";
-            else
-                std::cout << tiles.at(2).at(i).at(j) << ",";
-        }
-        std::cout << std::endl;
-    }
+    // std::cout << "value of tile: " << tiles.at(2).at((int)posx).at((int)posy) << std::endl;
+    // for(unsigned int i = 0; i < width; i++){
+    //     std::cout << i << " ";
+    //     for(unsigned int j = 0; j < height; j++){
+    //         if((int)posy == j and (int)posx == i)
+    //             std::cout << "1,";
+    //         else
+    //             std::cout << tiles.at(2).at(i).at(j) << ",";
+    //     }
+    //     std::cout << std::endl;
+    // }
 
 
     if(tiles.at(2).at((int)posx).at((int)posy) && tiles.at(2).at((int)posx).at((int)posy) != 563 

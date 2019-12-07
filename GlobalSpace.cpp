@@ -50,4 +50,7 @@ namespace gvars{
     int arrow_keys[4] = {0, 0, 0, 0};
     Image mask("images/mask.png");
     TileParser tp("./images/map4.tmx");
+    Texture map("./images/map4.png");
+    Texture map_1("./images/map4_1.png");
+
 } // namespace GVars
