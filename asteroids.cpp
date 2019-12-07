@@ -603,23 +603,23 @@ int check_keys(XEvent *e)
 	//keyboard input?
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-
-	// if (e->type == KeyRelease) {
-	// 	gl.keys[key]=0;
-	// 	if (key == XK_Shift_L || key == XK_Shift_R)
-	// 		shift=0;
-	// 	return 0;
-	// }
-	// if (e->type == KeyPress) {
-	// 	gl.keys[key]=1;
-	// 	if (key == XK_Shift_L || key == XK_Shift_R) {
-	// 		shift=1;
-	// 		return 0;
-	// 	}
-	// } else {
-	// 	return 0;
-	// }
 	arrowInputMap(e);
+	if (e->type == KeyRelease) {
+		gl.keys[key]=0;
+		if (key == XK_Shift_L || key == XK_Shift_R)
+			shift=0;
+		return 0;
+	}
+	if (e->type == KeyPress) {
+		gl.keys[key]=1;
+		if (key == XK_Shift_L || key == XK_Shift_R) {
+			shift=1;
+			return 0;
+		}
+	} else {
+		return 0;
+	}
+	
 
     int choice=0;
 	int dirX=0;
@@ -672,7 +672,7 @@ int check_keys(XEvent *e)
 			state = GameState::endgamescore;
 			break;
 		case XK_e:
-			gvars::attack = (gvars::attack + 1) % 4;
+			gvars::attack = ((gvars::attack + 1) % 4);
 			break;
 		case XK_a:
 			movez++;
@@ -967,7 +967,6 @@ void physics()
 Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
 void render()
 { 
-	
 	showAttack(gvars::attack);
     /*
 	Anna Commented
@@ -1145,8 +1144,8 @@ Anna commented
 		// 		break;
 		// }
 		//std::cout << "Does this work?" << std::endl;
-		int choice = gvars::attack;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
+				
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], gvars::attack);
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 
