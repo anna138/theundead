@@ -89,23 +89,33 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
 Texture character1;
 Texture character2;
 Texture character3;
+
+void characterOption(int option){
+    
+        if(option == 1){
+		character1.set("./images/hitlerlight.png");
+		character1.Display_Picture( 400, 400, -600, 0);
+        } else if (option == 2) {
+		character2.set("./images/hitlerdark.png");
+		character2.Display_Picture( 400, 400, 0, 0);
+        }else if(option ==3){
+		character3.set("./images/villain_glow.png");
+		character3.Display_Picture( 400, 400, 600, 0);
+        }
+}
+
 Texture character4;
 Texture character5;
 Texture character6;
 
 void characterChoice() {
-		character1.set("./images/villain.png");
-		character1.Display_Picture( 400, 400, 600, 0);
-		character2.set("./images/hitler_sprite/hitler_front.png");
-		character2.Display_Picture( 400, 400, -600, 0);
-		character3.set("./images/wizard/wiz_s.png");
-		character3.Display_Picture( 400, 400, 0, 0);
-		character4.set("./images/hitler_sprite/hitler_glow2.png");
-		character4.Display_Picture( 400, 400, -600, 0);
-		character5.set("./images/wizard/wiz_s_glow.png");
-		character5.Display_Picture( 400, 400, 0, 0);
-		character6.set("./images/villain_glow.png");
-		character6.Display_Picture( 400, 400, 600, 0);
+		
+        character4.set("./images/villain.png");
+		character4.Display_Picture( 400, 400, 600, 0);
+		character5.set("./images/hitler_sprite/hitler_front.png");
+		character5.Display_Picture( 400, 400, -600, 0);
+		character6.set("./images/wizard/wiz_s.png");
+		character6.Display_Picture( 400, 400, 0, 0);
 }
 
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -242,40 +252,3 @@ void renderVine( int size, int start, int end){
         gvars::arrayVine[i]=randXnum;
     }    
 }
-struct Box {
-    float x, y;
-    float w,h;
-    float vx, vy;
-};
-void characterSelect(){
-
-}
-/*
-float sweptAABB(Box b1, Box b2, float &normalx, float &normaly){
-    glReadPixels(200,150,100,100)
-    float xInvEntry, yInvEntry;
-    float xInvExit, yInvExit;
-//Find the distance between the objects on the near and far side for both x and y
-    if(b1.vx > 0.0f) {
-        xInvEntry =b2.x-(b1.x+b1.w);
-        xInvExit=(b2.x+b2.w)-b1.x;
-    }
-    else
-    {
-        xInvEntry=(b2.x+b2.w)-b1.x;
-        xInvExit=b2.x-(b1.x+b1.w);
-
-    }
-    if(b1.vy>0.0f)
-    {
-        yInvEntry=b2.y-(b1.y+b1.h);
-        yInvExit=(b2.y+b2.h)-b1.y;
-
-    }
-    else 
-    {
-        yInvEntry=(b2.y+b2.h)-b1.y;
-        yInvExit=b2.y-(b1.y+b1.h);
-    }
-
-}*/

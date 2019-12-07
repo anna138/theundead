@@ -105,6 +105,7 @@ extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
 extern void characterChoice();
+extern void characterOption(int option);
 extern void renderVine(int size, int start, int end);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
@@ -123,6 +124,7 @@ extern void arrowInputMap(XEvent *);
 
 X11_wrapper x11(0, 0);
 int movez = 0;
+int option=0;
 int main()
 {
 	//set up the x11 window
@@ -193,7 +195,6 @@ int main()
 			}
 
             case GameState::characterSelect:{
-            
 				//int x=200,y=200,dirX=0,dirY=0;
 				//int dirX=0,dirY=0;
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -205,6 +206,7 @@ int main()
 				//drawLine();
 				//drawVine();
                 characterChoice();
+                characterOption(option);
 				break;
 			}
 			case GameState::game:{
@@ -621,12 +623,24 @@ int check_keys(XEvent *e)
 		    }
 			break;
 		case XK_t:
-		    choice =1;
+            choice =1;
 		    if(state != GameState::characterSelect){
 				state = GameState::characterSelect;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
 				sleep(1);
+		    }
+			break;
+        case XK_1:
+		    option =1;
+		    if(state != GameState::characterSelect){
+				state = GameState::characterSelect;
+		    }
+			break;
+        case XK_2:
+		    option =2;
+		    if(state != GameState::characterSelect){
+				state = GameState::characterSelect;
 		    }
 			break;
 		case XK_p:
