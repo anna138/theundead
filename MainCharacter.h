@@ -13,6 +13,7 @@ class MainCharacter{
     public:
 		Direction dir;
         int pos[3];
+        int tile;
         int lifeForce; // Life force --> Hud Level
 		double mousepos[2];
         MainCharacter();

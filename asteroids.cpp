@@ -165,11 +165,11 @@ int main()
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
 		timeCopy(&timeStart, &timeCurrent);
-		physicsCountdown += timeSpan;
-		while (physicsCountdown >= physicsRate) {
-			physics();
-			physicsCountdown -= physicsRate;
-		}
+		// physicsCountdown += timeSpan;
+		// while (physicsCountdown >= physicsRate) {
+		// 	physics();
+		// 	physicsCountdown -= physicsRate;
+		// }
 		//lets start the game states
 		switch (state){
 			case GameState::startup:{
@@ -241,20 +241,27 @@ int main()
 				Texture map;
 				map.set("./images/map4.png");
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				hero.characterRender();
-				
-				glPushMatrix();
-				glPointSize(4);
-				glColor3ub(255,0,0);
-				glBegin(GL_POINTS);
-					// for(int i = 0; i < 32; i++){
-					// 	for(int j = 0; j <= 32; j++){
-					// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
-					// 	}
-					// }
-					glVertex2d(0,0);
-				glEnd();
-				glPopMatrix();
+				if(hero.tile == 0){
+					hero.characterRender();
+					map.set("./images/map4_1.png");
+					map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+				}else{
+					map.set("./images/map4_1.png");
+					map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+					hero.characterRender();
+				}
+				// glPushMatrix();
+				// glPointSize(4);
+				// glColor3ub(255,0,0);
+				// glBegin(GL_POINTS);
+				// 	// for(int i = 0; i < 32; i++){
+				// 	// 	for(int j = 0; j <= 32; j++){
+				// 	// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
+				// 	// 	}
+				// 	// }
+				// 	glVertex2d(0,0);
+				// glEnd();
+				// glPopMatrix();
 				//map.set("./images/cartgrid.png");
 				//map.Display_Picture(gl.xres/2, gl.yres/2,0,0);
 				

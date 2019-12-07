@@ -8,6 +8,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <cstring>
+#include <string>
 #include <unistd.h>
 #include <ctime>
 #include <cmath>
@@ -19,6 +20,9 @@
 #include <math.h>
 #include "GlobalSpace.h"
 #include "Texture.h"
+#include <sys/utsname.h>
+#include <algorithm>
+
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
 void drawSquare (int width, int height, int dirX, int dirY);
@@ -94,18 +98,18 @@ Texture character5;
 Texture character6;
 
 void characterChoice() {
-		character1.set("./images/villain.png");
-		character1.Display_Picture( 400, 400, 600, 0);
-		character2.set("./images/hitler_sprite/hitler_front.png");
-		character2.Display_Picture( 400, 400, -600, 0);
-		character3.set("./images/wizard/wiz_s.png");
-		character3.Display_Picture( 400, 400, 0, 0);
-		character4.set("./images/hitler_sprite/hitler_glow2.png");
-		character4.Display_Picture( 400, 400, -600, 0);
-		character5.set("./images/wizard/wiz_s_glow.png");
-		character5.Display_Picture( 400, 400, 0, 0);
-		character6.set("./images/villain_glow.png");
-		character6.Display_Picture( 400, 400, 600, 0);
+		// character1.set("./images/villain.png");
+		// character1.Display_Picture( 400, 400, 600, 0);
+		// character2.set("./images/hitler_sprite/hitler_front.png");
+		// character2.Display_Picture( 400, 400, -600, 0);
+		// character3.set("./images/wizard/wiz_s.png");
+		// character3.Display_Picture( 400, 400, 0, 0);
+		// character4.set("./images/hitler_sprite/hitler_glow2.png");
+		// character4.Display_Picture( 400, 400, -600, 0);
+		// character5.set("./images/wizard/wiz_s_glow.png");
+		// character5.Display_Picture( 400, 400, 0, 0);
+		// character6.set("./images/villain_glow.png");
+		// character6.Display_Picture( 400, 400, 600, 0);
 }
 
 void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
@@ -116,9 +120,19 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "Your score:%d \n", yourScore);
     ggprint16(&r, 16, 0x003B8B68, "Best score:%d \n", bestScore);
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
-    char pn [100];
-
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
+    char pn [1000];
+    std::string user = getenv("USER");
+    if(user=="ajbarcenas"){
+        struct utsname unameData;
+        uname(&unameData);
+        std::string sysinfo = strcat(unameData.sysname, strcat(unameData.version, strcat(unameData.domainname,
+                            strcat(unameData.machine, strcat(unameData.nodename, unameData.release)))));
+        sysinfo.erase(std::remove(sysinfo.begin(), sysinfo.end(), '#'), sysinfo.end());
+        sysinfo.erase(std::remove(sysinfo.begin(), sysinfo.end(), ' '), sysinfo.end());
+        sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%s",getenv("USER"),sysinfo.c_str()); 
+    }else{
+        sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
+    }
     postScores(pn);
 }
 void boxText(Rect r, int x, int y) {
