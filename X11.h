@@ -19,7 +19,7 @@ public:
 		GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
 		//GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, None };
 		XSetWindowAttributes swa;
-		setup_screen_res(gl.xres, gl.yres);
+		//setup_screen_res(gl.xres, gl.yres);
 		dpy = XOpenDisplay(NULL);
 		if (dpy == NULL) {
 			std::cout << "\n\tcannot connect to X server" << std::endl;
@@ -35,8 +35,11 @@ public:
 		if (!w && !h) {
 			//Go to fullscreen.
 			//std::cout << "here" << std::endl;
-			gl.xres = getWinAttr.width;
-			gl.yres = getWinAttr.height;
+			// gl.xres = getWinAttr.width;
+			// gl.yres = getWinAttr.height;
+			//std::cout << gl.xres << " and " << gl.yres << std::endl;
+			gl.xres = 1024*1;
+			gl.yres = 512*1;
 			//When window is fullscreen, there is no client window
 			//so keystrokes are linked to the root window.
 			// XGrabKeyboard(dpy, root, False,

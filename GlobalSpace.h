@@ -2,6 +2,7 @@
 #include <GL/glx.h>
 #include "MainCharacter.h"
 #include "Global.h"
+#include "./Tiled/TileParser.h"
 
 //define all global variables here that go
 namespace gvars{
@@ -40,6 +41,12 @@ namespace gvars{
     extern int lightningColors[][3];
     extern int bullet_position;
 
+    extern int movex;
+    extern int movey;
+    extern int sizeX;
+    extern int sizeY;
+    extern int fireArray[];
+    extern int playerdir;
     extern MainCharacter hero;
     enum class GameState{
         startup,
@@ -53,5 +60,7 @@ namespace gvars{
     };
     extern GameState state;
     extern int arrow_keys[4];
+    extern TileParser tp;
+    extern Image mask;
 }
 

@@ -28,7 +28,8 @@
 #include "MainCharacter.h"
 using gvars::gl;
 using gvars::arrow_keys;
-
+using gvars::tp;
+using gvars::mask;
 #define PORT 443
 #define USERAGENT "CMPS-3350"
 
@@ -457,14 +458,14 @@ MainCharacter::MainCharacter()
     face = 0;
     dir = Direction::S;
 	hitler = new Texture[8];
-    hitler[0].set("images/hitler_sprite/hitler_front.png");
-    hitler[1].set("images/hitler_sprite/hitler_back.png");
-    hitler[2].set("images/hitler_sprite/hitler_back_side.png");
-    hitler[3].set("images/hitler_sprite/hitler_side_walk1.png");
-    hitler[4].set("images/hitler_sprite/hitler_side_walk2.png");
-    hitler[5].set("images/hitler_sprite/hitler_invside_walk1.png");
-    hitler[6].set("images/hitler_sprite/hitler_invside_walk2.png");
-    hitler[7].set("images/hitler_sprite/hitler_side_shooting.png");
+    hitler[0].set("images/hitler_sprite/hitler_s.png");
+    hitler[1].set("images/hitler_sprite/hitler_sw.png");
+    hitler[2].set("images/hitler_sprite/hitler_w.png");
+    hitler[3].set("images/hitler_sprite/hitler_nw.png");
+    hitler[4].set("images/hitler_sprite/hitler_n.png");
+    hitler[5].set("images/hitler_sprite/hitler_ne.png");
+    hitler[6].set("images/hitler_sprite/hitler_e.png");
+    hitler[7].set("images/hitler_sprite/hitler_se.png");
     // hitler[0].set("images/wizard/wiz_s.png");
     // hitler[1].set("images/wizard/wiz_sw.png");
     // hitler[2].set("images/wizard/wiz_w.png");
@@ -480,43 +481,106 @@ MainCharacter::~MainCharacter(){
 
 void MainCharacter::calFace()
 {
+    int div = 4;
+    int ns =   16* 1/div;
+    int we =   32* 1/div;
+    int dns =  8*  1/div;
+    int dwe =  16* 1/div;
+
     int sum = arrow_keys[0]+arrow_keys[1]+arrow_keys[2]+arrow_keys[3];
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-            pos[2] += 7;
+			if(tp.isWalkable(pos[0], pos[2]+ns, 0) && tp.Walk(-1.0/div, -1.0/div))
+            	pos[2] += ns;
+			std::cout << "N" << std::endl;
         }else if(arrow_keys[1]){
+			
             dir = Direction::S;
-            pos[2] -= 7;
+			if(tp.isWalkable(pos[0], pos[2]-ns, 0)&& tp.Walk(1.0/div, 1.0/div))
+            	pos[2] -= ns;
+		
+			std::cout << "S" << std::endl;
+
         }else if(arrow_keys[2]){
             dir = Direction::W;
-            pos[0] -= 7; 
+			if(tp.isWalkable(pos[0]-we, pos[2], 0) && tp.Walk(1.0/div, -1.0/div))
+            	pos[0] -= we; 
+			std::cout << "W" << std::endl;
+
         }else {
             dir = Direction::E;
-            pos[0] += 7; 
+			if(tp.isWalkable(pos[0]+we, pos[2], 0) && tp.Walk(-1.0/div, 1.0/div))
+            	pos[0] += we; 
+			std::cout << "E" << std::endl;
+
         }
         return;
     }
     if (sum == 2) {
         if(arrow_keys[0]){
             if(arrow_keys[2]){
+				// if(dir == Direction::N){
+				// 	pos[2] -= ns;
+                //     tp.Walk(1.0/div, 1.0/div);
+				// }else if(dir == Direction::W){
+				// 	pos[0] += we;
+                //     tp.Walk(-1, 1);
+				// }
                 dir = Direction::NW;
-                pos[0] -= 5; 
-                pos[2] += 5;
+                if(tp.isWalkable(pos[0]-dwe, pos[2]+dns, 1) && tp.Walk(0, -1.0/div)){
+                    pos[0] -= dwe; 
+                    pos[2] += dns;
+                }
+			std::cout << "NW" << std::endl;
+
             }else if(arrow_keys[3]){
+				// if(dir == Direction::N){
+				// 	pos[2] -= ns;
+                //     tp.Walk(1.0/div, 1.0/div);
+				// }else if(dir == Direction::E){
+				// 	pos[0] -= we;
+                //     tp.Walk(1.0/div, -1.0/div);
+				// }
                 dir = Direction::NE;
-                pos[0] += 5; 
-                pos[2] += 5;
+                if(tp.isWalkable(pos[0]+dwe, pos[2]+dns, 1)&& tp.Walk(-1.0/div, 0)){
+                    pos[0] += dwe; 
+                    pos[2] += dns;			
+                }
+				std::cout << "NE" << std::endl;
+
             }
         }else if(arrow_keys[1]){
             if(arrow_keys[2]){
+				// if(dir == Direction::S){
+				// 	pos[2] += ns;
+                //     tp.Walk(-1.0/div, -1.0/div);
+				// }else if(dir == Direction::W){
+				// 	pos[0] += we;
+                //     tp.Walk(-1.0/div, 1/div);
+				// }
                 dir = Direction::SW;
-                pos[0] -= 5; 
-                pos[2] -= 5;
+                if(tp.isWalkable(pos[0]-dwe, pos[2]-dns, 1) && tp.Walk(1.0/div, 0)){
+                    pos[0] -= dwe; 
+                    pos[2] -= dns;
+                }
+			std::cout << "SW" << std::endl;
+
             }else if(arrow_keys[3]){
+				// if(dir == Direction::S){
+				// 	pos[2] += ns;
+                //     tp.Walk(-1.0/div, -1.0/div);
+				// }else if(dir == Direction::E){
+				// 	pos[0] -= we;
+                //     tp.Walk(1.0/div, -1.0/div);
+				// }
                 dir = Direction::SE;
-                pos[0] += 5; 
-                pos[2] -= 5;
+                if(tp.isWalkable(pos[0]+dwe, pos[2]-dns, 1) && tp.Walk(0, 1.0/div)){
+                    pos[0] += dwe; 
+                    pos[2] -= dns;
+                }
+			std::cout << "SE" << std::endl;
+
             }
         }
     }
@@ -524,8 +588,8 @@ void MainCharacter::calFace()
 }
 void MainCharacter::characterRender()
 {
-    int width = 30;
-	int height = 30;
+    int width = 16;
+	int height = 16;
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
@@ -533,21 +597,20 @@ void MainCharacter::characterRender()
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
-    //glColorMaterial ( GL_FRONT, GL_SPECULAR ) ;
     glBegin(GL_QUADS);
-        glNormal3f(1.0,0.0,-1.0);
         glTexCoord2f(0, 0);
-        glVertex3i(-width+pos[0],height+pos[2], pos[2]); 
+        glVertex3i(-width+pos[0],height-80+pos[2], 0); 
         glTexCoord2f(0, 1);
-        glVertex3i(-width+pos[0],-height+pos[2], pos[2]); 
+        glVertex3i(-width+pos[0],-height-80+pos[2], 0); 
         glTexCoord2f(1, 1);
-        glVertex3i(width+pos[0], -height+pos[2], pos[2]);      
+        glVertex3i(width+pos[0], -height-80+pos[2], 0);      
         glTexCoord2f(1,0);
-        glVertex3i(width+pos[0],height+pos[2], pos[2]);
+        glVertex3i(width+pos[0],height-80+pos[2], 0);
     glEnd();
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
+	//std::cout << "x:" << pos[0] << " and this is y:" << pos[2] << std::endl;
 }
 
 void MainCharacter::setFace(int f)
@@ -847,8 +910,8 @@ void isometricScene()
 	//rotate the x-axis by 30 degrees
 	glRotatef(35.264f, 1.0f, 0.0f, 0.0f);
 	//rotate the y-axis by 45 degres
-	//glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
-	glScalef(1.0f,1.0f,-1.0f);
+	//glRotatef(-60.0f, 0.0f, 1.0f, 0.0f);
+	//glScalef(1.0f,1.0f,-1.0f);
 }
 void orthoScene()
 {
@@ -884,6 +947,10 @@ void arrowInputMap(XEvent *e )
 
             if(arrow_key != -1)
                 arrow_keys[arrow_key] = 1;
+			if(gvars::state == gvars::GameState::game){
+
+				gvars::hero.calFace();
+			}
         } break;
         case KeyRelease: {
             KeySym keysym = XLookupKeysym(&e->xkey, 0);
@@ -893,10 +960,7 @@ void arrowInputMap(XEvent *e )
                 arrow_keys[arrow_key] = 0;
         } break;
     }
-    if(gvars::state == gvars::GameState::game){
 
-        gvars::hero.calFace();
-    }
 
 
 
