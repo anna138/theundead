@@ -92,8 +92,8 @@ extern void renderCoolCredits(int w, int h, unsigned int imageTexture);
 extern void makeParticles(int, int);
 extern void getScores(char*);
 extern void makeButton(int x, int y, int dirX, int dirY);
-extern void drawVine();
-extern void drawLine();
+//extern void drawVine();
+//extern void drawLine();
 extern void scoreboard(Rect r);
 extern void lightningShoots(float, int, int);
 extern void fireCircles(int, int, int);
@@ -104,9 +104,10 @@ extern void characterText(Rect r, int, int );
 extern void lighting( int size, int start, int end);
 extern void runLogoIntro(unsigned int logoIntroTexture);
 extern void changeButtonColor( int , int ,int dirX, int dirY, int choice);
+extern void DisplayGameControls(Rect r);
 extern void characterChoice();
 extern void characterOption(int option);
-extern void renderVine(int size, int start, int end);
+//extern void renderVine(int size, int start, int end);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
@@ -139,7 +140,7 @@ int main()
 	srand(time(NULL));
 	randomColor();
    // lighting( 11, 10, 20);
-    renderVine(11,10,20);
+    //renderVine(11,10,20);
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable
@@ -195,7 +196,7 @@ int main()
 				makeButton(gl.xres,gl.yres,dirX,dirY);
 				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
 				//drawLine();
-				drawVine();
+			//	drawVine();
                 boxText(r,gl.xres,gl.yres);
 				break;
 			}
@@ -213,6 +214,13 @@ int main()
 				//drawVine();
                 characterChoice();
                 characterOption(option);
+				break;
+			}
+            case GameState::howToPlay:{
+                Rect r;
+				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+				orthoScene();
+                DisplayGameControls(r);
 				break;
 			}
 			case GameState::game:{
@@ -667,9 +675,13 @@ int check_keys(XEvent *e)
 				state = GameState::characterSelect;
 		    }
 			break;
-		case XK_p:
-		    if(state != GameState::characterSelect){
-				state = GameState::characterSelect;
+		case XK_j:
+            choice=4;
+		    if(state != GameState::howToPlay){
+				state = GameState::howToPlay;
+				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
+                x11.swapBuffers();
+                sleep(1);
 		    }
 			break;
 		case XK_h:

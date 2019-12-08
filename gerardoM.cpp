@@ -18,6 +18,7 @@
 #include "fonts.h"
 #include <math.h>
 #include "GlobalSpace.h"
+#include <fstream>
 #include "Texture.h"
 #define DEG2RAD 3.14159/180.0
 //void drawlight(int x1, int y1,int x2,int y2,int displace);
@@ -34,8 +35,8 @@ void makeButton(int x, int y, int dirX, int dirY)
 {
     int width = x/16;
     int height = y/26;
-    int posx[3] = {x/5,0, -(x/5)};
-    int posy[3] = {(-y/4), (-y/4), (-y/4)};
+    int posx[4] = {x/5,0, -(x/5),0};
+    int posy[4] = {(-y/3)-y/15, (-y/3)-y/15, (-y/3)-y/15,-(y/4)-(y/70)};
     glPushMatrix();
 
     glBegin(GL_QUADS);
@@ -45,15 +46,21 @@ void makeButton(int x, int y, int dirX, int dirY)
         dirY = posy[i];
         drawSquare(width, height, dirX, dirY);
     }
+    dirX = posx[3];
+    dirY = posy[3];
+    drawSquare(x/4 + x/70, height, dirX, dirY);
     glEnd();
 
     glBegin(GL_QUADS);
     glColor3f(0.7,0.13,0.13);
-    for(int i=0;i<3;i++) {
+    for(int i=0;i<4;i++) {
         dirX = posx[i];
         dirY = posy[i];
         drawSquare(width - 3, height - 3, dirX, dirY);
     }
+    dirX = posx[3];
+    dirY = posy[3];
+    drawSquare(x/4 + x/70 - 3, height-3, dirX, dirY);
     glEnd();
 
     glPopMatrix();
@@ -63,26 +70,35 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
 
     int width = x/16;
     int height = y/26;
-    int posx[3] = {x/5,0, -(x/5)};
-    int posy[3] = {(-y/4), (-y/4), (-y/4)};
+    int posx[4] = {x/5,0, -(x/5),0};
+    int posy[4] = {(-y/3)-y/15, (-y/3)-y/15, (-y/3)-y/15,-(y/4)-(y/70)};
+    /*
+    int posx[4] = {x/5,0, -(x/5)};
+    int posy[4] = {(-y/4), (-y/4), (-y/4)};*/
     if( choice == 2) {
-        dirX=posx[1];
-        dirY=posy[1];
+        dirX=posx[3];
+        dirY=posy[3];
         glColor3f(0.0,1.0,1.0);
-        drawSquare(width - 3, height - 3,dirX,dirY);
+        drawSquare(x/4+x/70 - 3, height - 3,dirX,dirY);
     }
     if( choice == 1) {
-        dirX=posx[2];
-        dirY=posy[2];
+        dirX=posx[0];
+        dirY=posy[0];
         glColor3f(0.0,1.0,1.0);
         drawSquare(width - 3, height - 3,dirX,dirY);
     }
     //the boxes are backwards in the array
     if( choice == 3) {
-        dirX=posx[0];
-        dirY=posy[0];
+        dirX=posx[2];
+        dirY=posy[2];
         glColor3f(0.0,1.0,1.0);
         drawSquare(width -3, height - 3,dirX,dirY);
+    }
+    if( choice == 4) {
+        dirX=posx[1];
+        dirY=posy[1];
+        glColor3f(0.0,1.0,1.0);
+        drawSquare(width - 3, height - 3,dirX,dirY);
     }
 }
 
@@ -132,11 +148,16 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     postScores(pn);
 }
 void boxText(Rect r, int x, int y) {
-    std::string boxText[3]={"Characters","Start Game","Credits"};
+    std::string boxText[4]={"Characters(t)","How To Play(j)","Credits(c)","Start Game(space)"};
     
+    int posx[4] = {x/5-x/35,0-35,-(x/4)+x/30,0-35};
+
+    int posy[4] = {(-y/3)-y/13, (-y/3)-y/13, (-y/3)-y/13,-(y/4)-y/50};
+    /*
     int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
     int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
-    for(int i=0;i<3;i++) {
+    */
+    for(int i=0;i<4;i++) {
         r.left=posx[i];
         r.bot=posy[i];
         r.center=0;
@@ -169,6 +190,7 @@ void drawSquare(int x, int y, int dirX, int dirY) {
     glVertex2i(-w+dirX, h+dirY);
     glVertex2i(-w+dirX, -h+dirY);
     glVertex2i(w+dirX, h+dirY);
+    glVertex2i( w+dirX, h+dirY);
     glEnd();
     glPopMatrix();
 }
@@ -251,4 +273,23 @@ void renderVine( int size, int start, int end){
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::arrayVine[i]=randXnum;
     }    
+}
+void DisplayGameControls(Rect r){
+    r.center=0;
+    r.bot=220;
+    r.left=-490;
+    ggprint16(&r, 16, 0x003B8B68, "How To Play\n");
+    ggprint16(&r, 16, 0x003B8B68, "To move the character\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Up arrow moves the playe north\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Down arrow moves the player south\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Left arrow moves the player east\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Rigt arrow moves the player west\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Up + Left arrows moves the player North East\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Up + Right arrows moves the player North West\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Down + Left arrows moves the player South East\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Down + Right arrows moves the player South West\n");
+    ggprint16(&r, 16, 0x003B8B68, "To Shoot\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Right click on the mouse\n");
+    ggprint16(&r, 16, 0x003B8B68, "Change Bullet Elements\n");
+    ggprint16(&r, 16, 0x003B8B68, "    -Press e to change the element to either Fire, Water, Earth, and Air\n");
 }

@@ -56,6 +56,7 @@ namespace gvars{
         characterSelect,
         highscores,
         endgamescore,
+        howToPlay,
         end
     };
     extern GameState state;
