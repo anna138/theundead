@@ -457,15 +457,24 @@ MainCharacter::MainCharacter()
     pos[2] = 0;
     face = 0;
     dir = Direction::S;
-	hitler = new Texture[8];
-    hitler[0].set("images/hitler_sprite/hitler_s.png");
-    hitler[1].set("images/hitler_sprite/hitler_sw.png");
-    hitler[2].set("images/trooper_w.png");
-    hitler[3].set("images/hitler_sprite/hitler_nw.png");
-    hitler[4].set("images/hitler_sprite/hitler_n.png");
-    hitler[5].set("images/hitler_sprite/hitler_ne.png");
-    hitler[6].set("images/hitler_sprite/hitler_e.png");
-    hitler[7].set("images/hitler_sprite/hitler_se.png");
+    trooper = new Texture[8];
+	//hitler = new Texture[8];
+    // hitler[0].set("images/hitler_sprite/hitler_s.png");
+    // hitler[1].set("images/hitler_sprite/hitler_sw.png");
+    // hitler[2].set("images/trooper_w.png");
+    // hitler[3].set("images/hitler_sprite/hitler_nw.png");
+    // hitler[4].set("images/hitler_sprite/hitler_n.png");
+    // hitler[5].set("images/hitler_sprite/hitler_ne.png");
+    // hitler[6].set("images/hitler_sprite/hitler_e.png");
+    // hitler[7].set("images/hitler_sprite/hitler_se.png");
+    trooper[0].set("images/trooper_sprite/trooper_s.png");
+    trooper[1].set("images/trooper_sprite/trooper_sw.png");
+    trooper[2].set("images/trooper_sprite/trooper_w.png");
+    trooper[3].set("images/trooper_sprite/trooper_nw2.png");
+    trooper[4].set("images/trooper_sprite/trooper_n.png");
+    trooper[5].set("images/trooper_sprite/trooper_ne2.png");
+    trooper[6].set("images/trooper_sprite/trooper_e.png");
+    trooper[7].set("images/trooper_sprite/trooper_se.png");
     // hitler[0].set("images/wizard/wiz_s.png");
     // hitler[1].set("images/wizard/wiz_sw.png");
     // hitler[2].set("images/wizard/wiz_w.png");
@@ -476,7 +485,7 @@ MainCharacter::MainCharacter()
     // hitler[7].set("images/wizard/wiz_se.png");
 }
 MainCharacter::~MainCharacter(){
-    delete [] hitler;
+    delete [] trooper;
 }
 
 void MainCharacter::calFace()
@@ -586,7 +595,7 @@ void MainCharacter::characterRender()
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
-    glBindTexture(GL_TEXTURE_2D, hitler[(int)dir].getID());
+    glBindTexture(GL_TEXTURE_2D, trooper[(int)dir].getID());
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);

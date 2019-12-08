@@ -6,7 +6,8 @@ class MainCharacter{
 
     private:
         int face;
-        Texture *hitler;
+        //Texture *hitler;
+        Texture *trooper;
 
     public:
     	enum class Direction{
