@@ -194,19 +194,19 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMen
 	movingEyes(eyeLeft, leftLocation);
 	movingEyes(eyeRight, rightLocation);
 
-	r.bot = 0 - (y / 3);
-	r.left = 0 - (x / 9);
-	r.center = 0;
+	// r.bot = 0 - (y / 3);
+	// r.left = 0 - (x / 9);
+	// r.center = 0;
 
-	ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
-	ggprint8b(& r, 16, 0x00ff0000,
-		"Press M for Menu Screen During Gameplay");
-	ggprint8b(& r, 16, 0x00ff0000,
-		"Press C for Credits During Gameplay");
-	ggprint8b(& r, 16, 0x00ff0000,
-		"Press G for GameOver Screen During Gameplay");
-	ggprint8b(& r, 16, 0x00ff0000,
-		"Press H for Highscores Screen During Gameplay");
+	// ggprint8b(& r, 16, 0x00ff0000, "Press Space to Continue");
+	// ggprint8b(& r, 16, 0x00ff0000,
+	// 	"Press M for Menu Screen During Gameplay");
+	// ggprint8b(& r, 16, 0x00ff0000,
+	// 	"Press C for Credits During Gameplay");
+	// ggprint8b(& r, 16, 0x00ff0000,
+	// 	"Press G for GameOver Screen During Gameplay");
+	// ggprint8b(& r, 16, 0x00ff0000,
+	// 	"Press H for Highscores Screen During Gameplay");
 }
 void highScoreBoard(Rect r2, int w, int h, unsigned int imageTexture)
 {
