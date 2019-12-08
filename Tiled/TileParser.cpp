@@ -13,6 +13,24 @@ TileParser::TileParser(const std::string fn)
     parseXML(fn);
     posx = ((width/2)-1)+.4;
     posy = posx;
+    int size = tiles.size();
+    if(size > 2) {
+        for(int i = 0; i < tiles.at(size-1).size(); i++){
+            for(int j = 0; j < tiles.at(size-1).at(i).size(); j++){
+                if(tiles.at(size-1).at(i).at(j) == 0){
+                    tiles.at(size-1).at(i).at(j) = tiles.at(size-2).at(i).at(j);
+                }
+            }
+        }
+        // for(auto &i : tiles.at(size-1)){
+        //     for(auto &j : i){
+        //         std::cout << j << ",";
+        //     }
+        //     std::cout << std::endl;
+        // }
+    }
+
+
 }
 
 TileParser::~TileParser()
@@ -120,25 +138,36 @@ bool TileParser::isWalkable(int x, int y, int dir)
     return true;
 }
 
-bool TileParser::Walk(float x, float y){
+bool TileParser::Walk(float x, float y, int & code){
+
     posx += x;
     posy += y;
-    std::cout << "value of tile: " << tiles.at(1).at((int)posx).at((int)posy) << std::endl;
-    for(unsigned int i = 0; i < width; i++){
-        std::cout << i << " ";
-        for(unsigned int j = 0; j < height; j++){
-            if((int)posy == j and (int)posx == i)
-                std::cout << "1,";
-            else
-                std::cout << tiles.at(1).at(i).at(j) << ",";
-        }
-        std::cout << std::endl;
-    }
-    if(tiles.at(1).at((int)posx).at((int)posy)){
+    if(posx >= width || posy >= height || posx <= 0 || posy <= 0){
         posx -= x;
         posy -= y;
         return false;
+    }
+    // std::cout << "value of tile: " << tiles.at(2).at((int)posx).at((int)posy) << std::endl;
+    // for(unsigned int i = 0; i < width; i++){
+    //     std::cout << i << " ";
+    //     for(unsigned int j = 0; j < height; j++){
+    //         if((int)posy == j and (int)posx == i)
+    //             std::cout << "1,";
+    //         else
+    //             std::cout << tiles.at(2).at(i).at(j) << ",";
+    //     }
+    //     std::cout << std::endl;
+    // }
+
+
+    if(tiles.at(2).at((int)posx).at((int)posy) && tiles.at(2).at((int)posx).at((int)posy) != 563 
+                && tiles.at(2).at((int)posx).at((int)posy) != 443 && tiles.at(2).at((int)posx).at((int)posy) != 71){
+        posx -= x;
+        posy -= y;
+        //code = tiles.at(2).at((int)posx).at((int)posy);
+        return false;
     }else{
+        code = tiles.at(2).at((int)posx).at((int)posy);
         return true;
     }
 

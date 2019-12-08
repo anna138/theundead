@@ -457,15 +457,24 @@ MainCharacter::MainCharacter()
     pos[2] = 0;
     face = 0;
     dir = Direction::S;
-	hitler = new Texture[8];
-    hitler[0].set("images/hitler_sprite/hitler_s.png");
-    hitler[1].set("images/hitler_sprite/hitler_sw.png");
-    hitler[2].set("images/hitler_sprite/hitler_w.png");
-    hitler[3].set("images/hitler_sprite/hitler_nw.png");
-    hitler[4].set("images/hitler_sprite/hitler_n.png");
-    hitler[5].set("images/hitler_sprite/hitler_ne.png");
-    hitler[6].set("images/hitler_sprite/hitler_e.png");
-    hitler[7].set("images/hitler_sprite/hitler_se.png");
+    trooper = new Texture[8];
+	//hitler = new Texture[8];
+    // hitler[0].set("images/hitler_sprite/hitler_s.png");
+    // hitler[1].set("images/hitler_sprite/hitler_sw.png");
+    // hitler[2].set("images/trooper_w.png");
+    // hitler[3].set("images/hitler_sprite/hitler_nw.png");
+    // hitler[4].set("images/hitler_sprite/hitler_n.png");
+    // hitler[5].set("images/hitler_sprite/hitler_ne.png");
+    // hitler[6].set("images/hitler_sprite/hitler_e.png");
+    // hitler[7].set("images/hitler_sprite/hitler_se.png");
+    trooper[0].set("images/trooper_sprite/trooper_s.png");
+    trooper[1].set("images/trooper_sprite/trooper_sw.png");
+    trooper[2].set("images/trooper_sprite/trooper_w.png");
+    trooper[3].set("images/trooper_sprite/trooper_nw2.png");
+    trooper[4].set("images/trooper_sprite/trooper_n.png");
+    trooper[5].set("images/trooper_sprite/trooper_ne2.png");
+    trooper[6].set("images/trooper_sprite/trooper_e.png");
+    trooper[7].set("images/trooper_sprite/trooper_se.png");
     // hitler[0].set("images/wizard/wiz_s.png");
     // hitler[1].set("images/wizard/wiz_sw.png");
     // hitler[2].set("images/wizard/wiz_w.png");
@@ -476,7 +485,7 @@ MainCharacter::MainCharacter()
     // hitler[7].set("images/wizard/wiz_se.png");
 }
 MainCharacter::~MainCharacter(){
-    delete [] hitler;
+    delete [] trooper;
 }
 
 void MainCharacter::calFace()
@@ -491,28 +500,24 @@ void MainCharacter::calFace()
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-			if(tp.isWalkable(pos[0], pos[2]+ns, 0) && tp.Walk(-1.0/div, -1.0/div))
+			if(tp.Walk(-1.0/div, -1.0/div, tile))
             	pos[2] += ns;
-			std::cout << "N" << std::endl;
         }else if(arrow_keys[1]){
 			
             dir = Direction::S;
-			if(tp.isWalkable(pos[0], pos[2]-ns, 0)&& tp.Walk(1.0/div, 1.0/div))
+			if(tp.Walk(1.0/div, 1.0/div, tile))
             	pos[2] -= ns;
 		
-			std::cout << "S" << std::endl;
 
         }else if(arrow_keys[2]){
             dir = Direction::W;
-			if(tp.isWalkable(pos[0]-we, pos[2], 0) && tp.Walk(1.0/div, -1.0/div))
+			if(tp.Walk(1.0/div, -1.0/div, tile))
             	pos[0] -= we; 
-			std::cout << "W" << std::endl;
 
         }else {
             dir = Direction::E;
-			if(tp.isWalkable(pos[0]+we, pos[2], 0) && tp.Walk(-1.0/div, 1.0/div))
+			if(tp.Walk(-1.0/div, 1.0/div, tile))
             	pos[0] += we; 
-			std::cout << "E" << std::endl;
 
         }
         return;
@@ -528,11 +533,10 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1, 1);
 				// }
                 dir = Direction::NW;
-                if(tp.isWalkable(pos[0]-dwe, pos[2]+dns, 1) && tp.Walk(0, -1.0/div)){
+                if(tp.Walk(0, -1.0/div, tile)){
                     pos[0] -= dwe; 
                     pos[2] += dns;
                 }
-			std::cout << "NW" << std::endl;
 
             }else if(arrow_keys[3]){
 				// if(dir == Direction::N){
@@ -543,11 +547,10 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::NE;
-                if(tp.isWalkable(pos[0]+dwe, pos[2]+dns, 1)&& tp.Walk(-1.0/div, 0)){
+                if(tp.Walk(-1.0/div, 0, tile)){
                     pos[0] += dwe; 
                     pos[2] += dns;			
                 }
-				std::cout << "NE" << std::endl;
 
             }
         }else if(arrow_keys[1]){
@@ -560,11 +563,11 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1.0/div, 1/div);
 				// }
                 dir = Direction::SW;
-                if(tp.isWalkable(pos[0]-dwe, pos[2]-dns, 1) && tp.Walk(1.0/div, 0)){
+                if(tp.Walk(1.0/div, 0, tile)){
                     pos[0] -= dwe; 
                     pos[2] -= dns;
                 }
-			std::cout << "SW" << std::endl;
+			
 
             }else if(arrow_keys[3]){
 				// if(dir == Direction::S){
@@ -575,11 +578,10 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::SE;
-                if(tp.isWalkable(pos[0]+dwe, pos[2]-dns, 1) && tp.Walk(0, 1.0/div)){
+                if(tp.Walk(0, 1.0/div, tile)){
                     pos[0] += dwe; 
                     pos[2] -= dns;
                 }
-			std::cout << "SE" << std::endl;
 
             }
         }
@@ -588,12 +590,12 @@ void MainCharacter::calFace()
 }
 void MainCharacter::characterRender()
 {
-    int width = 16;
-	int height = 16;
+    int width = 8*1;
+	int height = 16*1;
     glPushMatrix();
 	glRotatef(0, 0.0, 1.0, 0.0);
 	glTranslatef(0, 100, 0);
-    glBindTexture(GL_TEXTURE_2D, hitler[(int)dir].getID());
+    glBindTexture(GL_TEXTURE_2D, trooper[(int)dir].getID());
     glEnable(GL_ALPHA_TEST);
 	glAlphaFunc(GL_GREATER, 0.0f);
 	glColor4ub(255,255,255,255);
@@ -695,6 +697,7 @@ void readScores(char *pagename)
             pagename, hostname, USERAGENT);    
     req_len = strlen(req);
     ret = SSL_write(ssl, req, req_len);
+
     //----------------
     //needed brackets bc there are two statements 
     //---------------
@@ -756,7 +759,7 @@ void postScores(char *pagename)
     const SSL_METHOD *method;
     SSL_CTX *ctx;
     SSL *ssl;
-    char req[1000];
+    char req[5000];
     int req_len;
     int port = PORT;
     int bytes, nreads, nerrs;
@@ -801,7 +804,7 @@ void postScores(char *pagename)
     //
     //Send the http request to the host server.
     sprintf(req, "GET /%s HTTP/1.1\r\nHost: %s\r\nUser-Agent: %s\r\n\r\n",
-            pagename, hostname, USERAGENT);    
+            pagename, hostname, USERAGENT);   
     req_len = strlen(req);
     ret = SSL_write(ssl, req, req_len);
     //----------------

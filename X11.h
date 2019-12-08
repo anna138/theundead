@@ -69,7 +69,7 @@ public:
 		set_title();
 		glc = glXCreateContext(dpy, vi, NULL, GL_TRUE);
 		glXMakeCurrent(dpy, win, glc);
-		XAutoRepeatOn(dpy);
+		//XAutoRepeatOn(dpy);
 		show_mouse_cursor(1);
 		
 	}

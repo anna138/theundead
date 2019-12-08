@@ -6,13 +6,16 @@ class MainCharacter{
 
     private:
         int face;
-        Texture *hitler;
-		enum class Direction{
+        //Texture *hitler;
+        Texture *trooper;
+
+    public:
+    	enum class Direction{
 			S,SW,W,NW,N,NE,E,SE,end
     	};
-    public:
 		Direction dir;
         int pos[3];
+        int tile;
         int lifeForce; // Life force --> Hud Level
 		double mousepos[2];
         MainCharacter();

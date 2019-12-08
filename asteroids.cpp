@@ -111,7 +111,7 @@ extern void characterOption(int option);
 extern void highScoreBoard(Rect, int, int, unsigned int);
 extern void populateWithRand(int*, unsigned int, int, int);
 extern void displayGameOverScore(Rect r2, int w, int h, unsigned int imageTexture, int yourCurrentScore);
-extern void skullAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
+extern void skullAI(Vec enemy_pos, int xres, int yres);
 extern void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
@@ -125,6 +125,8 @@ extern void drawCircle(float cx, float cy, float r, int num_segments);
 extern GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex);
 extern void orthoScene();
 extern void arrowInputMap(XEvent *);
+extern void bulletsTravel(float * pos, int dir);
+extern void checkBulletCollision(Bullet *b, int & nbullets);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -168,11 +170,11 @@ int main()
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
 		timeCopy(&timeStart, &timeCurrent);
-		physicsCountdown += timeSpan;
-		while (physicsCountdown >= physicsRate) {
-			physics();
-			physicsCountdown -= physicsRate;
-		}
+		// physicsCountdown += timeSpan;
+		// while (physicsCountdown >= physicsRate) {
+		// 	physics();
+		// 	physicsCountdown -= physicsRate;
+		// }
 		//lets start the game states
 		switch (state){
 			case GameState::startup:{
@@ -180,7 +182,7 @@ int main()
 				runLogoIntro(logoIntroTexture);
 				//render everything to the screen
 				x11.swapBuffers();
-				usleep(1000000);//sleep for 5 seconds
+				usleep(100000);//sleep for 5 seconds
 				state = GameState::menu;
 				glClear(GL_COLOR_BUFFER_BIT);
 				break;
@@ -248,23 +250,28 @@ int main()
 				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
 				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
 				
-				Texture map;
-				map.set("./images/map4.png");
-				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				hero.characterRender();
 				
-				glPushMatrix();
-				glPointSize(4);
-				glColor3ub(255,0,0);
-				glBegin(GL_POINTS);
-					// for(int i = 0; i < 32; i++){
-					// 	for(int j = 0; j <= 32; j++){
-					// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
-					// 	}
-					// }
-					glVertex2d(0,0);
-				glEnd();
-				glPopMatrix();
+				
+				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+				if(hero.tile == 0){
+					hero.characterRender();
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+				}else{		
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+					hero.characterRender();
+				}
+				// glPushMatrix();
+				// glPointSize(4);
+				// glColor3ub(255,0,0);
+				// glBegin(GL_POINTS);
+				// 	// for(int i = 0; i < 32; i++){
+				// 	// 	for(int j = 0; j <= 32; j++){
+				// 	// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
+				// 	// 	}
+				// 	// }
+				// 	glVertex2d(0,0);
+				// glEnd();
+				// glPopMatrix();
 				//map.set("./images/cartgrid.png");
 				//map.Display_Picture(gl.xres/2, gl.yres/2,0,0);
 				
@@ -276,7 +283,7 @@ int main()
 
 				//gluLookAt(100,100,0,0,0,0,0,1,0);
 
-				//render();
+				render();
 				break;
 			}
 			case GameState::highscores:{
@@ -529,21 +536,23 @@ void check_mouse(XEvent *e)
 					/*b->pos[0] = g.trooper.pos[0];
 					b->pos[1] = g.trooper.pos[1];*/
 					//b->pos[0]= movex; b->pos[1] = movey;
-					b->vel[0] = g.trooper.vel[0];
-					b->vel[1] = g.trooper.vel[1];
+					/*b->vel[0] = g.trooper.vel[0];
+					b->vel[1] = g.trooper.vel[1];*/
 					//convert trooper angle to radians
-					Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
-					b->angle = rad;
+					// Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
+					// b->angle = rad;
 					//convert angle to a vector
-					Flt xdir = cos(rad);
-					Flt ydir = sin(rad);
+					// Flt xdir = cos(rad);
+					// Flt ydir = sin(rad);
 					// b->pos[0] += xdir*20.0f;
 					// b->pos[1] += ydir*20.0f;
-					b->vel[0] += xdir*6.0f;
-					b->vel[1] += ydir*6.0f;
-					b->pos[0] += b->vel[0];
-					b->pos[1] += b->vel[1];
-					
+					// b->vel[0] += xdir*6.0f;
+					// b->vel[1] += ydir*6.0f;
+					//b->pos[0] += b->vel[0];
+					b->pos[0] = hero.pos[0];
+					b->pos[1] = hero.pos[2];
+					b->type = gvars::attack;
+					b->angle = (int)hero.dir;
 					b->row = rand() % 6;
 					b->color[0] = fireColors[b->row][0];
 					b->color[1] = fireColors[b->row][1];
@@ -606,23 +615,23 @@ int check_keys(XEvent *e)
 	//keyboard input?
 	static int shift=0;
 	int key = (XLookupKeysym(&e->xkey, 0) & 0x0000ffff);
-
-	// if (e->type == KeyRelease) {
-	// 	gl.keys[key]=0;
-	// 	if (key == XK_Shift_L || key == XK_Shift_R)
-	// 		shift=0;
-	// 	return 0;
-	// }
-	// if (e->type == KeyPress) {
-	// 	gl.keys[key]=1;
-	// 	if (key == XK_Shift_L || key == XK_Shift_R) {
-	// 		shift=1;
-	// 		return 0;
-	// 	}
-	// } else {
-	// 	return 0;
-	// }
 	arrowInputMap(e);
+	if (e->type == KeyRelease) {
+		gl.keys[key]=0;
+		if (key == XK_Shift_L || key == XK_Shift_R)
+			shift=0;
+		return 0;
+	}
+	if (e->type == KeyPress) {
+		gl.keys[key]=1;
+		if (key == XK_Shift_L || key == XK_Shift_R) {
+			shift=1;
+			return 0;
+		}
+	} else {
+		return 0;
+	}
+	
 
     int choice=0;
 	int dirX=0;
@@ -691,7 +700,7 @@ int check_keys(XEvent *e)
 			state = GameState::endgamescore;
 			break;
 		case XK_e:
-			gvars::attack = (gvars::attack + 1) % 4;
+			gvars::attack = ((gvars::attack + 1) % 4);
 			break;
 		case XK_a:
 			movez++;
@@ -706,7 +715,7 @@ int check_keys(XEvent *e)
 	}
     return 0;
 }
-
+/*
 void deleteAsteroid(Game *g, Asteroid *node)
 {
 	//Remove a node from doubly-linked list
@@ -759,10 +768,10 @@ void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
 	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
 	//std::cout << "frag" << std::endl;
 }
-
+*/
 void physics()
 {
-	Flt d0,d1,dist;
+	//Flt d0,d1,dist;
 	//Update trooper position
 	g.trooper.pos[0] += g.trooper.vel[0];
 	g.trooper.pos[1] += g.trooper.vel[1];
@@ -813,6 +822,7 @@ void physics()
 		}
 		i++;
 	}
+	/*
 	//
 	//Update asteroid positions
 	Asteroid *a = g.asteroid;
@@ -835,12 +845,14 @@ void physics()
 		a->angle += a->rotate;
 		a = a->next;
 	}
+	*/
 	//
 	//Asteroid collision with bullets?
 	//If collision detected:
 	//     1. delete the bullet
 	//     2. break the asteroid into pieces
 	//        if asteroid small, delete it
+	/*
 	a = g.asteroid;
 	while (a) {
 		//is there a bullet within its radius?
@@ -892,6 +904,7 @@ void physics()
 			break;
 		a = a->next;
 	}
+	*/
 	//---------------------------------------------------
 	//check keys pressed now
 	if (gl.keys[XK_Left]) {
@@ -935,20 +948,20 @@ void physics()
 				//Bullet *b = new Bullet;
 				Bullet *b = &g.barr[g.nbullets];
 				timeCopy(&b->time, &bt);
-				b->pos[0] = g.trooper.pos[0];
-				b->pos[1] = g.trooper.pos[1];
-				b->vel[0] = g.trooper.vel[0];
-				b->vel[1] = g.trooper.vel[1];
+				// b->pos[0] = g.trooper.pos[0];
+				// b->pos[1] = g.trooper.pos[1];
+				// b->vel[0] = g.trooper.vel[0];
+				// b->vel[1] = g.trooper.vel[1];
 				//convert trooper angle to radians
 				Flt rad = g.trooper.angle* PI; //((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
 				b->angle = rad;
 				//convert angle to a vector
-				Flt xdir = cos(rad);
-				Flt ydir = sin(rad);
-				b->pos[0] += xdir;
-				b->pos[1] += ydir;
-				b->vel[0] += xdir*6.0f;
-				b->vel[1] += ydir*6.0f;
+				// Flt xdir = cos(rad);
+				// Flt ydir = sin(rad);
+				// b->pos[0] += xdir;
+				// b->pos[1] += ydir;
+				// b->vel[0] += xdir*6.0f;
+				// b->vel[1] += ydir*6.0f;
 				
 				
 				/*FIRE BULLETS
@@ -979,11 +992,10 @@ void physics()
 			g.mouseThrustOn = false;
 	}
 }
-
+Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
 void render()
 { 
-	/*Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
-	showAttack(gvars::attack);*/
+	showAttack(gvars::attack);
     /*
 	Anna Commented
 	Rect r;
@@ -1015,13 +1027,15 @@ void render()
 	//Draw the Zombies and Skulls
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
-*/ /*
-	zombie.Display_Picture(g.zombie.size[0] / 3, g.zombie.size[0] / 3, *(g.zombie.pos), g.zombie.angle);
+*/ /* */
+	zombie.Display_Picture(g.zombie.size[0] / 20, g.zombie.size[0] / 20, *(g.zombie.pos), g.zombie.angle);
 
 	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
 		//g.zombie.angle, zombie.getID());
-	skullAI(g.trooper.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
+	/*skullAI(hero.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
 		gl.xres, gl.yres);*/
+	skullAI(g.zombie.pos, gl.xres, gl.yres);
+		
 /*
 Anna Commented
 	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
@@ -1099,6 +1113,7 @@ Anna commented
 	//Draw the bullets
 	//draw_circle(100, 8);
 	//drawCircle(260.0, 260.0, 100.0, 6);
+	checkBulletCollision(g.barr, g.nbullets);
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		/*//Log("draw bullet...\n");
@@ -1122,15 +1137,49 @@ Anna commented
 		//grassVines(b->angle, b->pos[0], b->pos[1]);
 
 		//waterBubbles(b->pos[0], b->pos[1]);
-		
-		//b->pos[0] += 10;
-		//b->pos[1] += 10;
-		int choice = gvars::attack;		
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], choice);
+
+		bulletsTravel(b->pos, b->angle);
+
+		// switch(hero.dir){
+		// 	case MainCharacter::Direction::S:
+		// 		b->pos[1] -= 10;
+		// 		break;
+		// 	case MainCharacter::Direction::N:
+		// 		b->pos[1] += 10;
+		// 		break;
+		// 	case MainCharacter::Direction::E:
+		// 		b->pos[0] += 10;
+		// 		break;
+		// 	case MainCharacter::Direction::W: 
+		// 		b->pos[0] -= 10;
+		// 		break;
+		// 	case MainCharacter::Direction::SW: 
+		// 		b->pos[0] -= 10;
+		// 		b->pos[1] -= 10;
+		// 		break;
+		// 	case MainCharacter::Direction::SE: 
+		// 		b->pos[0] += 10;
+		// 		b->pos[1] -= 10;
+		// 		break;
+		// 	case MainCharacter::Direction::NW: 
+		// 		b->pos[0] -= 10;
+		// 		b->pos[1] += 10;
+		// 		break;
+		// 	case MainCharacter::Direction::NE: 
+		// 		b->pos[0] += 10;
+		// 		b->pos[1] += 10;
+		// 		break;
+		// 	case MainCharacter::Direction::end:
+		// 		break;
+		// }
+		//std::cout << "Does this work?" << std::endl;
+				
+		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 
 		//std::cout << "I am poo poo " << std::endl;
+		
 
 	}
     

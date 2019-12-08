@@ -59,6 +59,8 @@ namespace gvars{
         howToPlay,
         end
     };
+    extern Texture map;
+    extern Texture map_1;
     extern GameState state;
     extern int arrow_keys[4];
     extern TileParser tp;
