@@ -48,9 +48,9 @@ namespace gvars{
     int playerdir = 0;
     MainCharacter hero;
     int arrow_keys[4] = {0, 0, 0, 0};
-    Image mask("images/mask.png");
-    TileParser tp("./images/map4.tmx");
-    Texture map("./images/map4.png");
-    Texture map_1("./images/map4_1.png");
+
+    TileParser tp("./images/level1/level1.tmx");
+    Texture map("./images/level1/level1_0.png");
+    Texture map_1("./images/level1/level1_1.png");
 
 } // namespace GVars

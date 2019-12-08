@@ -14,20 +14,22 @@ TileParser::TileParser(const std::string fn)
     posx = ((width/2)-1)+.4;
     posy = posx;
     int size = tiles.size();
-    if(size > 2) {
-        for(int i = 0; i < tiles.at(size-1).size(); i++){
-            for(int j = 0; j < tiles.at(size-1).at(i).size(); j++){
-                if(tiles.at(size-1).at(i).at(j) == 0){
-                    tiles.at(size-1).at(i).at(j) = tiles.at(size-2).at(i).at(j);
+    if(true) {
+        for(int loop = size-2; loop >= 0; loop--){
+            for(int i = 0; i < tiles.at(size-1).size(); i++){
+                for(int j = 0; j < tiles.at(size-1).at(i).size(); j++){
+                    if(tiles.at(size-1).at(i).at(j) == 0){
+                        tiles.at(size-1).at(i).at(j) = tiles.at(loop).at(i).at(j);
+                    }
                 }
             }
         }
-        // for(auto &i : tiles.at(size-1)){
-        //     for(auto &j : i){
-        //         std::cout << j << ",";
-        //     }
-        //     std::cout << std::endl;
-        // }
+        for(auto &i : tiles.at(size-1)){
+            for(auto &j : i){
+                std::cout << j << ",";
+            }
+            std::cout << std::endl;
+        }
     }
 
 
@@ -140,6 +142,7 @@ bool TileParser::isWalkable(int x, int y, int dir)
 
 bool TileParser::Walk(float x, float y, int & code){
 
+    int size = tiles.size();
     posx += x;
     posy += y;
     if(posx >= width || posy >= height || posx <= 0 || posy <= 0){
@@ -160,14 +163,17 @@ bool TileParser::Walk(float x, float y, int & code){
     // }
 
 
-    if(tiles.at(2).at((int)posx).at((int)posy) && tiles.at(2).at((int)posx).at((int)posy) != 563 
-                && tiles.at(2).at((int)posx).at((int)posy) != 443 && tiles.at(2).at((int)posx).at((int)posy) != 71){
+    // if(tiles.at(size-1).at((int)posx).at((int)posy) && 
+    //             tiles.at(size-1).at((int)posx).at((int)posy) != 563 
+    //             && tiles.at(size-1).at((int)posx).at((int)posy) != 443 && 
+    //             tiles.at(size-1).at((int)posx).at((int)posy) != 71){
+    if(tiles.at(size-1).at((int)posx).at((int)posy) >= 153){
         posx -= x;
         posy -= y;
         //code = tiles.at(2).at((int)posx).at((int)posy);
         return false;
     }else{
-        code = tiles.at(2).at((int)posx).at((int)posy);
+        code = tiles.at(size-1).at((int)posx).at((int)posy);
         return true;
     }
 

@@ -253,7 +253,7 @@ int main()
 				
 				
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				if(hero.tile == 0){
+				if(hero.tile >200 || hero.tile < 100){
 					hero.characterRender();
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				}else{		
@@ -1028,7 +1028,7 @@ void render()
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
 */ /* */
-	zombie.Display_Picture(g.zombie.size[0] / 20, g.zombie.size[0] / 20, *(g.zombie.pos), g.zombie.angle);
+	zombie.Display_Picture(g.zombie.size[0] / 20, g.zombie.size[0] / 20,     g.zombie.pos[0], g.zombie.pos[1]);
 
 	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
 		//g.zombie.angle, zombie.getID());
