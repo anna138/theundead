@@ -1148,7 +1148,7 @@ Anna commented
 		// }
 		//std::cout << "Does this work?" << std::endl;
 				
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], b->type);
+		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 
