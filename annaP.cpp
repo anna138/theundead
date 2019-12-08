@@ -5,7 +5,7 @@
  * Main Purpose: Start Menu, Animations, 
  * Power-Ups, Enemy AI
 */
-
+#include "Macros.h"
 #include <iostream>
 #include <cmath>
 #include <GL/glx.h>
@@ -406,44 +406,62 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 {
 	// std::cout << "B Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
 	// std::cout << "B Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
-	enemy_pos[1] = (int)((enemy_pos[1] + (hero.pos[2]*0.5)));
-	enemy_pos[0] = (int)((enemy_pos[0] + (hero.pos[0]*0.5)));
-	int angle = atan2(hero.pos[0], hero.pos[2]);
-	/* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
-	&& (enemy_pos[0] > (trooper_pos[0] + 5)))*/
-	if (angle < 35 && angle > 0){ 
-		//EAST
-		enemy_pos[0] += 10;
-	} 
-	else if (angle < 90 && angle > 36){
-		// NORTHEAST
-		enemy_pos[0] += 10;
-		enemy_pos[1] += 10;
+	// std::cout << "Hero Pos:" << hero.pos[0] << "and" << hero.pos[2] << std::endl;
+	// enemy_pos[1] = (int)((enemy_pos[1] + (hero.pos[2]*0.012)));
+	// enemy_pos[0] = (int)((enemy_pos[0] + (hero.pos[0]*0.012)));
+	float dir[2];
+	dir[0] = hero.pos[0] - enemy_pos[0];
+	dir[1] = hero.pos[2] - enemy_pos[1];
+	float mag = VecMag(dir);
+	if(mag < 300){
+		dir[0] /= mag;
+		dir[1] /= mag;
+		enemy_pos[0] += dir[0]*.3;
+		enemy_pos[1] += dir[1]*.3;
+	}else{
+		enemy_pos[0] += .2*cos(rand());
+		enemy_pos[1] += .2*sin(rand());
 	}
-	else if (angle < 155 && angle > 91){
-		// NORTHWEST
-		enemy_pos[0] -= 10;
-		enemy_pos[1] += 10;
-	}
-	else if (angle < 220 && angle > 155){
-		// WEST
-		enemy_pos[0] -= 10;
-	}
-	else if (angle < 270 && angle > 221){
-		// SOUTHWEST
-		enemy_pos[0] -= 10;
-		enemy_pos[1] -= 10;
-	}
-	else if (angle < 320 && angle > 271){
-		//SOUTHEAST
-		enemy_pos[0] += 10;
-		enemy_pos[1] -= 10;
-	}
-	else if (angle < 360 && angle > 321){
-		//EAST
-		enemy_pos[0] += 10;
-		enemy_pos[1] -= 10;
-	}
+
+
+	// float rad_angle = atan2(hero.pos[2], hero.pos[0]);
+	// float angle = (rad_angle * 180) / PI;
+	// /* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
+	// && (enemy_pos[0] > (trooper_pos[0] + 5)))*/
+	// std::cout << "Angle:" << angle << std::endl;
+	// if (angle < 35 && angle > 0){ 
+	// 	//EAST
+	// 	enemy_pos[0] += 1;
+	// } 
+	// else if (angle < 90 && angle > 36){
+	// 	// NORTHEAST
+	// 	enemy_pos[0] += 1;
+	// 	enemy_pos[1] += 1;
+	// }
+	// else if (angle < 155 && angle > 91){
+	// 	// NORTHWEST
+	// 	enemy_pos[0] -= 1;
+	// 	enemy_pos[1] += 1;
+	// }
+	// else if (angle < 220 && angle > 155){
+	// 	// WEST
+	// 	enemy_pos[0] -= 1;
+	// }
+	// else if (angle < 270 && angle > 221){
+	// 	// SOUTHWEST
+	// 	enemy_pos[0] -= 1;
+	// 	enemy_pos[1] -= 1;
+	// }
+	// else if (angle < 320 && angle > 271){
+	// 	//SOUTHEAST
+	// 	enemy_pos[0] += 1;
+	// 	enemy_pos[1] -= 1;
+	// }
+	// else if (angle < 360 && angle > 321){
+	// 	//EAST
+	// 	enemy_pos[0] += 1;
+	// 	enemy_pos[1] -= 1;
+	// }
 	// std::cout << "A Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
 	// std::cout << "A Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
 

@@ -1,7 +1,7 @@
 #pragma once
 //macros functions
 #define rnd() (((float)rand()) / (float)RAND_MAX)
-#define random(a) (rand() % a)
+//#define random(a) (((rand()) % (a))
 #define VecZero(v) (v)[0] = 0.0, (v)[1] = 0.0, (v)[2] = 0.0
 #define MakeVector(x, y, z, v) (v)[0] = (x), (v)[1] = (y), (v)[2] = (z)
 #define VecCopy(a, b) \
