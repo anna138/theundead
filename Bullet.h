@@ -11,4 +11,5 @@ public:
 	int angle;
 	struct timespec time;
 	int row;
+	int type;
 };

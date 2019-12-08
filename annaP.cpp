@@ -15,6 +15,7 @@
 #include "GlobalSpace.h"
 #include "Texture.h"
 #include "Image.h"
+#include "Bullet.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -481,35 +482,35 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 			break;
 	}*/
 }
-void bulletsTravel(float* pos){
-	switch(hero.dir){
+void bulletsTravel(float* pos, int dir){
+	switch((MainCharacter::Direction)dir){
 		case MainCharacter::Direction::S:
-			pos[1] -= 10;
+			pos[1] -= 1;
 			break;
 		case MainCharacter::Direction::N:
-			pos[1] += 10;
+			pos[1] += 1;
 			break;
 		case MainCharacter::Direction::E:
-			pos[0] += 10;
+			pos[0] += 1;
 			break;
 		case MainCharacter::Direction::W: 
-			pos[0] -= 10;
+			pos[0] -= 1;
 			break;
 		case MainCharacter::Direction::SW: 
-			pos[0] -= 10;
-			pos[1] -= 10;
+			pos[0] -= 1;
+			pos[1] -= 1;
 			break;
 		case MainCharacter::Direction::SE: 
-			pos[0] += 10;
-			pos[1] -= 10;
+			pos[0] += 1;
+			pos[1] -= 1;
 			break;
 		case MainCharacter::Direction::NW: 
-			pos[0] -= 10;
-			pos[1] += 10;
+			pos[0] -= 1;
+			pos[1] += 1;
 			break;
 		case MainCharacter::Direction::NE: 
-			pos[0] += 10;
-			pos[1] += 10;
+			pos[0] += 1;
+			pos[1] += 1;
 			break;
 		case MainCharacter::Direction::end:
 			break;
@@ -635,8 +636,8 @@ void drawCircle(float cx, float cy, float r, int num_segments)
 
 void lightningShots(float angle, int offset_x, int offset_y){
 	
-	float x_angle = cos(angle);
-	float y_angle = sin(angle);
+	float x_angle = 1;
+	float y_angle = 1;
 
 	glPushMatrix();
 
@@ -811,22 +812,12 @@ void showAttack(int choice)
 	}
 }
 /*General Collisons with Window Edges*/
-void collideWindowEdges(int * pos){
-	if (pos[0] < -gl.xres/2) {
-		pos[0] += gl.xres;
-		std::cout << " Collided Right" << std::endl;
-	}
-	else if (pos[0] > gl.xres/2) {
-		pos[0] -= gl.xres;
-		std::cout << " Collided Left" << std::endl;
-	}
-	else if (pos[1] < -gl.yres/2) {
-		pos[1] += gl.yres;
-		std::cout << " Collided Down" << std::endl;
-	}
-	else if (pos[1] > gl.yres/2) {
-		pos[1] -= gl.yres;
-		std::cout << " Collided Up" << std::endl;
+void checkBulletCollision(Bullet *b, int & nbullets){
+	for( int i = 0; i < nbullets; i++){
+		if(b[i].pos[0] > gl.xres/2 || b[i].pos[1] > gl.yres/2 
+				|| b[i].pos[0] <= -gl.xres/2 || b[i].pos[1] <= -gl.yres/2){
+			b[i] = b[--nbullets];
+		}
 	}
 	
 }

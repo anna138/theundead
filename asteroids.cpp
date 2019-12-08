@@ -123,7 +123,8 @@ extern void drawCircle(float cx, float cy, float r, int num_segments);
 extern GLvoid draw_circle(const GLfloat radius,const GLuint num_vertex);
 extern void orthoScene();
 extern void arrowInputMap(XEvent *);
-extern void bulletsTravel(float * pos);
+extern void bulletsTravel(float * pos, int dir);
+extern void checkBulletCollision(Bullet *b, int & nbullets);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -540,7 +541,8 @@ void check_mouse(XEvent *e)
 					//b->pos[0] += b->vel[0];
 					b->pos[0] = hero.pos[0];
 					b->pos[1] = hero.pos[2];
-					
+					b->type = gvars::attack;
+					b->angle = (int)hero.dir;
 					b->row = rand() % 6;
 					b->color[0] = fireColors[b->row][0];
 					b->color[1] = fireColors[b->row][1];
@@ -1085,6 +1087,7 @@ Anna commented
 	//Draw the bullets
 	//draw_circle(100, 8);
 	//drawCircle(260.0, 260.0, 100.0, 6);
+	checkBulletCollision(g.barr, g.nbullets);
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		/*//Log("draw bullet...\n");
@@ -1109,7 +1112,7 @@ Anna commented
 
 		//waterBubbles(b->pos[0], b->pos[1]);
 
-		bulletsTravel(b->pos);
+		bulletsTravel(b->pos, b->angle);
 
 		// switch(hero.dir){
 		// 	case MainCharacter::Direction::S:
@@ -1145,11 +1148,12 @@ Anna commented
 		// }
 		//std::cout << "Does this work?" << std::endl;
 				
-		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], gvars::attack);
+		switchBullets(b->angle, b->row, b->pos[0], b->pos[1], b->type);
 		//fireCircles(b->row, b->pos[0], b->pos[1]);
 		//b->pos[1] += .25;
 
 		//std::cout << "I am poo poo " << std::endl;
+		
 
 	}
     

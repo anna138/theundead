@@ -491,23 +491,23 @@ void MainCharacter::calFace()
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-			if(tp.isWalkable(pos[0], pos[2]+ns, 0) && tp.Walk(-1.0/div, -1.0/div, tile))
+			if(tp.Walk(-1.0/div, -1.0/div, tile))
             	pos[2] += ns;
         }else if(arrow_keys[1]){
 			
             dir = Direction::S;
-			if(tp.isWalkable(pos[0], pos[2]-ns, 0)&& tp.Walk(1.0/div, 1.0/div, tile))
+			if(tp.Walk(1.0/div, 1.0/div, tile))
             	pos[2] -= ns;
 		
 
         }else if(arrow_keys[2]){
             dir = Direction::W;
-			if(tp.isWalkable(pos[0]-we, pos[2], 0) && tp.Walk(1.0/div, -1.0/div, tile))
+			if(tp.Walk(1.0/div, -1.0/div, tile))
             	pos[0] -= we; 
 
         }else {
             dir = Direction::E;
-			if(tp.isWalkable(pos[0]+we, pos[2], 0) && tp.Walk(-1.0/div, 1.0/div, tile))
+			if(tp.Walk(-1.0/div, 1.0/div, tile))
             	pos[0] += we; 
 
         }
@@ -524,7 +524,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1, 1);
 				// }
                 dir = Direction::NW;
-                if(tp.isWalkable(pos[0]-dwe, pos[2]+dns, 1) && tp.Walk(0, -1.0/div, tile)){
+                if(tp.Walk(0, -1.0/div, tile)){
                     pos[0] -= dwe; 
                     pos[2] += dns;
                 }
@@ -538,7 +538,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::NE;
-                if(tp.isWalkable(pos[0]+dwe, pos[2]+dns, 1)&& tp.Walk(-1.0/div, 0, tile)){
+                if(tp.Walk(-1.0/div, 0, tile)){
                     pos[0] += dwe; 
                     pos[2] += dns;			
                 }
@@ -554,7 +554,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1.0/div, 1/div);
 				// }
                 dir = Direction::SW;
-                if(tp.isWalkable(pos[0]-dwe, pos[2]-dns, 1) && tp.Walk(1.0/div, 0, tile)){
+                if(tp.Walk(1.0/div, 0, tile)){
                     pos[0] -= dwe; 
                     pos[2] -= dns;
                 }
@@ -569,7 +569,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::SE;
-                if(tp.isWalkable(pos[0]+dwe, pos[2]-dns, 1) && tp.Walk(0, 1.0/div, tile)){
+                if(tp.Walk(0, 1.0/div, tile)){
                     pos[0] += dwe; 
                     pos[2] -= dns;
                 }
