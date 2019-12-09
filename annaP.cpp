@@ -16,6 +16,7 @@
 #include "Texture.h"
 #include "Image.h"
 #include "Bullet.h"
+#include "Zombie.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -423,83 +424,18 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 		enemy_pos[1] += .2*sin(rand());
 	}
 
-
-	// float rad_angle = atan2(hero.pos[2], hero.pos[0]);
-	// float angle = (rad_angle * 180) / PI;
-	// /* if ((enemy_pos[1] > (trooper_pos[1] + 5)) 
-	// && (enemy_pos[0] > (trooper_pos[0] + 5)))*/
-	// std::cout << "Angle:" << angle << std::endl;
-	// if (angle < 35 && angle > 0){ 
-	// 	//EAST
-	// 	enemy_pos[0] += 1;
-	// } 
-	// else if (angle < 90 && angle > 36){
-	// 	// NORTHEAST
-	// 	enemy_pos[0] += 1;
-	// 	enemy_pos[1] += 1;
-	// }
-	// else if (angle < 155 && angle > 91){
-	// 	// NORTHWEST
-	// 	enemy_pos[0] -= 1;
-	// 	enemy_pos[1] += 1;
-	// }
-	// else if (angle < 220 && angle > 155){
-	// 	// WEST
-	// 	enemy_pos[0] -= 1;
-	// }
-	// else if (angle < 270 && angle > 221){
-	// 	// SOUTHWEST
-	// 	enemy_pos[0] -= 1;
-	// 	enemy_pos[1] -= 1;
-	// }
-	// else if (angle < 320 && angle > 271){
-	// 	//SOUTHEAST
-	// 	enemy_pos[0] += 1;
-	// 	enemy_pos[1] -= 1;
-	// }
-	// else if (angle < 360 && angle > 321){
-	// 	//EAST
-	// 	enemy_pos[0] += 1;
-	// 	enemy_pos[1] -= 1;
-	// }
-	// std::cout << "A Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
-	// std::cout << "A Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
-
-	
-	/*
-	switch(hero.dir){
-		case MainCharacter::Direction::S:
-			enemy_pos[1] -= 10;
-			break;
-		case MainCharacter::Direction::N:
-			enemy_pos[1] += 10;
-			break;
-		case MainCharacter::Direction::E:
-			enemy_pos[0] += 10;
-			break;
-		case MainCharacter::Direction::W: 
-			enemy_pos[0] -= 10;
-			break;
-		case MainCharacter::Direction::SW: 
-			enemy_pos[0] -= 10;
-			enemy_pos[1] -= 10;
-			break;
-		case MainCharacter::Direction::SE: 
-			enemy_pos[0] += 10;
-			enemy_pos[1] -= 10;
-			break;
-		case MainCharacter::Direction::NW: 
-			enemy_pos[0] -= 10;
-			enemy_pos[1] += 10;
-			break;
-		case MainCharacter::Direction::NE: 
-			enemy_pos[0] += 10;
-			enemy_pos[1] += 10;
-			break;
-		case MainCharacter::Direction::end:
-			break;
-	}*/
 }
+void checkZombieCollision(Zombie *zs, int zcount)
+{
+	for(int i = 0; i < zcount-1; i++){
+		if(zs[i].pos[0] == zs[i+1].pos[0] && zs[i].pos[1] == zs[i+1].pos[1]){
+			
+		}
+	}
+
+
+}
+
 void bulletsTravel(float* pos, int dir){
 	switch((MainCharacter::Direction)dir){
 		case MainCharacter::Direction::S:

@@ -458,15 +458,7 @@ MainCharacter::MainCharacter()
     face = 0;
     dir = Direction::S;
     trooper = new Texture[8];
-	//hitler = new Texture[8];
-    // hitler[0].set("images/hitler_sprite/hitler_s.png");
-    // hitler[1].set("images/hitler_sprite/hitler_sw.png");
-    // hitler[2].set("images/trooper_w.png");
-    // hitler[3].set("images/hitler_sprite/hitler_nw.png");
-    // hitler[4].set("images/hitler_sprite/hitler_n.png");
-    // hitler[5].set("images/hitler_sprite/hitler_ne.png");
-    // hitler[6].set("images/hitler_sprite/hitler_e.png");
-    // hitler[7].set("images/hitler_sprite/hitler_se.png");
+
     trooper[0].set("images/trooper_sprite/trooper_s.png");
     trooper[1].set("images/trooper_sprite/trooper_sw.png");
     trooper[2].set("images/trooper_sprite/trooper_w.png");
@@ -475,14 +467,7 @@ MainCharacter::MainCharacter()
     trooper[5].set("images/trooper_sprite/trooper_ne2.png");
     trooper[6].set("images/trooper_sprite/trooper_e.png");
     trooper[7].set("images/trooper_sprite/trooper_se.png");
-    // hitler[0].set("images/wizard/wiz_s.png");
-    // hitler[1].set("images/wizard/wiz_sw.png");
-    // hitler[2].set("images/wizard/wiz_w.png");
-    // hitler[3].set("images/wizard/wiz_nw.png");
-    // hitler[4].set("images/wizard/wiz_n.png");
-    // hitler[5].set("images/wizard/wiz_ne.png");
-    // hitler[6].set("images/wizard/wiz_e.png");
-    // hitler[7].set("images/wizard/wiz_se.png");
+
 }
 MainCharacter::~MainCharacter(){
     delete [] trooper;
@@ -500,23 +485,23 @@ void MainCharacter::calFace()
     if (sum == 1) {
         if(arrow_keys[0]){
             dir = Direction::N;
-			if(tp.Walk(-1.0/div, -1.0/div, tile))
+			if(tp.Walk(-1.0/div, -1.0/div, tile, face))
             	pos[2] += ns;
         }else if(arrow_keys[1]){
 			
             dir = Direction::S;
-			if(tp.Walk(1.0/div, 1.0/div, tile))
+			if(tp.Walk(1.0/div, 1.0/div, tile, face))
             	pos[2] -= ns;
 		
 
         }else if(arrow_keys[2]){
             dir = Direction::W;
-			if(tp.Walk(1.0/div, -1.0/div, tile))
+			if(tp.Walk(1.0/div, -1.0/div, tile, face))
             	pos[0] -= we; 
 
         }else {
             dir = Direction::E;
-			if(tp.Walk(-1.0/div, 1.0/div, tile))
+			if(tp.Walk(-1.0/div, 1.0/div, tile, face))
             	pos[0] += we; 
 
         }
@@ -533,7 +518,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1, 1);
 				// }
                 dir = Direction::NW;
-                if(tp.Walk(0, -1.0/div, tile)){
+                if(tp.Walk(0, -1.0/div, tile, face)){
                     pos[0] -= dwe; 
                     pos[2] += dns;
                 }
@@ -547,7 +532,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::NE;
-                if(tp.Walk(-1.0/div, 0, tile)){
+                if(tp.Walk(-1.0/div, 0, tile, face)){
                     pos[0] += dwe; 
                     pos[2] += dns;			
                 }
@@ -563,13 +548,13 @@ void MainCharacter::calFace()
                 //     tp.Walk(-1.0/div, 1/div);
 				// }
                 dir = Direction::SW;
-                if(tp.Walk(1.0/div, 0, tile)){
+                if(tp.Walk(1.0/div, 0, tile, face)){
                     pos[0] -= dwe; 
                     pos[2] -= dns;
                 }
 			
 
-            }else if(arrow_keys[3]){
+            } else if(arrow_keys[3]) {
 				// if(dir == Direction::S){
 				// 	pos[2] += ns;
                 //     tp.Walk(-1.0/div, -1.0/div);
@@ -578,7 +563,7 @@ void MainCharacter::calFace()
                 //     tp.Walk(1.0/div, -1.0/div);
 				// }
                 dir = Direction::SE;
-                if(tp.Walk(0, 1.0/div, tile)){
+                if (tp.Walk(0, 1.0/div, tile, face)) {
                     pos[0] += dwe; 
                     pos[2] -= dns;
                 }

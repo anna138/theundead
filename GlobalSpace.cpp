@@ -52,5 +52,8 @@ namespace gvars{
     TileParser tp("./images/level1/level1.tmx");
     Texture map("./images/level1/level1_0.png");
     Texture map_1("./images/level1/level1_1.png");
+    Texture map2("./images/level2/level2_0.png");
+    Texture map2_1("./images/level2/level2_1.png");
+
 
 } // namespace GVars

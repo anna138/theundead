@@ -4,10 +4,8 @@
 
 Zombie::Zombie() {
 	VecZero(dir);
-	// pos[0] = (Flt)(gl.xres/2);
-	// pos[1] = (Flt)(gl.yres/2);
-	pos[0] = 0.0;
-	pos[1] = 200;
+	pos[0] = rand()%500;
+	pos[1] = rand()%200;
 	pos[2] = 0.0;
 	VecZero(vel);
 	angle = 0.0;

@@ -5,7 +5,7 @@
 class MainCharacter{
 
     private:
-        int face;
+        
         //Texture *hitler;
         Texture *trooper;
 
@@ -13,6 +13,7 @@ class MainCharacter{
     	enum class Direction{
 			S,SW,W,NW,N,NE,E,SE,end
     	};
+        int face;
 		Direction dir;
         int pos[3];
         int tile;

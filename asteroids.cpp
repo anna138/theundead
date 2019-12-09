@@ -127,6 +127,7 @@ extern void orthoScene();
 extern void arrowInputMap(XEvent *);
 extern void bulletsTravel(float * pos, int dir);
 extern void checkBulletCollision(Bullet *b, int & nbullets);
+extern void checkZombieCollision(Zombie *zs, int zcount);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -253,12 +254,12 @@ int main()
 				
 				
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				if(hero.tile >200 || hero.tile < 100){
-					hero.characterRender();
+				if(hero.face){
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+					hero.characterRender();
 				}else{		
-					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 					hero.characterRender();
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				}
 				// glPushMatrix();
 				// glPointSize(4);
@@ -433,8 +434,6 @@ void init_opengl(void)
 	glGenTextures(1, &gl.zombieTexture);
 	int w7 = img[7].width;
 	int h7 = img[7].height;
-	g.zombie.size[0] = img[7].width;
-	g.zombie.size[1] = img[7].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.zombieTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -444,8 +443,11 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w7, h7, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
 
-	g.zombie.zombieImageTexture = gl.zombieTexture;
-
+	for(int i = 0; i < g.zombiecount; i++){
+		g.zombie[i].zombieImageTexture = gl.zombieTexture;
+		g.zombie[i].size[0] = img[7].width;
+		g.zombie[i].size[1] = img[7].height;
+	}
 	//Image - Undead Logo
 	
 	glGenTextures(1, &gl.logoTexture);
@@ -1028,13 +1030,12 @@ void render()
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
 */ /* */
-	zombie.Display_Picture(g.zombie.size[0] / 20, g.zombie.size[0] / 20,     g.zombie.pos[0], g.zombie.pos[1]);
-
-	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
-		//g.zombie.angle, zombie.getID());
-	/*skullAI(hero.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
-		gl.xres, gl.yres);*/
-	skullAI(g.zombie.pos, gl.xres, gl.yres);
+	for(int i = 0; i < g.zombiecount; i++){
+		zombie.Display_Picture(g.zombie[i].size[0] / 20, g.zombie[i].size[0] / 20,   
+					g.zombie[i].pos[0], g.zombie[i].pos[1]);
+		skullAI(g.zombie[i].pos, gl.xres, gl.yres);
+		checkZombieCollision(g.zombie, g.zombiecount)
+	}
 		
 /*
 Anna Commented
