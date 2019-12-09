@@ -180,7 +180,6 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
             if(tiles.at(size-1).at((int)posx).at((int)i) >= 153  || 
                 tiles.at(size-1).at((int)posx).at((int)i) == 10){
                     face = 0;
-                    std::cout << "here y rendeer char before" << std::endl;
                     set = true;
             }
 
@@ -189,7 +188,6 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
             if(tiles.at(size-1).at((int)posx).at((int)i) >= 153  || 
                 tiles.at(size-1).at((int)posx).at((int)i) == 10){
                     face = 1;
-                    std::cout << "here y rendeer char after" << std::endl;
                     set = true;
             }
 
@@ -198,7 +196,6 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
             if(tiles.at(size-1).at((int)i).at((int)posy) >= 153  || 
                 tiles.at(size-1).at((int)i).at((int)posy) == 10){
                     face = 0;
-                    std::cout << "here x rendeer char before" << std::endl;
                     set = true;
             }
         }
@@ -206,7 +203,6 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
             if(tiles.at(size-1).at((int)i).at((int)posy) >= 153  || 
                 tiles.at(size-1).at((int)i).at((int)posy) == 10){
                     face = 1;
-                    std::cout << "here x rendeer char after" << std::endl;
                     set = true;
             }
         }

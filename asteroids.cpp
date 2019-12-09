@@ -1034,7 +1034,7 @@ void render()
 		zombie.Display_Picture(g.zombie[i].size[0] / 20, g.zombie[i].size[0] / 20,   
 					g.zombie[i].pos[0], g.zombie[i].pos[1]);
 		skullAI(g.zombie[i].pos, gl.xres, gl.yres);
-		checkZombieCollision(g.zombie, g.zombiecount)
+		checkZombieCollision(g.zombie, g.zombiecount);
 	}
 		
 /*

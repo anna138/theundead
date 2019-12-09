@@ -429,7 +429,8 @@ void checkZombieCollision(Zombie *zs, int zcount)
 {
 	for(int i = 0; i < zcount-1; i++){
 		if(zs[i].pos[0] == zs[i+1].pos[0] && zs[i].pos[1] == zs[i+1].pos[1]){
-			
+			zs[i+1].pos[0] -= zs[i+1].size[0];
+			zs[i+1].pos[1] -= zs[i+1].size[1];
 		}
 	}
 
