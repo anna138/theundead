@@ -64,6 +64,7 @@ namespace gvars{
     extern Texture hud3;
     extern Texture hud4;
     extern Texture hud5;
+    extern Texture back;
     extern Texture map;
     extern Texture map_1;
     extern GameState state;

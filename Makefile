@@ -16,9 +16,9 @@ pugixml.o: ./Tiled/pugixml.cpp
 
 asteroids: GlobalSpace.o pugixml.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
 	g++ $(CFLAGS) asteroids.cpp Global.o pugixml.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids \
-	-D USE_OPENAL_SOUND \
-	/usr/lib/libopenal.so \
-	/usr/lib/libalut.so 
+#	-D USE_OPENAL_SOUND \
+#	/usr/lib/libopenal.so \
+#	/usr/lib/libalut.so 
 
 Global.o: Global.cpp
 	g++ -c Global.cpp 

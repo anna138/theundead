@@ -55,6 +55,7 @@ namespace gvars{
     Texture hud3("./images/hud/hud3.png");
     Texture hud4("./images/hud/hud4.png");
     Texture hud5("./images/hud/hud5.png");
+    Texture back("./images/back.png");
     Texture map("./images/level1/level1_0.png");
     Texture map_1("./images/level1/level1_1.png");
     Texture map2("./images/level2/level2_0.png");

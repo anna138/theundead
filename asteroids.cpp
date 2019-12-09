@@ -117,7 +117,7 @@ extern void skullAI(Vec enemy_pos, int xres, int yres);
 extern void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
-extern void switchBullets(float, int, int, int, int);
+extern void switchBullets(float, int, int, int, int, int);
 extern void showAttack(int choice);
 extern void isometricScene(); 
 extern void dyingAnimation(Vec enemy_pos);
@@ -700,7 +700,7 @@ void render()
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		bulletsTravel(b->pos, b->angle);
-		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
+		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type, timeCurrent.tv_sec);
 		for(int j = 0; j < g.zombiecount; j++){
 			bulletEnemyCollision(g.zombie[i].pos, b->pos);
 			bulletEnemyCollision(g.skull[i].pos, b->pos);
