@@ -17,6 +17,7 @@
 #include "Image.h"
 #include "Bullet.h"
 #include "Zombie.h"
+#include "Skull.h"
 
 /*Summary of Source File
 	Start Menu Function is used to display the 
@@ -438,9 +439,17 @@ void checkZombieCollision(Zombie *zs, int zcount)
 			zs[i].pos[1] -= 10;
 		}
 	}
-
-
 }
+void checkSkullCollision(Skull *zs, int zcount)
+{
+	for(int i = 0; i < zcount-1; i++){
+		if(zs[i].pos[0] == zs[i+1].pos[0] && zs[i].pos[1] == zs[i+1].pos[1]){
+			zs[i+1].pos[0] -= zs[i+1].size[0];
+			zs[i+1].pos[1] -= zs[i+1].size[1];
+		}
+	}
+}
+
 
 void bulletsTravel(float* pos, int dir){
 	switch((MainCharacter::Direction)dir){
@@ -791,7 +800,7 @@ void A_CollidedTo_B(int * a_pos, int * b_pos){
 /* Main Character healing for power-ups or recovery*/
 void MainCharacter::heal(int increase){
 	hero.lifeForce += increase;
-	hero.lifeForce %= 7;
+	hero.lifeForce %= 601;
 }
 
 void MainCharacter::damage(int decrease){
@@ -799,8 +808,8 @@ void MainCharacter::damage(int decrease){
 }
 
 void MainCharacter::recovery(int time){
-	if(!(time % 5)){
-		hero.lifeForce++;
+	if(!(time  % 10) && hero.lifeForce <= 590){
+		hero.lifeForce = hero.lifeForce + 10;
 	}
 }
 
@@ -809,29 +818,26 @@ void MainCharacter::recovery(int time){
  * MainCharacter Hud Level
  */
 void showHud(){
-	switch(hero.lifeForce){
-		case 60000:
-			break;
-		case 50000:
+	
+		if(hero.lifeForce <= 600 && hero.lifeForce > 501){
+			;
+		}
+		else if(hero.lifeForce <= 501 && hero.lifeForce > 401){
 			hud1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-			break;
-		case 40000:
+		}
+		else if(hero.lifeForce <= 401 && hero.lifeForce > 301){
 			hud2.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-			break;
-		case 30000:
+		}
+		else if(hero.lifeForce <= 301 && hero.lifeForce > 201){
 			hud3.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-			break;
-		case 20000:
+		}
+		else if(hero.lifeForce <= 201 && hero.lifeForce > 101){
 			hud4.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-			break;
-		case 10000:
+		}
+		else if(hero.lifeForce <= 101 && hero.lifeForce > 1){
 			hud5.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-			break;
-		case 0:
+		} else if(hero.lifeForce <= 0) {
 			state = GameState::endgamescore;
-			break;
-		default:
-			break;
 		}
 }
 bool MainCharacter::isCollide(int * pos, int & life, int decrease){

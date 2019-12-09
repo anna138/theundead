@@ -17,12 +17,13 @@ extern void movingImages(int width_x, int height_y, Vec img_pos, float img_angle
 class Game {
 public:
 	Trooper trooper;
-	Skull skull;
-	Skull *skulls = new Skull[gvars::MAX_SKULLS];
+	Skull *skull;
+	// Skull *skulls = new Skull[gvars::MAX_SKULLS];
 	int level = 1;
 	Zombie *zombie;
 	
 	int zombiecount = level*3; 
+	int skullcount = level*3; 
 	Asteroid *asteroid;
 	Bullet *barr;
 	int nasteroids;
@@ -32,9 +33,10 @@ public:
 	bool mouseThrustOn;
 public:
 	Game() {
-		hero.heal(60000);
+		hero.heal(600);
 		barr = new Bullet[MAX_BULLETS];
 		zombie = new Zombie[zombiecount];
+		skull = new Skull[skullcount];
 		asteroid = NULL;
 		nasteroids = 0;
 		nbullets = 0;
@@ -48,7 +50,7 @@ public:
 		zombie = new Zombie[zombiecount];
 	}
 	~Game() {
-		delete [] skulls;
+		delete [] skull;
 		delete [] zombie;
 		delete [] barr;
 	}
