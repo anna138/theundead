@@ -427,10 +427,12 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 }
 void checkZombieCollision(Zombie *zs, int zcount)
 {
-	for(int i = 0; i < zcount-1; i++){
-		if(zs[i].pos[0] == zs[i+1].pos[0] && zs[i].pos[1] == zs[i+1].pos[1]){
-			zs[i+1].pos[0] -= zs[i+1].size[0];
-			zs[i+1].pos[1] -= zs[i+1].size[1];
+	for(int i = 0; i < zcount; i++){
+		float dist[2] = {zs[i].pos[0]-zs[(i+1)%zcount].pos[0], zs[i].pos[1]-zs[(i+1)%zcount].pos[1]};
+		float mag = VecMag(dist);
+		if(mag > -20 && mag < 20){
+			//zs[i].pos[0] -= zs[i].size[0];
+			zs[i].pos[1] -= 10;
 		}
 	}
 

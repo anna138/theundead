@@ -192,7 +192,6 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
-				std::cout << "here" << std::endl;
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
@@ -996,190 +995,21 @@ Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
 void render()
 { 
 	showAttack(gvars::attack);
-    /*
-	Anna Commented
-	Rect r;
-	glClear(GL_COLOR_BUFFER_BIT);
-  
-	r.bot = gl.yres - 20;
-	r.left = 10;
-	r.center = 0;
-	ggprint8b(&r, 16, 0x00ff0000, "3350 - Asteroids");
-//	ggprint8b(&r, 16, 0x00ffff00, "n bullets: %i", g.nbullets);
-//	ggprint8b(&r, 16, 0x00ffff00, "n asteroids: %i", g.nasteroids);
-    creditManvir(r);
-	ggprint8b(&r, 16, 0x00ffff00, "\n");
-    creditsAnna(r);
-	ggprint8b(&r, 16, 0x00ffff00, "\n");
-    creditsGerardo(r);
-	ggprint8b(&r, 16, 0x00ffff00, "\n");
-    creditsKevin(r);
 
 
-
-	for(int i = 0; i< gvars::MAX_SKULLS;i++){		
-		Skull *s = &g.skulls[i];		
-		movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 + g.skull.size[0] / 4, s->pos, s->angle, g.skull.skullImageTexture);		
-		enemyAI(g.trooper.pos, g.trooper.angle, s->pos, s->angle, gl.xres, gl.yres);		
-
- 	}
-	//-------------------------------------------------------------------------
-	//Draw the Zombies and Skulls
-	//for(int i = 0; i < 3; i++)
-	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
-*/ /* */
 	for(int i = 0; i < g.zombiecount; i++){
 		zombie.Display_Picture(g.zombie[i].size[0] / 20, g.zombie[i].size[0] / 20,   
 					g.zombie[i].pos[0], g.zombie[i].pos[1]);
 		skullAI(g.zombie[i].pos, gl.xres, gl.yres);
 		checkZombieCollision(g.zombie, g.zombiecount);
 	}
-		
-/*
-Anna Commented
-	movingImages(g.skull.size[0] / 2 + g.skull.size[0] / 4, g.skull.size[0] / 2 
-		+ g.skull.size[0] / 4, g.skull.pos, g.skull.angle, g.skull.skullImageTexture);
-	enemyAI(g.trooper.pos, g.trooper.angle, g.skull.pos, g.skull.angle, gl.xres, gl.yres);
-*/
-	/*g.enemy.pos[0] += g.trooper.vel[0] * 1.2;
-	g.enemy.pos[1] += g.trooper.vel[1] * 1.2;*/
+	checkZombieCollision(g.zombie, g.zombiecount);
 
-	//-------------------------------------------------------------------------
-/*
-Anna commented
-	movingImages(50, 50, g.trooper.pos, g.trooper.angle, g.trooper.trooperImageTexture);
-	Flt rad;
-	if (gl.keys[XK_Up] || g.mouseThrustOn) {
-		int i;
-		//draw thrust
-		rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
-	
-		//convert angle to a vector
-		Flt xdir = cos(rad);
-		Flt ydir = sin(rad);
-		Flt xs,ys,xe,ye,r;
-		glBegin(GL_LINES);
-		for (i=0; i<16; i++) {
-			xs = -xdir * 11.0f + rnd() * 4.0 - 2.0;
-			ys = -ydir * 11.0f + rnd() * 4.0 - 2.0;
-			r = rnd()*40.0+40.0;
-			xe = -xdir * r + rnd() * 18.0 - 9.0;
-			ye = -ydir * r + rnd() * 18.0 - 9.0;
-			glColor3f(rnd()*.3+.7, rnd()*.3+.7, 0);
-			glVertex2f(g.trooper.pos[0]+xs,g.trooper.pos[1]+ys);
-			glVertex2f(g.trooper.pos[0]+xe,g.trooper.pos[1]+ye);
-		}
-		glEnd();
-	}
-
-
-	//-------------------------------------------------------------------------
-	//Draw the asteroids
-	{
-		Asteroid *a = g.asteroid;
-		while (a) {
-			
-			//Log("draw asteroid...\n");
-			glColor3fv(a->color);
-			glPushMatrix();
-			glTranslatef(a->pos[0], a->pos[1], a->pos[2]);
-			glRotatef(a->angle, 0.0f, 0.0f, 1.0f);
-			glLineWidth(1);
-			glBegin(GL_LINE_LOOP);
-			//Log("%i verts\n",a->nverts);
-			for (int j=0; j<a->nverts; j++) {
-				glVertex2f(a->vert[j][0], a->vert[j][1]);
-			}
-			glEnd();
-			//glBegin(GL_LINES);
-			//	glVertex2f(0,   0);
-			//	glVertex2f(a->radius, 0);
-			//glEnd();
-			glPopMatrix();
-			glColor3f(1.0f, 0.0f, 0.0f);
-			glBegin(GL_POINTS);
-			glVertex2f(a->pos[0], a->pos[1]);
-			glEnd();
-			a = a->next;
-			
-			*/
-			/*movingImages(30, 30, a->pos, a->angle, g.villain.skullImageTexture);*/
-			/*
-			Anna Commented
-		}
-	}*/
-	//-------------------------------------------------------------------------
-	//Draw the bullets
-	//draw_circle(100, 8);
-	//drawCircle(260.0, 260.0, 100.0, 6);
 	checkBulletCollision(g.barr, g.nbullets);
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
-		/*//Log("draw bullet...\n");
-		glColor3f(1.0, 1.0, 1.0);
-		glBegin(GL_POINTS);
-		glVertex2f(b->pos[0],      b->pos[1]);
-		glVertex2f(b->pos[0]-1.0f, b->pos[1]);
-		glVertex2f(b->pos[0]+1.0f, b->pos[1]);
-		glVertex2f(b->pos[0],      b->pos[1]-1.0f);
-		glVertex2f(b->pos[0],      b->pos[1]+1.0f);
-		glColor3f(0.8, 0.8, 0.8);
-		glVertex2f(b->pos[0]-1.0f, b->pos[1]-1.0f);
-		glVertex2f(b->pos[0]-1.0f, b->pos[1]+1.0f);
-		glVertex2f(b->pos[0]+1.0f, b->pos[1]-1.0f);
-		glVertex2f(b->pos[0]+1.0f, b->pos[1]+1.0f);
-		glEnd();*/
-		
-		//fireCircles(b->row, b->pos[0], b->pos[1]);
-		
-		//lightningShoots(b->angle, b->pos[0], b->pos[1]);
-		//grassVines(b->angle, b->pos[0], b->pos[1]);
-
-		//waterBubbles(b->pos[0], b->pos[1]);
-
 		bulletsTravel(b->pos, b->angle);
-
-		// switch(hero.dir){
-		// 	case MainCharacter::Direction::S:
-		// 		b->pos[1] -= 10;
-		// 		break;
-		// 	case MainCharacter::Direction::N:
-		// 		b->pos[1] += 10;
-		// 		break;
-		// 	case MainCharacter::Direction::E:
-		// 		b->pos[0] += 10;
-		// 		break;
-		// 	case MainCharacter::Direction::W: 
-		// 		b->pos[0] -= 10;
-		// 		break;
-		// 	case MainCharacter::Direction::SW: 
-		// 		b->pos[0] -= 10;
-		// 		b->pos[1] -= 10;
-		// 		break;
-		// 	case MainCharacter::Direction::SE: 
-		// 		b->pos[0] += 10;
-		// 		b->pos[1] -= 10;
-		// 		break;
-		// 	case MainCharacter::Direction::NW: 
-		// 		b->pos[0] -= 10;
-		// 		b->pos[1] += 10;
-		// 		break;
-		// 	case MainCharacter::Direction::NE: 
-		// 		b->pos[0] += 10;
-		// 		b->pos[1] += 10;
-		// 		break;
-		// 	case MainCharacter::Direction::end:
-		// 		break;
-		// }
-		//std::cout << "Does this work?" << std::endl;
-				
 		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
-		//fireCircles(b->row, b->pos[0], b->pos[1]);
-		//b->pos[1] += .25;
-
-		//std::cout << "I am poo poo " << std::endl;
-		
-
 	}
     
 }
