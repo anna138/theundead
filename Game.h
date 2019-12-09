@@ -46,6 +46,8 @@ public:
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
 	void reset(){
+		zombiecount = level*3; 
+		skullcount = level*3; 
 		delete [] zombie;
 		delete [] skull;
 		zombie = new Zombie[zombiecount];

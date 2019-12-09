@@ -82,17 +82,22 @@ void creditsKevin(Rect r)
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/stat.h>
+#include <vector>
+#include <string>
 #ifdef USE_OPENAL_SOUND
+
 #include </usr/include/AL/alut.h>
+
+#include <ctime>
 #endif //USE_OPENAL_SOUND
 
 int stop = 0;
 
-int music()
+int music(std::vector<std::string> files)
 {
 	//Get started right here.
 #ifdef USE_OPENAL_SOUND
-	alutInit(0, NULL);
+	alutInit(NULL, NULL);
 	if (alGetError() != AL_NO_ERROR) {
 		printf("ERROR: alutInit()\n");
 		return 0;
@@ -113,7 +118,8 @@ int music()
 	//
 	//Buffers hold the sound information.
 	ALuint alBuffer[1];
-	alBuffer[0] = alutCreateBufferFromFile("./Credits1.wav");
+    int rnd = rand()%files.size();
+	alBuffer[0] = alutCreateBufferFromFile(files.at(rnd).c_str());
 	//let's create a looping sound.
 	//alBuffer[1] = alutCreateBufferFromFile("./Credits1.wav");
 
@@ -142,11 +148,24 @@ int music()
 		return 0;
 	}
 	alSourcePlay(alSource[0]);
+    stop = 0;
 	for (int i=0; i<42; i++) {
         
 		alSourcePlay(alSource[0]);
-        
-		usleep(48000000);
+        for(int j = 1000000; j <= 48000000; j+=1000000){
+            if(stop){break;}
+            usleep(j);
+        }
+        if(stop){	
+            alDeleteSources(1, &alSource[0]);
+            //alDeleteSources(1, &alSource[1]);
+            //Delete the buffers.
+            alDeleteBuffers(1, &alBuffer[0]);
+
+            return 0;
+            break;
+            
+        }
 
 	}
 	//Cleanup.
@@ -159,6 +178,22 @@ int music()
 	//
 	//Close out OpenAL itself.
 	//Get active context.
+	// ALCcontext *Context = alcGetCurrentContext();
+	// //Get device for active context.
+	// ALCdevice *Device = alcGetContextsDevice(Context);
+	// //Disable context.
+	// alcMakeContextCurrent(NULL);
+	// //Release context(s).
+	// alcDestroyContext(Context);
+	// //Close device.
+	// alcCloseDevice(Device);
+#endif //USE_OPENAL_SOUND
+	return 0;
+}
+void closemusic()
+{
+#ifdef USE_OPENAL_SOUND
+
 	ALCcontext *Context = alcGetCurrentContext();
 	//Get device for active context.
 	ALCdevice *Device = alcGetContextsDevice(Context);
@@ -168,6 +203,6 @@ int music()
 	alcDestroyContext(Context);
 	//Close device.
 	alcCloseDevice(Device);
-#endif //USE_OPENAL_SOUND
-	return 0;
+
+#endif
 }

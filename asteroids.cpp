@@ -7,7 +7,6 @@
 
 #include <cstdlib>
 #include <cstring>
-#include <signal.h>
 #include <thread>
 #include <unistd.h>
 #include <ctime>
@@ -133,7 +132,8 @@ extern void showHud();
 extern void checkZombieCollision(Zombie *zs, int zcount);
 extern void checkSkullCollision(Skull *zs, int zcount);
 extern void bulletEnemyCollision(Vec enemyPos, Vec bulletPos);
-extern void music();
+extern void music(std::vector<std::string> files);
+extern void closemusic();
 extern int stop;
 //==========================================================================
 // M A I N
@@ -142,6 +142,7 @@ extern int stop;
 X11_wrapper x11(0, 0);
 int musicstart = 0;
 //std::thread kmusic(music);
+pthread_t kmusic;
 int main()
 {
 	//set up the x11 window
@@ -192,8 +193,9 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
-				if(stop){
-					kill(stop, 9);
+				if(musicstart == 1){
+					stop = 1;
+					musicstart = 0;
 				}
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
@@ -232,12 +234,24 @@ int main()
 				break;
 			}
 			case GameState::game:{
-                
+
+                if(musicstart == 0){
+					stop = 0;
+					#ifdef USE_OPENAL_SOUND
+						std::vector<std::string> file; 
+						file.push_back("./BattleTheme1.wav"); 
+						file.push_back("./BattleTheme2.wav");
+						file.push_back("./GameplayTheme1.wav");
+						file.push_back("./Intro1.wav");
+						std::thread kmusic(music, file);
+						kmusic.detach();
+					#endif
+					musicstart = 1;
+					
+				}
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
-				std::cout << "Health: " << hero.lifeForce << std::endl;
 				showHud();
-				
 				hero.recovery(timeCurrent.tv_sec);
 				
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
@@ -248,6 +262,21 @@ int main()
 					hero.characterRender();
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				}
+				if(hero.tile==39 || hero.tile == 55){
+					hero.tile = 0;
+					g.level++;
+					hero.reset();
+					tp.reset();
+					g.reset();
+					init_opengl();
+					if(g.level==4){
+						tp.map = 1;
+						tp.reMap("./images/level2/level2.tmx");
+						map.set("./images/level2/level2_0.png");
+						map_1.set("./images/level2/level2_1.png");
+					}
+				}
+
 
 				render();
 				break;
@@ -262,14 +291,17 @@ int main()
 				break;
 			}
 			case GameState::credits:{
-				// if(musicstart == 0){
+				if(musicstart == 0){
+					stop = 0;
+					#ifdef USE_OPENAL_SOUND
+						std::vector<std::string> file; 
+						file.push_back("./Credits1.wav"); 
+						std::thread kmusic(music, file);
+						kmusic.detach();
+					#endif
+					musicstart = 1;
 					
-				// 	std::thread kmusic(music);
-					
-				// 	kmusic.detach();
-				// 	musicstart = 1;
-					
-				// }
+				}
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
@@ -282,7 +314,7 @@ int main()
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
-										rand()%10);
+										g.level);
 				hero.reset();
 				tp.reset();
 				g.reset();
@@ -300,6 +332,9 @@ int main()
 	}
 	cleanup_fonts();
 	logClose();
+	#ifdef USE_OPENAL_SOUND
+	closemusic();
+	#endif
 	return 0;
 }
 
@@ -501,10 +536,9 @@ void check_mouse(XEvent *e)
 			if (ts > 0.1) {
 				timeCopy(&g.bulletTimer, &bt);
 				//shoot a bullet...
-				if (g.nbullets < MAX_BULLETS) {
+				if (g.nbullets < MAX_BULLETS && state == GameState::game) {
 					Bullet *b = &g.barr[g.nbullets];
 					timeCopy(&b->time, &bt);
-
 					b->pos[0] = hero.pos[0];
 					b->pos[1] = hero.pos[2];
 					b->type = gvars::attack;
@@ -595,6 +629,7 @@ int check_keys(XEvent *e)
 	if (shift){}
 	switch (key) {
 		case XK_Escape:
+			
             return 1;
 			break;
 		case XK_m:

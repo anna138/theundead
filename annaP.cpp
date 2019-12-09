@@ -412,7 +412,7 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 	if(mag < 1 && mag > -1){
 		hero.damage(1);
 	}
-	if(mag < 300){
+	if(mag < 3){
 		dir[0] /= mag;
 		dir[1] /= mag;
 		enemy_pos[0] += dir[0]*.3;

@@ -49,16 +49,18 @@ namespace gvars{
     MainCharacter hero;
     int arrow_keys[4] = {0, 0, 0, 0};
 
-    TileParser tp("./images/level1/level1.tmx");
+    
     Texture hud1("./images/hud/hud1.png");
     Texture hud2("./images/hud/hud2.png");
     Texture hud3("./images/hud/hud3.png");
     Texture hud4("./images/hud/hud4.png");
     Texture hud5("./images/hud/hud5.png");
+
+    TileParser tp("./images/level1/level1.tmx");
     Texture map("./images/level1/level1_0.png");
     Texture map_1("./images/level1/level1_1.png");
-    Texture map2("./images/level2/level2_0.png");
-    Texture map2_1("./images/level2/level2_1.png");
+    // Texture map("./images/level2/level2_0.png");
+    // Texture map_1("./images/level2/level2_1.png");
 
 
 } // namespace GVars

@@ -11,7 +11,9 @@ class TileParser{
         float posx;
         float posy;
         
+        
     public:
+        int map = 0;
         TileParser(const std::string);
         ~TileParser();
         void reset();
@@ -21,5 +23,6 @@ class TileParser{
         bool Walk(float, float, int&, int&);
         double distance(double *a, double *b);
         double dot(double *a, double *b);
+        void reMap(const std::string);
 
 };
