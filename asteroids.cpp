@@ -136,7 +136,6 @@ extern void checkSkullCollision(Skull *zs, int zcount);
 
 X11_wrapper x11(0, 0);
 
-int option=0;
 int main()
 {
 	//set up the x11 window
@@ -211,7 +210,9 @@ int main()
 				//drawLine();
 				//drawVine();
                 characterChoice();
-                characterOption(option);
+                characterOption(hero.character_option);
+				hero.characterChange();
+				
 				break;
 			}
             case GameState::howToPlay:{
@@ -289,6 +290,7 @@ int main()
 				hero.reset();
 				tp.reset();
 				g.reset();
+				init_opengl();
 				state = GameState::end;
 				break;
 			}
@@ -631,19 +633,19 @@ int check_keys(XEvent *e)
 		    }
 			break;
         case XK_1:
-		    option =1;
+		    hero.character_option =1;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_2:
-		    option =2;
+		    hero.character_option =2;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_3:
-		    option =3;
+		    hero.character_option =3;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }

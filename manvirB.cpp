@@ -455,9 +455,9 @@ MainCharacter::MainCharacter()
     pos[0] = 0;
     pos[1] = 0;
     pos[2] = -gvars::gl.yres/2;
-    face = 0;
+    face = 1;
     dir = Direction::S;
-
+    character_option = 1;
     trooper = new Texture[8];
     trooper[0].set("images/trooper_sprite/trooper_s.png");
     trooper[1].set("images/trooper_sprite/trooper_sw.png");
@@ -467,6 +467,44 @@ MainCharacter::MainCharacter()
     trooper[5].set("images/trooper_sprite/trooper_ne2.png");
     trooper[6].set("images/trooper_sprite/trooper_e.png");
     trooper[7].set("images/trooper_sprite/trooper_se.png");
+}
+void MainCharacter::characterChange()
+{
+    switch (character_option) {
+        case 1:
+            trooper[0].set("images/trooper_sprite/trooper_s.png");
+            trooper[1].set("images/trooper_sprite/trooper_sw.png");
+            trooper[2].set("images/trooper_sprite/trooper_w.png");
+            trooper[3].set("images/trooper_sprite/trooper_nw2.png");
+            trooper[4].set("images/trooper_sprite/trooper_n.png");
+            trooper[5].set("images/trooper_sprite/trooper_ne2.png");
+            trooper[6].set("images/trooper_sprite/trooper_e.png");
+            trooper[7].set("images/trooper_sprite/trooper_se.png");
+            break;
+        case 2:
+            trooper[0].set("images/ninja_sprite/ninja_s.png");
+            trooper[1].set("images/ninja_sprite/ninja_sw.png");
+            trooper[2].set("images/ninja_sprite/ninja_w.png");
+            trooper[3].set("images/ninja_sprite/ninja_nw.png");
+            trooper[4].set("images/ninja_sprite/ninja_n.png");
+            trooper[5].set("images/ninja_sprite/ninja_ne.png");
+            trooper[6].set("images/ninja_sprite/ninja_e.png");
+            trooper[7].set("images/ninja_sprite/ninja_se.png");
+            break;
+        case 3:
+            trooper[0].set("images/hitler_sprite/hitler_s.png");
+            trooper[1].set("images/hitler_sprite/hitler_sw.png");
+            trooper[2].set("images/hitler_sprite/hitler_w.png");
+            trooper[3].set("images/hitler_sprite/hitler_nw.png");
+            trooper[4].set("images/hitler_sprite/hitler_n.png");
+            trooper[5].set("images/hitler_sprite/hitler_ne.png");
+            trooper[6].set("images/hitler_sprite/hitler_e.png");
+            trooper[7].set("images/hitler_sprite/hitler_se.png");
+            break;
+        default:
+            break;
+    }
+
 
 }
 MainCharacter::~MainCharacter(){
