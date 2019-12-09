@@ -48,11 +48,7 @@ Texture water("images/water.png", 0,0,0, gl.xres, gl.yres);
 Texture grass("images/leaf.png", 0,0,0, gl.xres, gl.yres);
 Texture light("images/electric.png", 0,0,0, gl.xres, gl.yres);
 Texture fire("images/fire.png", 0,0,0, gl.xres, gl.yres);
-Texture hud_0("images/hud.png", 0,0,0, gl.xres, gl.yres);
-Texture hud_1("images/hud.png", 0,0,0, gl.xres, gl.yres);
-Texture hud_2("images/hud.png", 0,0,0, gl.xres, gl.yres);
-Texture hud_3("images/hud.png", 0,0,0, gl.xres, gl.yres);
-Texture hud_4("images/hud.png", 0,0,0, gl.xres, gl.yres);
+
 
 /*Prototype Functions for Functions Used*/
 void movingEyes(int *eye, int *location);
@@ -442,10 +438,12 @@ void checkZombieCollision(Zombie *zs, int zcount)
 }
 void checkSkullCollision(Skull *zs, int zcount)
 {
-	for(int i = 0; i < zcount-1; i++){
-		if(zs[i].pos[0] == zs[i+1].pos[0] && zs[i].pos[1] == zs[i+1].pos[1]){
-			zs[i+1].pos[0] -= zs[i+1].size[0];
-			zs[i+1].pos[1] -= zs[i+1].size[1];
+	for(int i = 0; i < zcount; i++){
+		float dist[2] = {zs[i].pos[0]-zs[(i+1)%zcount].pos[0], zs[i].pos[1]-zs[(i+1)%zcount].pos[1]};
+		float mag = VecMag(dist);
+		if(mag > -20 && mag < 20){
+			//zs[i].pos[0] -= zs[i].size[0];
+			zs[i].pos[1] -= 10;
 		}
 	}
 }

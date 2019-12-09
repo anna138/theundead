@@ -56,7 +56,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 Image img[9] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
-		"./images/trooper.png",
+		"./images/background.png",
 		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
@@ -362,20 +362,7 @@ void init_opengl(void)
 
 	startMenuTexture = gl.startTexture;
 	
-	//Image - Trooper
-	glGenTextures(1, &gl.trooperTexture);
-	int w2 = img[2].width;
-	int h2 = img[2].height;
-
-	glBindTexture(GL_TEXTURE_2D, gl.trooperTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
-
-	g.trooper.trooperImageTexture = gl.trooperTexture;
+	
 	
 	//Image - High scores bloodBackground
 	
