@@ -19,7 +19,10 @@ public:
 	Trooper trooper;
 	Skull skull;
 	Skull *skulls = new Skull[gvars::MAX_SKULLS];
-	Zombie zombie;
+	int level = 1;
+	Zombie *zombie;
+	
+	int zombiecount = level*3; 
 	Asteroid *asteroid;
 	Bullet *barr;
 	int nasteroids;
@@ -31,7 +34,7 @@ public:
 	Game() {
 		hero.heal(60000);
 		barr = new Bullet[MAX_BULLETS];
-
+		zombie = new Zombie[zombiecount];
 		asteroid = NULL;
 		nasteroids = 0;
 		nbullets = 0;
@@ -41,6 +44,8 @@ public:
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
 	~Game() {
+		delete [] skulls;
+		delete [] zombie;
 		delete [] barr;
 	}
 } g;

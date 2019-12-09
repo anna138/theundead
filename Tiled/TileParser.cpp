@@ -140,7 +140,7 @@ bool TileParser::isWalkable(int x, int y, int dir)
     return true;
 }
 
-bool TileParser::Walk(float x, float y, int & code){
+bool TileParser::Walk(float x, float y, int & code, int &face){
 
     int size = tiles.size();
     posx += x;
@@ -150,14 +150,14 @@ bool TileParser::Walk(float x, float y, int & code){
         posy -= y;
         return false;
     }
-    // std::cout << "value of tile: " << tiles.at(2).at((int)posx).at((int)posy) << std::endl;
+    // std::cout << "value of tile: " << tiles.at(size-1).at((int)posx).at((int)posy) << std::endl;
     // for(unsigned int i = 0; i < width; i++){
     //     std::cout << i << " ";
     //     for(unsigned int j = 0; j < height; j++){
     //         if((int)posy == j and (int)posx == i)
     //             std::cout << "1,";
     //         else
-    //             std::cout << tiles.at(2).at(i).at(j) << ",";
+    //             std::cout << tiles.at(size-1).at(i).at(j) << ",";
     //     }
     //     std::cout << std::endl;
     // }
@@ -167,7 +167,47 @@ bool TileParser::Walk(float x, float y, int & code){
     //             tiles.at(size-1).at((int)posx).at((int)posy) != 563 
     //             && tiles.at(size-1).at((int)posx).at((int)posy) != 443 && 
     //             tiles.at(size-1).at((int)posx).at((int)posy) != 71){
-    if(tiles.at(size-1).at((int)posx).at((int)posy) >= 153){
+    bool set = false;
+    if(tiles.at(size-1).at((int)posx).at((int)posy) >= 153  || tiles.at(size-1).at((int)posx).at((int)posy) == 10){
+        posx -= x;
+        posy -= y;
+        
+        return false;
+    }
+    if((posx+2 <= width && posy+2 <= height) && (posx-2 >= 0 && posy-2 >= 0)){
+        
+        for(int i = posy+1; i < posy+2; i++){
+            if(tiles.at(size-1).at((int)posx).at((int)i) >= 153  || 
+                tiles.at(size-1).at((int)posx).at((int)i) == 10){
+                    face = 0;
+                    set = true;
+            }
+
+        }
+        for(int i = posy; !set && i >= posy-2; i--){
+            if(tiles.at(size-1).at((int)posx).at((int)i) >= 153  || 
+                tiles.at(size-1).at((int)posx).at((int)i) == 10){
+                    face = 1;
+                    set = true;
+            }
+
+        }
+        for(int i = posx; !set && i < posx+2; i++){
+            if(tiles.at(size-1).at((int)i).at((int)posy) >= 153  || 
+                tiles.at(size-1).at((int)i).at((int)posy) == 10){
+                    face = 0;
+                    set = true;
+            }
+        }
+        for(int i = posx; !set && i >= posx-2; i--){
+            if(tiles.at(size-1).at((int)i).at((int)posy) >= 153  || 
+                tiles.at(size-1).at((int)i).at((int)posy) == 10){
+                    face = 1;
+                    set = true;
+            }
+        }
+    }
+    if(tiles.at(size-1).at((int)posx+(0*x*.9)).at((int)posy+(0*y*.9)) >= 153  || tiles.at(size-1).at((int)posx).at((int)posy) == 10){
         posx -= x;
         posy -= y;
         //code = tiles.at(2).at((int)posx).at((int)posy);

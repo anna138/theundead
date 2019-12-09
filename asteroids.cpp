@@ -128,6 +128,7 @@ extern void arrowInputMap(XEvent *);
 extern void bulletsTravel(float * pos, int dir);
 extern void checkBulletCollision(Bullet *b, int & nbullets);
 extern void showHud();
+extern void checkZombieCollision(Zombie *zs, int zcount);
 //==========================================================================
 // M A I N
 //==========================================================================
@@ -192,6 +193,7 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
+				std::cout << "here" << std::endl;
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
@@ -253,12 +255,12 @@ int main()
 
 				showHud();
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
-				if(hero.tile >200 || hero.tile < 100){
-					hero.characterRender();
+				if(hero.face){
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+					hero.characterRender();
 				}else{		
-					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 					hero.characterRender();
+					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				}
 				// glPushMatrix();
 				// glPointSize(4);
@@ -288,11 +290,11 @@ int main()
 			}
 			case GameState::highscores:{
 				Rect r2;
+				glClear(GL_COLOR_BUFFER_BIT);
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				getScores(filename);
-				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
-				state = GameState::end;
+				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);				
 				break;
 			}
 			case GameState::credits:{
@@ -311,6 +313,8 @@ int main()
 				state = GameState::end;
 				break;
 			}
+			case GameState::end:
+				break;
 			default:{
 				break;
 			}
@@ -433,8 +437,6 @@ void init_opengl(void)
 	glGenTextures(1, &gl.zombieTexture);
 	int w7 = img[7].width;
 	int h7 = img[7].height;
-	g.zombie.size[0] = img[7].width;
-	g.zombie.size[1] = img[7].height;
 
 	glBindTexture(GL_TEXTURE_2D, gl.zombieTexture);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
@@ -444,8 +446,11 @@ void init_opengl(void)
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w7, h7, 0,
 		GL_RGB, GL_UNSIGNED_BYTE, img[7].data);
 
-	g.zombie.zombieImageTexture = gl.zombieTexture;
-
+	for(int i = 0; i < g.zombiecount; i++){
+		g.zombie[i].zombieImageTexture = gl.zombieTexture;
+		g.zombie[i].size[0] = img[7].width;
+		g.zombie[i].size[1] = img[7].height;
+	}
 	//Image - Undead Logo
 	
 	glGenTextures(1, &gl.logoTexture);
@@ -646,7 +651,7 @@ int check_keys(XEvent *e)
 			break;
 		case XK_space:
 		    choice=2;
-		    if(state != GameState::game) {
+		    if(state == GameState::menu) {
 				state = GameState::game;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -656,7 +661,7 @@ int check_keys(XEvent *e)
 		    break;
 		case XK_c:
 		    choice =3;
-		    if(state != GameState::credits){
+		    if(state == GameState::menu){
 				state = GameState::credits;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -665,7 +670,7 @@ int check_keys(XEvent *e)
 			break;
 		case XK_t:
             choice =1;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -674,19 +679,19 @@ int check_keys(XEvent *e)
 			break;
         case XK_1:
 		    option =1;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_2:
 		    option =2;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
 		case XK_j:
             choice=4;
-		    if(state != GameState::howToPlay){
+		    if(state == GameState::menu){
 				state = GameState::howToPlay;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
                 x11.swapBuffers();
@@ -700,13 +705,8 @@ int check_keys(XEvent *e)
 			state = GameState::endgamescore;
 			break;
 		case XK_e:
-			gvars::attack = ((gvars::attack + 1) % 4);
-			break;
-		case XK_a:
-			movez++;
-			break;
-		case XK_d:
-			movez--; 
+			if(state == GameState::game)
+				gvars::attack = ((gvars::attack + 1) % 4);
 			break;
 		case XK_equal:
 			break;
@@ -1028,13 +1028,12 @@ void render()
 	//for(int i = 0; i < 3; i++)
 	//	g.zombie.pos[i] = g.zombie.pos[i] + 300.0;
 */ /* */
-	zombie.Display_Picture(g.zombie.size[0] / 20, g.zombie.size[0] / 20,     g.zombie.pos[0], g.zombie.pos[1]);
-
-	//movingImages(g.zombie.size[0], g.zombie.size[0], g.zombie.pos,
-		//g.zombie.angle, zombie.getID());
-	/*skullAI(hero.pos, g.trooper.angle, g.zombie.pos, g.zombie.angle, 	
-		gl.xres, gl.yres);*/
-	skullAI(g.zombie.pos, gl.xres, gl.yres);
+	for(int i = 0; i < g.zombiecount; i++){
+		zombie.Display_Picture(g.zombie[i].size[0] / 20, g.zombie[i].size[0] / 20,   
+					g.zombie[i].pos[0], g.zombie[i].pos[1]);
+		skullAI(g.zombie[i].pos, gl.xres, gl.yres);
+		checkZombieCollision(g.zombie, g.zombiecount);
+	}
 		
 /*
 Anna Commented
