@@ -402,27 +402,38 @@ void fireballAttack(int * fire_pos){
 	else
 		fire_pos[0] = -1 * (((int)(fire_pos[0])) + 100);
 }
+
 void skullAI(Vec enemy_pos, int xres, int yres)
 {
-	// std::cout << "B Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
-	// std::cout << "B Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
-	// std::cout << "Hero Pos:" << hero.pos[0] << "and" << hero.pos[2] << std::endl;
-	// enemy_pos[1] = (int)((enemy_pos[1] + (hero.pos[2]*0.012)));
-	// enemy_pos[0] = (int)((enemy_pos[0] + (hero.pos[0]*0.012)));
+
 	float dir[2];
 	dir[0] = hero.pos[0] - enemy_pos[0];
 	dir[1] = hero.pos[2] - enemy_pos[1];
 	float mag = VecMag(dir);
+	std::cout << mag << std::endl;
+	if(mag < 1 && mag > -1){
+		hero.damage(1);
+	}
 	if(mag < 300){
 		dir[0] /= mag;
 		dir[1] /= mag;
 		enemy_pos[0] += dir[0]*.3;
 		enemy_pos[1] += dir[1]*.3;
+		std::cout << "0" << dir[0] << " and 1 " << dir[1] << std::endl;
+
 	}else{
 		enemy_pos[0] += .2*cos(rand());
 		enemy_pos[1] += .2*sin(rand());
 	}
 
+}
+
+
+	// std::cout << "B Hero X:" << hero.pos[0] << "Hero Y:" << hero.pos[1] << std::endl; 
+	// std::cout << "B Enemy X:" << enemy_pos[0] << "Enemy Y:" << enemy_pos[1] << std::endl; 
+	// std::cout << "Hero Pos:" << hero.pos[0] << "and" << hero.pos[2] << std::endl;
+	// enemy_pos[1] = (int)((enemy_pos[1] + (hero.pos[2]*0.012)));
+	// enemy_pos[0] = (int)((enemy_pos[0] + (hero.pos[0]*0.012)));
 
 	// float rad_angle = atan2(hero.pos[2], hero.pos[0]);
 	// float angle = (rad_angle * 180) / PI;
@@ -499,7 +510,7 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 		case MainCharacter::Direction::end:
 			break;
 	}*/
-}
+
 void bulletsTravel(float* pos, int dir){
 	switch((MainCharacter::Direction)dir){
 		case MainCharacter::Direction::S:
@@ -536,8 +547,8 @@ void bulletsTravel(float* pos, int dir){
 }
 void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres)
 {
-	enemy_pos[1] = (int)((enemy_pos[1] + (trooper_pos[1]*0.012))) % yres / 2 - yres / 2 ;
-	enemy_pos[0] = (int)((enemy_pos[0] + (trooper_pos[0]*0.012))) % xres / 2 - xres / 2 ;
+	enemy_pos[1] = (int)((enemy_pos[1] - (trooper_pos[1]*0.012))) % yres / 2 - yres / 2 ;
+	enemy_pos[0] = (int)((enemy_pos[0] - (trooper_pos[0]*0.012))) % xres / 2 - xres / 2 ;
 }
 /*Anna 
 	-function needs to know where to draw the circle
@@ -847,17 +858,18 @@ void A_CollidedTo_B(int * a_pos, int * b_pos){
 }
 
 /* Main Character healing for power-ups or recovery*/
-void MainCharacter::heal(int & lifeForce, int increase){
-	lifeForce += increase;
+void MainCharacter::heal(int increase){
+	hero.lifeForce += increase;
+	hero.lifeForce %= 7;
 }
 
-void MainCharacter::damage(int & lifeForce, int decrease){
-	lifeForce -= decrease;
+void MainCharacter::damage(int decrease){
+	hero.lifeForce -= decrease;
 }
 
-void MainCharacter::recovery(int & lifeForce, int time){
+void MainCharacter::recovery(int time){
 	if(!(time % 5)){
-		lifeForce++;
+		hero.lifeForce++;
 	}
 }
 
@@ -865,33 +877,37 @@ void MainCharacter::recovery(int & lifeForce, int time){
  * Activates the Hud levels using 
  * MainCharacter Hud Level
  */
-void showHud(int life){
-	switch(life){
-		//The lower the life, the higher the hud level
+void showHud(){
+	switch(hero.lifeForce){
+		case 60000:
+			break;
+		case 50000:
+			hud1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+			break;
+		case 40000:
+			hud2.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+			break;
+		case 30000:
+			hud3.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+			break;
+		case 20000:
+			hud4.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+			break;
+		case 10000:
+			hud5.Display_Picture(gl.xres/2,gl.yres/2,0,0);
+			break;
 		case 0:
-			hud_0.Display_Picture(gl.xres, gl.yres, 0, 0);
-			break;
-		case 1:
-			hud_1.Display_Picture(gl.xres, gl.yres, 0, 0);
-			break;
-		case 2: 
-			hud_2.Display_Picture(gl.xres, gl.yres, 0, 0);
-			break;
-		case 3:
-			hud_3.Display_Picture(gl.xres, gl.yres, 0, 0);
-			break;
-		case 4:
-			hud_4.Display_Picture(gl.xres, gl.yres, 0, 0);
+			state = GameState::endgamescore;
 			break;
 		default:
-			;
-	}
+			break;
+		}
 }
 bool MainCharacter::isCollide(int * pos, int & life, int decrease){
 	if(true){
 		std::cout << "Collisions worked" << std::endl;
-		damage(life, decrease);
-		showHud(life);
+		damage(decrease);
+		showHud();
 	}
 	return false;
 }

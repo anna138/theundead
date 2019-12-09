@@ -29,6 +29,7 @@ public:
 	bool mouseThrustOn;
 public:
 	Game() {
+		hero.heal(60000);
 		barr = new Bullet[MAX_BULLETS];
 
 		asteroid = NULL;

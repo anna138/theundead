@@ -50,6 +50,11 @@ namespace gvars{
     int arrow_keys[4] = {0, 0, 0, 0};
 
     TileParser tp("./images/level1/level1.tmx");
+    Texture hud1("./images/hud/hud1.png");
+    Texture hud2("./images/hud/hud2.png");
+    Texture hud3("./images/hud/hud3.png");
+    Texture hud4("./images/hud/hud4.png");
+    Texture hud5("./images/hud/hud5.png");
     Texture map("./images/level1/level1_0.png");
     Texture map_1("./images/level1/level1_1.png");
 
