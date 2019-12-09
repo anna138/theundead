@@ -192,6 +192,7 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
+				std::cout << "here" << std::endl;
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
@@ -289,11 +290,11 @@ int main()
 			}
 			case GameState::highscores:{
 				Rect r2;
+				glClear(GL_COLOR_BUFFER_BIT);
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				getScores(filename);
-				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);
-				state = GameState::end;
+				highScoreBoard(r2, gl.xres, gl.yres, bloodBackgroundTexture);				
 				break;
 			}
 			case GameState::credits:{
@@ -312,6 +313,8 @@ int main()
 				state = GameState::end;
 				break;
 			}
+			case GameState::end:
+				break;
 			default:{
 				break;
 			}
@@ -648,7 +651,7 @@ int check_keys(XEvent *e)
 			break;
 		case XK_space:
 		    choice=2;
-		    if(state != GameState::game) {
+		    if(state == GameState::menu) {
 				state = GameState::game;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -658,7 +661,7 @@ int check_keys(XEvent *e)
 		    break;
 		case XK_c:
 		    choice =3;
-		    if(state != GameState::credits){
+		    if(state == GameState::menu){
 				state = GameState::credits;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -667,7 +670,7 @@ int check_keys(XEvent *e)
 			break;
 		case XK_t:
             choice =1;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
 				x11.swapBuffers();
@@ -676,19 +679,19 @@ int check_keys(XEvent *e)
 			break;
         case XK_1:
 		    option =1;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_2:
 		    option =2;
-		    if(state != GameState::characterSelect){
+		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
 		case XK_j:
             choice=4;
-		    if(state != GameState::howToPlay){
+		    if(state == GameState::menu){
 				state = GameState::howToPlay;
 				changeButtonColor( gl.xres,gl.yres, dirX,dirY, choice);
                 x11.swapBuffers();
@@ -702,13 +705,8 @@ int check_keys(XEvent *e)
 			state = GameState::endgamescore;
 			break;
 		case XK_e:
-			gvars::attack = ((gvars::attack + 1) % 4);
-			break;
-		case XK_a:
-			movez++;
-			break;
-		case XK_d:
-			movez--; 
+			if(state == GameState::game)
+				gvars::attack = ((gvars::attack + 1) % 4);
 			break;
 		case XK_equal:
 			break;
