@@ -791,12 +791,18 @@ void checkBulletCollision(Bullet *b, int & nbullets){
 	
 }
 /* Two objects colliding to one another*/
-void A_CollidedTo_B(int * a_pos, int * b_pos){
-	if(true){
-		std::cout << "Collisions worked" << std::endl;
+/*
+void bulletToSkull(Skull * s, int * b_pos, int * s_pos){
+	if(mag < 1 and mag > -1){
+		delete [] s;
 	}
 }
-
+void bulletToZombie(Zombie & z, int * b_pos, int * s_pos){
+	if(mag < 1 and mag > -1){
+		delete z;
+	}
+}
+*/
 /* Main Character healing for power-ups or recovery*/
 void MainCharacter::heal(int increase){
 	hero.lifeForce += increase;
@@ -808,7 +814,7 @@ void MainCharacter::damage(int decrease){
 }
 
 void MainCharacter::recovery(int time){
-	if(!(time  % 10) && hero.lifeForce <= 590){
+	if(!(time  % 100) && hero.lifeForce <= 590){
 		hero.lifeForce = hero.lifeForce + 10;
 	}
 }
