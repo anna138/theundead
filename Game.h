@@ -43,6 +43,10 @@ public:
 
 		clock_gettime(CLOCK_REALTIME, &bulletTimer);
 	}
+	void reset(){
+		delete [] zombie;
+		zombie = new Zombie[zombiecount];
+	}
 	~Game() {
 		delete [] skulls;
 		delete [] zombie;

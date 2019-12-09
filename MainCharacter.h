@@ -5,8 +5,6 @@
 class MainCharacter{
 
     private:
-        
-        //Texture *hitler;
         Texture *trooper;
 
     public:
@@ -28,4 +26,5 @@ class MainCharacter{
         void heal(int); /* anna.cpp - heals character;*/
         void damage(int); /* anna.cpp - damage to character;*/
         void recovery(int);
+        void reset();
 };

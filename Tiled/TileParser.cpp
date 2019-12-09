@@ -11,7 +11,8 @@ TileParser::TileParser(const std::string fn)
 {
 
     parseXML(fn);
-    posx = ((width/2)-1)+.4;
+    //posx = ((width/2)-1)+.4;
+    posx = width-1+.5;
     posy = posx;
     int size = tiles.size();
     if(true) {
@@ -218,6 +219,11 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
     }
 
     
+}
+void TileParser::reset()
+{
+    posx = ((width)-1)+.5;
+    posy = posx;
 }
 
 

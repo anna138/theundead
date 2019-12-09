@@ -1,11 +1,13 @@
 #include "Zombie.h"
+#include <random>
+#include <iostream>
 #define VecZero(v) (v)[0]=0.0,(v)[1]=0.0,(v)[2]=0.0
 
 
 Zombie::Zombie() {
 	VecZero(dir);
-	pos[0] = rand()%500;
-	pos[1] = rand()%200;
+	pos[0] = ((2.0f*((float)rand()/RAND_MAX))-1.0f)*500.0f;
+	pos[1] = ((2.0f*((float)rand()/RAND_MAX))-1.0f)*200.0f;
 	pos[2] = 0.0;
 	VecZero(vel);
 	angle = 0.0;

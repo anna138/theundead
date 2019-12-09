@@ -134,7 +134,7 @@ extern void checkZombieCollision(Zombie *zs, int zcount);
 //==========================================================================
 
 X11_wrapper x11(0, 0);
-int movez = 0;
+
 int option=0;
 int main()
 {
@@ -143,24 +143,21 @@ int main()
 	init_opengl();
 	srand(time(NULL));
 	randomColor();
-   // lighting( 11, 10, 20);
-    //renderVine(11,10,20);
+
 	makeParticles(gl.xres, gl.yres);
 	getScores(filename);
 	//start the state variable
 	state = GameState::startup;
 	clock_gettime(CLOCK_REALTIME, &timePause);
 	clock_gettime(CLOCK_REALTIME, &timeStart);
-	//x11.set_mouse_position(100,100);
+
 	int done=0;
 	//remove later
 	Rect r3;
 	displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
 						rand()%20);
 	//up to here ask manvir for removal
-	//creating a blender object
-	// Blender b;
-    // b.readObj("./images/map.obj");
+
 	
 	while (!done) {
 		while (x11.getXPending()) {
@@ -172,11 +169,7 @@ int main()
 		clock_gettime(CLOCK_REALTIME, &timeCurrent);
 		timeSpan = timeDiff(&timeStart, &timeCurrent);
 		timeCopy(&timeStart, &timeCurrent);
-		// physicsCountdown += timeSpan;
-		// while (physicsCountdown >= physicsRate) {
-		// 	physics();
-		// 	physicsCountdown -= physicsRate;
-		// }
+
 		//lets start the game states
 		switch (state){
 			case GameState::startup:{
@@ -230,27 +223,6 @@ int main()
 			case GameState::game:{
                 
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-				// glEnable(GL_LIGHTING);
-				// glEnable(GL_LIGHT0);
-				// glEnable(GL_DEPTH_TEST);
-				// float intensitygo[] = {.83,.68,.21,0.1};
-				// glLightfv(GL_LIGHT0, GL_AMBIENT, intensitygo);
-				// float posgo[] = {(float)hero.pos[0],(float)hero.pos[2],-1,0.1};
-				// glLightfv(GL_LIGHT0, GL_POSITION, posgo);
-				// float intensityr[] = {1,0,0,0.1};
-				// glLightfv(GL_LIGHT0, GL_SPECULAR, intensityr);
-				// float posr[] = {100.0f,200.0f,0.0,.01};
-				// glLightfv(GL_LIGHT0, GL_POSITION, posr);
-				// float intensityg[] = {0,1,0,.01};
-				// glLightfv(GL_LIGHT0, GL_DIFFUSE, intensityg);
-				// float posg[] = {0.0f,200.0f,0.0,.1};
-				// glLightfv(GL_LIGHT0, GL_POSITION, posg);
-
-				
-				//isometricScene();
-				//glTranslatef(hero.pos[0], hero.pos[2], 0);
-				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
-				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
 
 				showHud();
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
@@ -309,6 +281,9 @@ int main()
 				orthoScene();
 				displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
 										rand()%10);
+				hero.reset();
+				tp.reset();
+				g.reset();
 				state = GameState::end;
 				break;
 			}
@@ -537,22 +512,7 @@ void check_mouse(XEvent *e)
 				if (g.nbullets < MAX_BULLETS) {
 					Bullet *b = &g.barr[g.nbullets];
 					timeCopy(&b->time, &bt);
-					/*b->pos[0] = g.trooper.pos[0];
-					b->pos[1] = g.trooper.pos[1];*/
-					//b->pos[0]= movex; b->pos[1] = movey;
-					/*b->vel[0] = g.trooper.vel[0];
-					b->vel[1] = g.trooper.vel[1];*/
-					//convert trooper angle to radians
-					// Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
-					// b->angle = rad;
-					//convert angle to a vector
-					// Flt xdir = cos(rad);
-					// Flt ydir = sin(rad);
-					// b->pos[0] += xdir*20.0f;
-					// b->pos[1] += ydir*20.0f;
-					// b->vel[0] += xdir*6.0f;
-					// b->vel[1] += ydir*6.0f;
-					//b->pos[0] += b->vel[0];
+
 					b->pos[0] = hero.pos[0];
 					b->pos[1] = hero.pos[2];
 					b->type = gvars::attack;
@@ -714,283 +674,7 @@ int check_keys(XEvent *e)
 	}
     return 0;
 }
-/*
-void deleteAsteroid(Game *g, Asteroid *node)
-{
-	//Remove a node from doubly-linked list
-	//Must look at 4 special cases below.
-	if (node->prev == NULL) {
-		if (node->next == NULL) {
-			//only 1 item in list.
-			g->asteroid = NULL;
-		} else {
-			//at beginning of list.
-			node->next->prev = NULL;
-			g->asteroid = node->next;
-		}
-	} else {
-		if (node->next == NULL) {
-			//at end of list.
-			node->prev->next = NULL;
-		} else {
-			//in middle of list.
-			node->prev->next = node->next;
-			node->next->prev = node->prev;
-		}
-	}
-	delete node;
-	node = NULL;
-}
 
-void buildAsteroidFragment(Asteroid *ta, Asteroid *a)
-{
-	//build ta from a
-	ta->nverts = 8;
-	ta->radius = a->radius / 2.0;
-	Flt r2 = ta->radius / 2.0;
-	Flt angle = 0.0f;
-	Flt inc = (PI * 2.0) / (Flt)ta->nverts;
-	for (int i=0; i<ta->nverts; i++) {
-		ta->vert[i][0] = sin(angle) * (r2 + rnd() * ta->radius);
-		ta->vert[i][1] = cos(angle) * (r2 + rnd() * ta->radius);
-		angle += inc;
-	}
-	ta->pos[0] = a->pos[0] + rnd()*10.0-5.0;
-	ta->pos[1] = a->pos[1] + rnd()*10.0-5.0;
-	ta->pos[2] = 0.0f;
-	ta->angle = 0.0;
-	ta->rotate = a->rotate + (rnd() * 4.0 - 2.0);
-	ta->color[0] = 0.8;
-	ta->color[1] = 0.8;
-	ta->color[2] = 0.7;
-	ta->vel[0] = a->vel[0] + (rnd()*2.0-1.0);
-	ta->vel[1] = a->vel[1] + (rnd()*2.0-1.0);
-	//std::cout << "frag" << std::endl;
-}
-*/
-void physics()
-{
-	//Flt d0,d1,dist;
-	//Update trooper position
-	g.trooper.pos[0] += g.trooper.vel[0];
-	g.trooper.pos[1] += g.trooper.vel[1];
-	//Check for collision with window edges
-	if (g.trooper.pos[0] < -gl.xres/2) {
-		g.trooper.pos[0] += (float)gl.xres;
-	}
-	else if (g.trooper.pos[0] > (float)gl.xres/2) {
-		g.trooper.pos[0] -= (float)gl.xres;
-	}
-	else if (g.trooper.pos[1] < -gl.yres/2) {
-		g.trooper.pos[1] += (float)gl.yres;
-	}
-	else if (g.trooper.pos[1] > (float)gl.yres/2) {
-		g.trooper.pos[1] -= (float)gl.yres;
-	}
-	//Update bullet positions
-	struct timespec bt;
-	clock_gettime(CLOCK_REALTIME, &bt);
-	int i=0;
-	while (i < g.nbullets) {
-		Bullet *b = &g.barr[i];
-		//How long has bullet been alive?
-		double ts = timeDiff(&b->time, &bt);
-		if (ts > 2.5) {
-			//time to delete the bullet.
-			memcpy(&g.barr[i], &g.barr[g.nbullets-1],
-				sizeof(Bullet));
-			g.nbullets--;
-			//do not increment i.
-			continue;
-		}
-		//move the bullet
-		b->pos[0] += b->vel[0];
-		b->pos[1] += b->vel[1];
-		//Check for collision with window edges
-		if (b->pos[0] < -gl.xres/2) {
-			b->pos[0] += (float)gl.xres;
-		}
-		else if (b->pos[0] > (float)gl.xres/2) {
-			b->pos[0] -= (float)gl.xres;
-		}
-		else if (b->pos[1] < -gl.yres/2) {
-			b->pos[1] += (float)gl.yres;
-		}
-		else if (b->pos[1] > (float)gl.yres/2) {
-			b->pos[1] -= (float)gl.yres;
-		}
-		i++;
-	}
-	/*
-	//
-	//Update asteroid positions
-	Asteroid *a = g.asteroid;
-	while (a) {
-		a->pos[0] += a->vel[0];
-		a->pos[1] += a->vel[1];
-		//Check for collision with window edges
-		if (a->pos[0] < -gl.xres/2) {
-			a->pos[0] += (float)gl.xres;
-		}
-		else if (a->pos[0] > (float)(gl.xres/2)) {
-			a->pos[0] -= (float)gl.xres;
-		}
-		else if (a->pos[1] < -gl.yres/2) {
-			a->pos[1] += (float)gl.yres;
-		}
-		else if (a->pos[1] > (float)(gl.yres/2)) {
-			a->pos[1] -= (float)gl.yres;
-		}
-		a->angle += a->rotate;
-		a = a->next;
-	}
-	*/
-	//
-	//Asteroid collision with bullets?
-	//If collision detected:
-	//     1. delete the bullet
-	//     2. break the asteroid into pieces
-	//        if asteroid small, delete it
-	/*
-	a = g.asteroid;
-	while (a) {
-		//is there a bullet within its radius?
-		int i=0;
-		while (i < g.nbullets) {
-			Bullet *b = &g.barr[i];
-			d0 = b->pos[0] - a->pos[0];
-			d1 = b->pos[1] - a->pos[1];
-			dist = (d0*d0 + d1*d1);
-			if (dist < (a->radius*a->radius)) {
-				//std::cout << "asteroid hit." << std::endl;
-				//this asteroid is hit.
-				if (a->radius > MINIMUM_ASTEROID_SIZE) {
-					//break it into pieces.
-					Asteroid *ta = a;
-					buildAsteroidFragment(ta, a);
-					int r = rand()%10+5;
-					for (int k=0; k<r; k++) {
-						//get the next asteroid position in the array
-						Asteroid *ta = new Asteroid;
-						buildAsteroidFragment(ta, a);
-						//add to front of asteroid linked list
-						ta->next = g.asteroid;
-						if (g.asteroid != NULL)
-							g.asteroid->prev = ta;
-						g.asteroid = ta;
-						g.nasteroids++;
-					}
-				} else {
-					a->color[0] = 1.0;
-					a->color[1] = 0.1;
-					a->color[2] = 0.1;
-					//asteroid is too small to break up
-					//delete the asteroid and bullet
-					Asteroid *savea = a->next;
-					deleteAsteroid(&g, a);
-					a = savea;
-					g.nasteroids--;
-				}
-				//delete the bullet...
-				memcpy(&g.barr[i], &g.barr[g.nbullets-1], sizeof(Bullet));
-				g.nbullets--;
-				if (a == NULL)
-					break;
-			}
-			i++;
-		}
-		if (a == NULL)
-			break;
-		a = a->next;
-	}
-	*/
-	//---------------------------------------------------
-	//check keys pressed now
-	if (gl.keys[XK_Left]) {
-		g.trooper.angle += 4.0;
-		if (g.trooper.angle >= 360.0f)
-			g.trooper.angle -= 360.0f;
-	}
-	if (gl.keys[XK_Right]) {
-		g.trooper.angle -= 4.0;
-		if (g.trooper.angle < 0.0f)
-			g.trooper.angle += 360.0f;
-	}
-	if (gl.keys[XK_Up]) {
-		//apply thrust
-		//convert trooper angle to radians
-		Flt rad = ((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
-
-		//convert angle to a vector
-		Flt xdir = cos(rad);
-		Flt ydir = sin(rad);
-		g.trooper.vel[0] += xdir*0.02f;
-		g.trooper.vel[1] += ydir*0.02f;
-		Flt speed = sqrt(g.trooper.vel[0]*g.trooper.vel[0]+
-				g.trooper.vel[1]*g.trooper.vel[1]);
-		if (speed > 10.0f) {
-			speed = 10.0f;
-			normalize2d(g.trooper.vel);
-			g.trooper.vel[0] *= speed;
-			g.trooper.vel[1] *= speed;
-		}
-	}
-	if (gl.keys[XK_space]) {
-		//a little time between each bullet
-		struct timespec bt;
-		clock_gettime(CLOCK_REALTIME, &bt);
-		double ts = timeDiff(&g.bulletTimer, &bt);
-		if (ts > 0.1) {
-			timeCopy(&g.bulletTimer, &bt);
-			if (g.nbullets < MAX_BULLETS) {
-				//shoot a bullet...
-				//Bullet *b = new Bullet;
-				Bullet *b = &g.barr[g.nbullets];
-				timeCopy(&b->time, &bt);
-				// b->pos[0] = g.trooper.pos[0];
-				// b->pos[1] = g.trooper.pos[1];
-				// b->vel[0] = g.trooper.vel[0];
-				// b->vel[1] = g.trooper.vel[1];
-				//convert trooper angle to radians
-				Flt rad = g.trooper.angle* PI; //((g.trooper.angle+90.0) / 360.0f) * PI * 2.0;
-				b->angle = rad;
-				//convert angle to a vector
-				// Flt xdir = cos(rad);
-				// Flt ydir = sin(rad);
-				// b->pos[0] += xdir;
-				// b->pos[1] += ydir;
-				// b->vel[0] += xdir*6.0f;
-				// b->vel[1] += ydir*6.0f;
-				
-				
-				/*FIRE BULLETS
-				
-				b->row = rand() % 6;
-				b->color[0] = fireColors[b->row][0];
-				b->color[1] = fireColors[b->row][1];
-				b->color[2] = fireColors[b->row][2];
-				*/
-				//Bullets for all
-				/*
-				b->row = 1;
-				b->color[0] = lightningColors[b->row][0];
-				b->color[1] = lightningColors[b->row][1];
-				b->color[2] = lightningColors[b->row][2];
-				*/
-				g.nbullets++;
-			}
-		}
-	}
-	if (g.mouseThrustOn) {
-		//should thrust be turned off
-		struct timespec mtt;
-		clock_gettime(CLOCK_REALTIME, &mtt);
-		double tdif = timeDiff(&mtt, &g.mouseThrustTimer);
-		//std::cout << "tdif: " << tdif << std::endl;
-		if (tdif < -0.3)
-			g.mouseThrustOn = false;
-	}
-}
 Texture zombie("images/zombie.png",0,0,0,gl.xres,gl.yres);
 void render()
 { 

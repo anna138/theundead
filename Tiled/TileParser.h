@@ -14,6 +14,7 @@ class TileParser{
     public:
         TileParser(const std::string);
         ~TileParser();
+        void reset();
         void parseCSV(pugi::xml_node&);
         void parseXML(const std::string);
         bool isWalkable(int x, int y, int dir);

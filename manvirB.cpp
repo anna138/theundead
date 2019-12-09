@@ -454,11 +454,11 @@ MainCharacter::MainCharacter()
 {
     pos[0] = 0;
     pos[1] = 0;
-    pos[2] = 0;
+    pos[2] = -gvars::gl.yres/2;
     face = 0;
     dir = Direction::S;
-    trooper = new Texture[8];
 
+    trooper = new Texture[8];
     trooper[0].set("images/trooper_sprite/trooper_s.png");
     trooper[1].set("images/trooper_sprite/trooper_sw.png");
     trooper[2].set("images/trooper_sprite/trooper_w.png");
@@ -598,6 +598,12 @@ void MainCharacter::characterRender()
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
 	//std::cout << "x:" << pos[0] << " and this is y:" << pos[2] << std::endl;
+}
+void MainCharacter::reset()
+{
+    pos[0] = 0;
+    pos[2] = -gvars::gl.yres/2;
+    lifeForce = 600;
 }
 
 void MainCharacter::setFace(int f)
