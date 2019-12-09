@@ -689,6 +689,12 @@ int check_keys(XEvent *e)
 				state = GameState::characterSelect;
 		    }
 			break;
+        case XK_3:
+		    option =3;
+		    if(state == GameState::menu){
+				state = GameState::characterSelect;
+		    }
+			break;
 		case XK_j:
             choice=4;
 		    if(state == GameState::menu){
