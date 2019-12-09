@@ -48,6 +48,7 @@ namespace gvars{
     int playerdir = 0;
     MainCharacter hero;
     int arrow_keys[4] = {0, 0, 0, 0};
+    int timekeeper = 0;
 
     
     Texture hud1("./images/hud/hud1.png");
@@ -57,6 +58,7 @@ namespace gvars{
     Texture hud5("./images/hud/hud5.png");
 
     TileParser tp("./images/level1/level1.tmx");
+    Texture back("./images/back.png");
     Texture map("./images/level1/level1_0.png");
     Texture map_1("./images/level1/level1_1.png");
     // Texture map("./images/level2/level2_0.png");

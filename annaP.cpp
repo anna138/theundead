@@ -55,7 +55,7 @@ void movingEyes(int *eye, int *location);
 void fireCircles(int, int, int);
 void waterBubbles(int offset_x, int offset_y);
 void lightningShots(float angle, int offset_x, int offset_y);
-void grassRazorLeaf(float angle, int offset_x, int offset_y);
+void grassRazorLeaf(int offset_x, int offset_y);
 void grassRazorMove(int & x);
 void waterBubbleMove(int & y);
 void displayBackground(int w, int h, unsigned int texture);
@@ -185,7 +185,7 @@ void startMenu(Rect r, int y, int x, int img_x, int img_y, unsigned int startMen
 		img_y - (img_y - img_y / 25)};
 	int rightLocation[2] = {(img_x - img_x / 25) - img_x, 
 		img_y - (img_y - img_y / 25)};
-	
+	back.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 	displayImage(img_x / 8, img_y / 4 + img_y / 20, 0, img_y / 40, startMenu);
 	displayImage(img_x / 3, img_y / 8, 0, img_y /3 + img_y / 12, title);
 
@@ -370,7 +370,8 @@ void runLogoIntro(unsigned int logoIntroTexture)
 void movingEyes(int * eye, int * location)
 {
 	int width = eye[0] * 2;
-	int offset_x = location[0], offset_y = location[1];
+	int offset_x = location[0]+((sin(gvars::timekeeper)*2)), 
+						offset_y = location[1]+((cos(gvars::timekeeper)*2))*(sin(gvars::timekeeper)*2);
 	glPushMatrix();
 	glColor3f(1.0, 0.0, 0.0);
 	glTranslatef(0.0, 0.0, 1);
@@ -412,7 +413,7 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 	if(mag < 1 && mag > -1){
 		hero.damage(1);
 	}
-	if(mag < 3){
+	if(mag < 300){
 		dir[0] /= mag;
 		dir[1] /= mag;
 		enemy_pos[0] += dir[0]*.3;
@@ -613,7 +614,7 @@ void drawCircle(float cx, float cy, float r, int num_segments)
 }
 /* Anna, you need to fix where the lightning's position is*/
 
-void lightningShots(float angle, int offset_x, int offset_y){
+void lightningShots(float angle, int offset_x, int offset_y, int time){
 	
 	float x_angle = 1;
 	float y_angle = 1;
@@ -623,21 +624,75 @@ void lightningShots(float angle, int offset_x, int offset_y){
 	glLineWidth(7);
 	glBegin(GL_LINES);
 	glColor3ub(gvars::lightningColors[0][0], gvars::lightningColors[0][1],gvars::lightningColors[0][2]);
-	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
-	glEnd();
+	// glVertex2f(x_angle*offset_x, y_angle*offset_y);
+    // glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
+	//if((int)hero.dir == 4 || (int)hero.dir == 0){
+	if(time % 3 == 0){
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(offset_x), y_angle*(20 + offset_y));
+		glEnd();
 
-	glLineWidth(2);
-	glBegin(GL_LINES);
-	glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
-	glVertex2f(x_angle*offset_x, y_angle*offset_y);
-    glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
-	
-	glEnd();
-	
+		glLineWidth(2);
+		glBegin(GL_LINES);
+		glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+		// glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		// glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(offset_x), y_angle*(20 + offset_y));
+		
+		glEnd();
+	}
+	//if((int)hero.dir == 2 || (int)hero.dir == 6){
+	if(time % 3 == 1){
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(20 + offset_x), y_angle*(offset_y));
+		glEnd();
+
+		glLineWidth(2);
+		glBegin(GL_LINES);
+		glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+		// glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		// glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(20 + offset_x), y_angle*(offset_y));
+		
+		glEnd();
+	}
+	//if((int)hero.dir == 5){
+	if(time % 3 == 2){
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(20 + offset_x), y_angle*(20 + offset_y));
+		glEnd();
+
+		glLineWidth(2);
+		glBegin(GL_LINES);
+		glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+		// glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		// glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(20 + offset_x), y_angle*(20 + offset_y));
+		
+		glEnd();
+	}
+	//if((int)hero.dir == 3){
+	/*if(time % 4 == 3){
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(offset_x - 45), y_angle*(offset_y - 45));
+		glEnd();
+
+		glLineWidth(2);
+		glBegin(GL_LINES);
+		glColor3ub(gvars::lightningColors[1][0], gvars::lightningColors[1][1],gvars::lightningColors[1][2]);
+		// glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		// glVertex2f(x_angle*(20  + offset_x), y_angle*(20 + offset_y));
+		glVertex2f(x_angle*offset_x, y_angle*offset_y);
+		glVertex2f(x_angle*(offset_x - 45), y_angle*(offset_y - 45));
+		
+		glEnd();
+	}*/
 }
 
-void grassRazorLeaf(float angle, int offset_x, int offset_y){
+void grassRazorLeaf(int offset_x, int offset_y){
 	
 	int width = 5, height = 5;
 
@@ -649,9 +704,9 @@ void grassRazorLeaf(float angle, int offset_x, int offset_y){
 
 	glColor3ub(gvars::grassColors[0][0], gvars::grassColors[0][1],gvars::grassColors[0][2]);
 	
-	glVertex3i(-width + offset_x, height + offset_y, height + offset_y);
-	glVertex3i(width + offset_x, -height + offset_y, height + offset_y);
-	glVertex3i(width + offset_x, height + offset_y, height + offset_y);
+	glVertex2i(-width + offset_x, height + offset_y);
+	glVertex2i(width + offset_x, height + offset_y);
+	glVertex2i(width + offset_x, -height + offset_y);
 	glVertex3i(-width + offset_x, -height + offset_y, height + offset_y);
 	
 	glEnd();
@@ -660,18 +715,15 @@ void grassRazorLeaf(float angle, int offset_x, int offset_y){
 
 	glColor3ub(gvars::grassColors[2][0], gvars::grassColors[2][1],gvars::grassColors[2][2]);
 	
-	glVertex3i(-width + offset_x, height + offset_y, height + offset_y);
-	glVertex3i(width + offset_x, -height + offset_y, height + offset_y);
-	glVertex3i(width + offset_x, height + offset_y, height + offset_y);
-	glVertex3i(-width + offset_x, -height + offset_y, height + offset_y);
+	glVertex2i(-width + offset_x, height + offset_y);
+	glVertex2i(width + offset_x, -height + offset_y);
+	glVertex2i(width + offset_x, height + offset_y);
+	glVertex2i(-width + offset_x, -height + offset_y);
 	
 	glEnd();
-	angle = offset_x + angle;
+	
 }
 
-void grassVines(float, int, int){
-	;
-}
 void waterBubbles(int offset_x, int offset_y)
 {
 	int x = 300, y = 300, w = 7, h = 7;
@@ -709,9 +761,11 @@ void waterBubbles(int offset_x, int offset_y)
 
 /*Functions for Different Bullet Movements*/
 
-void grassRazorMove(int & x)
+void grassRazorMove(int & x, int & y)
 {
-	x *= 20;
+	x *= 50;
+	y  *= 50;
+	//x  -= 0.7;
 }
 void waterBubbleMove(int & y)
 {
@@ -752,7 +806,7 @@ void writing(Rect r, std::string sentence)
 }
 // This is my Friday code.
 
-void switchBullets(float angle, int row, int offset_x, int offset_y, int choice){
+void switchBullets(float angle, int row, int offset_x, int offset_y, int choice, int time){
 	switch(choice){
 		case 0:
 			fireCircles(row, offset_x, offset_y);
@@ -764,12 +818,11 @@ void switchBullets(float angle, int row, int offset_x, int offset_y, int choice)
 			//gl.yres / 2 - 200);
 			break;
 		case 2: 
-			grassRazorLeaf(angle, offset_x, offset_y);
-			grassRazorMove(offset_x);
+			grassRazorLeaf(offset_x, offset_y);
+			grassRazorMove(offset_x, offset_y);
 			break;
 		case 3:
-			lightningShots(angle, offset_x, offset_y);
-
+			lightningShots(angle, offset_x, offset_y, time);
 			break;
 	}
 }
@@ -801,12 +854,18 @@ void checkBulletCollision(Bullet *b, int & nbullets){
 	
 }
 /* Two objects colliding to one another*/
-void A_CollidedTo_B(int * a_pos, int * b_pos){
-	if(true){
-		std::cout << "Collisions worked" << std::endl;
+/*
+void bulletToSkull(Skull * s, int * b_pos, int * s_pos){
+	if(mag < 1 and mag > -1){
+		delete [] s;
 	}
 }
-
+void bulletToZombie(Zombie & z, int * b_pos, int * s_pos){
+	if(mag < 1 and mag > -1){
+		delete z;
+	}
+}
+*/
 /* Main Character healing for power-ups or recovery*/
 void MainCharacter::heal(int increase){
 	hero.lifeForce += increase;
@@ -818,7 +877,7 @@ void MainCharacter::damage(int decrease){
 }
 
 void MainCharacter::recovery(int time){
-	if(!(time  % 10) && hero.lifeForce <= 590){
+	if(!(time  % 100) && hero.lifeForce <= 590){
 		hero.lifeForce = hero.lifeForce + 10;
 	}
 }

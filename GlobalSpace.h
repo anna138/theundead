@@ -64,11 +64,13 @@ namespace gvars{
     extern Texture hud3;
     extern Texture hud4;
     extern Texture hud5;
+    extern Texture back;
     extern Texture map;
     extern Texture map_1;
     extern GameState state;
     extern int arrow_keys[4];
     extern TileParser tp;
     extern Image mask;
+    extern int timekeeper;
 }
 

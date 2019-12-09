@@ -25,12 +25,7 @@ TileParser::TileParser(const std::string fn)
                 }
             }
         }
-        for(auto &i : tiles.at(size-1)){
-            for(auto &j : i){
-                std::cout << j << ",";
-            }
-            std::cout << std::endl;
-        }
+
     }
 }
 void TileParser::reMap(const std::string fn){
@@ -49,12 +44,7 @@ void TileParser::reMap(const std::string fn){
                 }
             }
         }
-        for(auto &i : tiles.at(size-1)){
-            for(auto &j : i){
-                std::cout << j << ",";
-            }
-            std::cout << std::endl;
-        }
+
     }
 }
 
@@ -128,38 +118,7 @@ bool TileParser::isWalkable(int x, int y, int dir)
         px = +((height>>1)-1  );
         py = -(x/(width>>1))+((width>>1)-1);
     }
-    // if(px >= width || py >= height){
-    //     return false;
-    // }
 
-    // std::cout << "value of tile: " << tiles.at(1).at(py).at(px) << std::endl;
-    // for(unsigned int i = 0; i < width; i++){
-    //     std::cout << i << " ";
-    //     for(unsigned int j = 0; j < height; j++){
-    //         if(py == j and px == i)
-    //             std::cout << "1,";
-    //         else
-    //             std::cout << tiles.at(1).at(i).at(j) << ",";
-    //     }
-    //     std::cout << std::endl;
-    // }
-    //return tiles.at(1).at(px).at(py)==0;
-    // double A[] = {-1920/2, 0};
-    // double B[] = {0, -512};
-    // double C[] = {1920/2, 0};
-    // double D[] = {0, 512};
- 
-    // double centerpt[2] = {0, 0};
-    // double distX = .5*distance(A,C);
-    // //std::cout << "X:" << dot(A,C) << std::endl;
-    // double distY = .5*distance(B,D);
-    // double U[] = {(C[0]-A[0])/(2.0*distX), (C[1]-A[1])/(2.0*distX)};
-    // double V[] = {(D[0]-B[0])/(2.0*distY), (D[1]-B[1])/(2.0*distY)};
-    // double W[] = {x, y};
-    // double xabs = abs(dot(W,U));
-    // double yabs = abs(dot(W,V));
-
-    // return (xabs/distX + yabs/distY) <= 1;
 
     return true;
 }
@@ -174,17 +133,7 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
         posy -= y;
         return false;
     }
-    std::cout << "value of tile: " << tiles.at(size-1).at((int)posx).at((int)posy) << std::endl;
-    for(unsigned int i = 0; i < width; i++){
-        std::cout << i << " ";
-        for(unsigned int j = 0; j < height; j++){
-            if((int)posy == j and (int)posx == i)
-                std::cout << "1,";
-            else
-                std::cout << tiles.at(size-1).at(i).at(j) << ",";
-        }
-        std::cout << std::endl;
-    }
+
 
     if(map == 0){
         bool set = false;
@@ -285,7 +234,11 @@ bool TileParser::Walk(float x, float y, int & code, int &face){
             posy -= y;
             return false;
         }else{
+            
             code = tiles.at(size-1).at((int)posx).at((int)posy);
+            if(code == 55 || code == 39){
+                face = 1;
+            }
             return true;
         }
 

@@ -116,7 +116,7 @@ extern void skullAI(Vec enemy_pos, int xres, int yres);
 extern void zombieAI(Vec trooper_pos, float trooper_angle, Vec enemy_pos, float enemy_angle, int xres, int yres);
 extern void grassRazorLeaf(float, int, int);
 extern void grassRazerMove(int);
-extern void switchBullets(float, int, int, int, int);
+extern void switchBullets(float, int, int, int, int, int);
 extern void showAttack(int choice);
 extern void isometricScene(); 
 extern void dyingAnimation(Vec enemy_pos);
@@ -184,7 +184,7 @@ int main()
 				runLogoIntro(logoIntroTexture);
 				//render everything to the screen
 				x11.swapBuffers();
-				usleep(100000);//sleep for 5 seconds
+				usleep(1000000);//sleep for 5 seconds
 				state = GameState::menu;
 				glClear(GL_COLOR_BUFFER_BIT);
 				break;
@@ -202,10 +202,9 @@ int main()
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
 								 startMenuTexture, titleImageTexture);
 				makeButton(gl.xres,gl.yres,dirX,dirY);
-				//changeButtonColor( gl.xres,gl.yres, dirX,dirY);
-				//drawLine();
-			//	drawVine();
+
                 boxText(r,gl.xres,gl.yres);
+				timekeeper = timeCurrent.tv_sec;
 				break;
 			}
 
@@ -274,6 +273,8 @@ int main()
 						tp.reMap("./images/level2/level2.tmx");
 						map.set("./images/level2/level2_0.png");
 						map_1.set("./images/level2/level2_1.png");
+					}else if(g.level == 10){
+						done = 1;
 					}
 				}
 
@@ -333,7 +334,7 @@ int main()
 	cleanup_fonts();
 	logClose();
 	#ifdef USE_OPENAL_SOUND
-	closemusic();
+		closemusic();
 	#endif
 	return 0;
 }
@@ -735,7 +736,7 @@ void render()
 	for (int i=0; i<g.nbullets; i++) {
 		Bullet *b = &g.barr[i];
 		bulletsTravel(b->pos, b->angle);
-		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
+		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type, timeCurrent.tv_sec);
 		for(int j = 0; j < g.zombiecount; j++){
 			bulletEnemyCollision(g.zombie[i].pos, b->pos);
 			bulletEnemyCollision(g.skull[i].pos, b->pos);
