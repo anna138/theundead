@@ -17,6 +17,7 @@ class MainCharacter{
         int tile;
         int lifeForce; // Life force --> Hud Level
 		double mousepos[2];
+        int character_option;
         MainCharacter();
         ~MainCharacter();
         void characterRender();
@@ -27,4 +28,5 @@ class MainCharacter{
         void damage(int); /* anna.cpp - damage to character;*/
         void recovery(int);
         void reset();
+        void characterChange();
 };

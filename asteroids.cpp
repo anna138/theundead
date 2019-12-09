@@ -7,6 +7,8 @@
 
 #include <cstdlib>
 #include <cstring>
+#include <signal.h>
+#include <thread>
 #include <unistd.h>
 #include <ctime>
 #include <cmath>
@@ -56,7 +58,7 @@ extern void timeCopy(struct timespec *dest, struct timespec *source);
 Image img[9] = {
 		"./images/background.png",
 		"./images/zombie_start.png",
-		"./images/trooper.png",
+		"./images/background.png",
 		"./images/ghost_skull.png",
 		"./images/undead_logo.png",
 		"./images/bloodBackground.png",
@@ -130,13 +132,16 @@ extern void checkBulletCollision(Bullet *b, int & nbullets);
 extern void showHud();
 extern void checkZombieCollision(Zombie *zs, int zcount);
 extern void checkSkullCollision(Skull *zs, int zcount);
+extern void bulletEnemyCollision(Vec enemyPos, Vec bulletPos);
+extern void music();
+extern int stop;
 //==========================================================================
 // M A I N
 //==========================================================================
 
 X11_wrapper x11(0, 0);
-
-int option=0;
+int musicstart = 0;
+//std::thread kmusic(music);
 int main()
 {
 	//set up the x11 window
@@ -187,6 +192,9 @@ int main()
 				Rect r;
 				//int x=200,y=200,dirX=0,dirY=0;
 				int dirX=0,dirY=0;
+				if(stop){
+					kill(stop, 9);
+				}
 				glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 				orthoScene();
 				startMenu(r, gl.yres, gl.xres, gl.xres, gl.yres,
@@ -211,7 +219,9 @@ int main()
 				//drawLine();
 				//drawVine();
                 characterChoice();
-                characterOption(option);
+                characterOption(hero.character_option);
+				hero.characterChange();
+				
 				break;
 			}
             case GameState::howToPlay:{
@@ -238,28 +248,6 @@ int main()
 					hero.characterRender();
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				}
-				// glPushMatrix();
-				// glPointSize(4);
-				// glColor3ub(255,0,0);
-				// glBegin(GL_POINTS);
-				// 	// for(int i = 0; i < 32; i++){
-				// 	// 	for(int j = 0; j <= 32; j++){
-				// 	// 		glVertex2d((-16*i)+(16*j),(256-(8*i))-(8*j));
-				// 	// 	}
-				// 	// }
-				// 	glVertex2d(0,0);
-				// glEnd();
-				// glPopMatrix();
-				//map.set("./images/cartgrid.png");
-				//map.Display_Picture(gl.xres/2, gl.yres/2,0,0);
-				
-				// tp.draw();
-				
-
-				//gluLookAt(0,0,0,0,0,-1.5, 0, 1,0);
-				//b.renderObj(0, 0, -1);
-
-				//gluLookAt(100,100,0,0,0,0,0,1,0);
 
 				render();
 				break;
@@ -274,10 +262,19 @@ int main()
 				break;
 			}
 			case GameState::credits:{
+				// if(musicstart == 0){
+					
+				// 	std::thread kmusic(music);
+					
+				// 	kmusic.detach();
+				// 	musicstart = 1;
+					
+				// }
 				renderCoolCredits(gl.xres, gl.yres, imageTexture);
 				glMatrixMode(GL_PROJECTION); glLoadIdentity();
 				glMatrixMode(GL_MODELVIEW); glLoadIdentity();
 				glOrtho(-gl.xres/2,gl.xres/2,-gl.yres/2,gl.yres/2, -1,1);
+				
 				break;
 			}
 			case GameState::endgamescore:{
@@ -289,6 +286,7 @@ int main()
 				hero.reset();
 				tp.reset();
 				g.reset();
+				init_opengl();
 				state = GameState::end;
 				break;
 			}
@@ -362,20 +360,7 @@ void init_opengl(void)
 
 	startMenuTexture = gl.startTexture;
 	
-	//Image - Trooper
-	glGenTextures(1, &gl.trooperTexture);
-	int w2 = img[2].width;
-	int h2 = img[2].height;
-
-	glBindTexture(GL_TEXTURE_2D, gl.trooperTexture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, w2, h2, 0,
-		GL_RGB, GL_UNSIGNED_BYTE, img[2].data);
-
-	g.trooper.trooperImageTexture = gl.trooperTexture;
+	
 	
 	//Image - High scores bloodBackground
 	
@@ -644,19 +629,19 @@ int check_keys(XEvent *e)
 		    }
 			break;
         case XK_1:
-		    option =1;
+		    hero.character_option =1;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_2:
-		    option =2;
+		    hero.character_option =2;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
 			break;
         case XK_3:
-		    option =3;
+		    hero.character_option =3;
 		    if(state == GameState::menu){
 				state = GameState::characterSelect;
 		    }
@@ -700,11 +685,13 @@ void render()
 					g.zombie[i].pos[0], g.zombie[i].pos[1]);
 		skullAI(g.zombie[i].pos, gl.xres, gl.yres);
 		checkZombieCollision(g.zombie, g.zombiecount);
+		
+
 	}
-	checkZombieCollision(g.zombie, g.zombiecount);
+
 	for(int i = 0; i < g.skullcount; i++){
 		skull.Display_Picture(g.skull[i].size[0] / 20, g.skull[i].size[0] / 20,   
-					g.skull[i].pos[0], g.zombie[i].pos[1]);
+					g.skull[i].pos[0], g.skull[i].pos[1]);
 		skullAI(g.skull[i].pos, gl.xres, gl.yres);
 		checkSkullCollision(g.skull, g.skullcount);
 	}
@@ -714,6 +701,10 @@ void render()
 		Bullet *b = &g.barr[i];
 		bulletsTravel(b->pos, b->angle);
 		switchBullets(b->angle, b->row, b->pos[0]+4, b->pos[1]+8, b->type);
+		for(int j = 0; j < g.zombiecount; j++){
+			bulletEnemyCollision(g.zombie[i].pos, b->pos);
+			bulletEnemyCollision(g.skull[i].pos, b->pos);
+		}
 	}
     
 }

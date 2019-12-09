@@ -47,7 +47,9 @@ public:
 	}
 	void reset(){
 		delete [] zombie;
+		delete [] skull;
 		zombie = new Zombie[zombiecount];
+		skull = new Skull[skullcount];
 	}
 	~Game() {
 		delete [] skull;
