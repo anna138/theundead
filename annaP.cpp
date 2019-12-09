@@ -448,6 +448,18 @@ void checkSkullCollision(Skull *zs, int zcount)
 	}
 }
 
+void bulletEnemyCollision(Vec enemyPos, Vec bulletPos)
+{
+	float dist[3];
+	VecSub(enemyPos, bulletPos, dist);
+	float mag = VecMag(dist);
+	if(mag <= 25){
+		enemyPos[0] = ((2.0f*((float)rand()/RAND_MAX))-1.0f)*500.0f;
+		enemyPos[1] = ((2.0f*((float)rand()/RAND_MAX))-1.0f)*200.0f;;
+	}
+
+
+}
 
 void bulletsTravel(float* pos, int dir){
 	switch((MainCharacter::Direction)dir){
