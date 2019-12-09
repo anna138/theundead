@@ -113,13 +113,13 @@ Texture character3;
 void characterOption(int option){
     
         if(option == 1){
-		character1.set("./images/hitlerlight.png");
+		character1.set("./images/trooper_sprite/trooper_s.png");
 		character1.Display_Picture( 50, 50, -200, 0);
         } else if (option == 2) {
-		character2.set("./images/hitlerdark.png");
+		character2.set("./images/ninja_s.png");
 		character2.Display_Picture( 50, 50, 0, 0);
         }else if(option ==3){
-		character3.set("./images/villain_glow.png");
+		character3.set("./images/hitler_front.png");
 		character3.Display_Picture( 50, 50, 200, 0);
         }
 }
@@ -130,11 +130,11 @@ Texture character6;
 
 void characterChoice() {
 		
-       	        character4.set("./images/trooper_sprite/trooper_s.png");
+        character4.set("./images/trooper_sDark.png");
 		character4.Display_Picture( 50, 50, -200, 0);
-		character5.set("./images/hitler_front.png");
+		character5.set("./images/hitler_frontDark.png");
 		character5.Display_Picture( 50, 50, 200, 0);
-		character6.set("./images/wizard/wiz_s.png");
+		character6.set("./images/ninja_sDark.png");
 		character6.Display_Picture( 50, 50, 0, 0);
 }
 
