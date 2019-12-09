@@ -411,7 +411,7 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 	dir[0] = hero.pos[0] - enemy_pos[0];
 	dir[1] = hero.pos[2] - enemy_pos[1];
 	float mag = VecMag(dir);
-	std::cout << mag << std::endl;
+	//std::cout << mag << std::endl;
 	if(mag < 1 && mag > -1){
 		hero.damage(1);
 	}
@@ -420,7 +420,7 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 		dir[1] /= mag;
 		enemy_pos[0] += dir[0]*.3;
 		enemy_pos[1] += dir[1]*.3;
-		std::cout << "0" << dir[0] << " and 1 " << dir[1] << std::endl;
+		//std::cout << "0" << dir[0] << " and 1 " << dir[1] << std::endl;
 
 	}else{
 		enemy_pos[0] += .2*cos(rand());
