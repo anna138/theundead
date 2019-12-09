@@ -59,6 +59,11 @@ namespace gvars{
         howToPlay,
         end
     };
+    extern Texture hud1;
+    extern Texture hud2;
+    extern Texture hud3;
+    extern Texture hud4;
+    extern Texture hud5;
     extern Texture map;
     extern Texture map_1;
     extern GameState state;

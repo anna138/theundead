@@ -25,7 +25,7 @@ class MainCharacter{
         void setFace(int);
 		void calFace();
         bool isCollide(int *, int &, int); /* anna.cpp*/  
-        void heal(int &, int); /* anna.cpp - heals character;*/
-        void damage(int &, int); /* anna.cpp - damage to character;*/
-        void recovery(int &, int);
+        void heal(int); /* anna.cpp - heals character;*/
+        void damage(int); /* anna.cpp - damage to character;*/
+        void recovery(int);
 };

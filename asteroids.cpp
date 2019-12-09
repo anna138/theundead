@@ -127,6 +127,7 @@ extern void orthoScene();
 extern void arrowInputMap(XEvent *);
 extern void bulletsTravel(float * pos, int dir);
 extern void checkBulletCollision(Bullet *b, int & nbullets);
+extern void showHud();
 extern void checkZombieCollision(Zombie *zs, int zcount);
 //==========================================================================
 // M A I N
@@ -250,9 +251,8 @@ int main()
 				//glTranslatef(hero.pos[0], hero.pos[2], 0);
 				//gluLookAt(sin((double)hero.pos[0]),cos((double)hero.pos[0]),0,(double)hero.pos[0],(double)hero.pos[2],-1.5,0,1,0);
 				//glTranslatef((float)hero.pos[0], (float)hero.pos[2], (float)hero.pos[1]);
-				
-				
-				
+
+				showHud();
 				map.Display_Picture(gl.xres/2,gl.yres/2,0,0);
 				if(hero.face){
 					map_1.Display_Picture(gl.xres/2,gl.yres/2,0,0);
