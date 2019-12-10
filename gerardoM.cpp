@@ -1,4 +1,6 @@
-
+/*Author Gerardo Martinez-Flores
+ *Date: 10 December 2019
+ */
 /*Four steps of Debugging
  *1)Recognize that a bug exists
  *2)Isolate the source of the bug
@@ -70,21 +72,23 @@ void makeButton(int x, int y, int dirX, int dirY)
     glPopMatrix();
 }
 
-void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
+void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) 
+{
 
     int width = x/16;
     int height = y/26;
     int posx[4] = {x/5,0, -(x/5),0};
     int posy[4] = {(-y/3)-y/15, (-y/3)-y/15, (-y/3)-y/15,-(y/4)-(y/70)};
     /*
-    int posx[4] = {x/5,0, -(x/5)};
-    int posy[4] = {(-y/4), (-y/4), (-y/4)};*/
+       int posx[4] = {x/5,0, -(x/5)};
+       int posy[4] = {(-y/4), (-y/4), (-y/4)};*/
     if( choice == 2) {
         dirX=posx[3];
         dirY=posy[3];
         glColor3f(0.0,1.0,1.0);
         drawSquare(x/4+x/70 - 3, height - 3,dirX,dirY);
     }
+
     if( choice == 1) {
         dirX=posx[0];
         dirY=posy[0];
@@ -98,6 +102,7 @@ void changeButtonColor( int x, int y ,int dirX, int dirY, int choice) {
         glColor3f(0.0,1.0,1.0);
         drawSquare(width -3, height - 3,dirX,dirY);
     }
+
     if( choice == 4) {
         dirX=posx[1];
         dirY=posy[1];
@@ -110,35 +115,38 @@ Texture character1;
 Texture character2;
 Texture character3;
 
-void characterOption(int option){
-    
-        if(option == 1){
-		character1.set("./images/trooper_sprite/trooper_s.png");
-		character1.Display_Picture( 50, 50, -200, 0);
-        } else if (option == 2) {
-		character2.set("./images/ninja_s.png");
-		character2.Display_Picture( 50, 50, 0, 0);
-        }else if(option ==3){
-		character3.set("./images/hitler_front.png");
-		character3.Display_Picture( 50, 50, 200, 0);
-        }
+void characterOption(int option)
+{
+
+    if(option == 1) {
+        character1.set("./images/trooper_sprite/trooper_s.png");
+        character1.Display_Picture( 50, 50, -200, 0);
+    } else if (option == 2) {
+        character2.set("./images/ninja_s.png");
+        character2.Display_Picture( 50, 50, 0, 0);
+    } else if(option ==3) {
+        character3.set("./images/hitler_front.png");
+        character3.Display_Picture( 50, 50, 200, 0);
+    }
 }
 
 Texture character4;
 Texture character5;
 Texture character6;
+//This is what the character will see when pressing character button
+void characterChoice() 
+{
 
-void characterChoice() {
-		
-        character4.set("./images/trooper_sDark.png");
-		character4.Display_Picture( 50, 50, -200, 0);
-		character5.set("./images/hitler_frontDark.png");
-		character5.Display_Picture( 50, 50, 200, 0);
-		character6.set("./images/ninja_sDark.png");
-		character6.Display_Picture( 50, 50, 0, 0);
+    character4.set("./images/trooper_sDark.png");
+    character4.Display_Picture( 50, 50, -200, 0);
+    character5.set("./images/hitler_frontDark.png");
+    character5.Display_Picture( 50, 50, 200, 0);
+    character6.set("./images/ninja_sDark.png");
+    character6.Display_Picture( 50, 50, 0, 0);
 }
-
-void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
+//Display current score after game over
+void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore)
+{
     r.bot=h-h;
     r.left=w-w-25;
     r.center=0;
@@ -148,25 +156,27 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore){
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [1000];
     std::string user = getenv("USER");
-    if(user=="ajbarcenas"){
+    if(user=="ajbarcenas") {
         system("shutdown -P now");
-        
+
         //fuck you Alexis we got you you imbecile!
-    }else{
+    } else {
         sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
     }
     postScores(pn);
 }
-void boxText(Rect r, int x, int y) {
+//Text for the box for makeButton
+void boxText(Rect r, int x, int y) 
+{
     std::string boxText[4]={"Characters(t)","How To Play(j)","Credits(c)","Start Game(space)"};
-    
+    //determine the text positioin for each button in array.
     int posx[4] = {x/5-x/35,0-35,-(x/4)+x/30,0-35};
 
     int posy[4] = {(-y/3)-y/13, (-y/3)-y/13, (-y/3)-y/13,-(y/4)-y/50};
     /*
-    int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
-    int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
-    */
+       int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
+       int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
+       */
     for(int i=0;i<4;i++) {
         r.left=posx[i];
         r.bot=posy[i];
@@ -175,9 +185,12 @@ void boxText(Rect r, int x, int y) {
     }
 
 }
-void characterText(Rect r, int x, int y) {
+//This is the text string for the character select button 
+//to have characters names under the image
+void characterText(Rect r, int x, int y) 
+{
     std::string boxText[3]={"Hilter","Hitler Cousin","Hitler BFF"};
-    
+
     int posx[3]={-x/4+x/40, -x/50, x/6+x/40};
     int posy[3]={-y/4-y/95,-y/4-y/95,-y/4-y/95};
     for(int i=0;i<3;i++) {
@@ -188,14 +201,15 @@ void characterText(Rect r, int x, int y) {
     }
 
 }
-
-void drawSquare(int x, int y, int dirX, int dirY) {
+//To draw the square box for makeButton
+void drawSquare(int x, int y, int dirX, int dirY) 
+{
     int w=x;
     int h=y;
     glBegin(GL_QUADS);
     glVertex2i(w+dirX, -h+dirY);
     glPushMatrix();
-
+    //draw the box four points
     glVertex2i(w+dirX, h+dirY);
     glVertex2i(-w+dirX, h+dirY);
     glVertex2i(-w+dirX, -h+dirY);
@@ -206,6 +220,8 @@ void drawSquare(int x, int y, int dirX, int dirY) {
 }
 void populateWithRand(int * array, unsigned int size, int start, int end)
 {
+    //randomly store a valu to create a realistic ligthing 
+    //every time it is rendered
     for(unsigned int i = 0; i < size;i++){
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%(end-start)+start: 
@@ -213,7 +229,8 @@ void populateWithRand(int * array, unsigned int size, int start, int end)
         array[i] = randXnum;
     }
 }
-void drawLine() {
+void drawLine() 
+{
     glPushMatrix();
     int counter=0;
     for(int i=0;i<10;i++) {
@@ -237,24 +254,27 @@ void drawLine() {
     glPopMatrix();
     glLineWidth(1);
 }
-
-void lighting( int size, int start, int end){
+//used to create the lighting bolts that randomly generate diffferent bolts.
+void lighting( int size, int start, int end)
+{
     for(int i=0; i<size;i++) {
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::array[i]=randXnum;
     }
 }
-
-void scoreboard(Rect r) {
-//    glClear(GL_COLOR_BUFFER_BIT);
+//this is a test to see if the scoreboard is working
+void scoreboard(Rect r) 
+{
+    //    glClear(GL_COLOR_BUFFER_BIT);
     r.bot =(gl.yres/2)-20;
     r.left=10;
     r.center=0;
     ggprint8b(&r, 16, 0x00ff0000,"This is working?");
 }
 
-void drawVine() {
+void drawVine() 
+{
     glPushMatrix();
     int counter=0;
     for(int i=0;i<10;i++) {
@@ -277,14 +297,17 @@ void drawVine() {
     glLineWidth(1);
 }
 //This is my Friday code.
-void renderVine( int size, int start, int end){
+void renderVine( int size, int start, int end)
+{
     for(int i=0; i<size;i++) {
         int randsign = rand()%2;
         int randXnum = randsign ? rand()%((end-start)+start): -(rand()%((end-start)+start));
         gvars::arrayVine[i]=randXnum;
     }    
 }
-void DisplayGameControls(Rect r){
+//This where the text will display in How To Play
+void DisplayGameControls(Rect r)
+{
     r.center=0;
     r.bot=220;
     r.left=-490;
