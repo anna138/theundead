@@ -1,4 +1,5 @@
-asteroids
+undead
+undeadSound
 *.o
 x.x
 a.out
@@ -8,4 +9,3 @@ a.out
 *.txt
 *.ppm
 *.PPM
-*.wav

@@ -3,7 +3,7 @@ ERRORFLAGS = -Wall #-Werror -Wextra
 ##LIB    = ./libggfonts.so
 LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm -lssl -lcrypto #-lXrandr
 
-all: asteroids
+all: undead undeadSound
 
 GlobalSpace.o: GlobalSpace.cpp
 	g++ -c GlobalSpace.cpp
@@ -14,11 +14,14 @@ TileParser.o: ./Tiled/TileParser.cpp
 pugixml.o: ./Tiled/pugixml.cpp
 	g++ -c ./Tiled/pugixml.cpp
 
-asteroids: GlobalSpace.o pugixml.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp asteroids.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
-	g++ $(CFLAGS) asteroids.cpp Global.o pugixml.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oasteroids \
+undeadSound: GlobalSpace.o pugixml.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp undead.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
+	g++ $(CFLAGS) undead.cpp Global.o pugixml.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oundeadSound \
 	-D USE_OPENAL_SOUND \
 	/usr/lib/libopenal.so \
 	/usr/lib/libalut.so 
+
+undead: GlobalSpace.o pugixml.o TileParser.o manvirB.cpp gerardoM.cpp kevinM.cpp annaP.cpp credits.cpp undead.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Global.o Highscores.o 
+	g++ $(CFLAGS) undead.cpp Global.o pugixml.o TileParser.o GlobalSpace.o manvirB.cpp gerardoM.cpp annaP.cpp kevinM.cpp credits.cpp log.cpp timers.cpp Image.o Trooper.o Zombie.o Skull.o Bullet.o Highscores.o libggfonts.a $(ERRORFLAGS) $(LFLAGS) -oundead
 
 Global.o: Global.cpp
 	g++ -c Global.cpp 
@@ -42,6 +45,6 @@ Bullet.o: Bullet.cpp
 	g++ -c Bullet.cpp 
 	
 clean:
-	rm -f asteroids
+	rm -f undead
 	rm -f *.o
-
+	rm -f undeadSound

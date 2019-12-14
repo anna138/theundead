@@ -156,8 +156,8 @@ void displaycurrentscore(Rect r, int h, int w, int bestScore,int yourScore)
     ggprint16(&r, 16, 0x003B8B68, "\nTap to restart\n");
     char pn [1000];
 
-    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d",getenv("USER"),yourScore); 
-    
+    sprintf(pn, "~mbal/3350/lab7/scores.php?name=%s&score=%d","student",yourScore); 
+
     postScores(pn);
 }
 //Text for the box for makeButton
