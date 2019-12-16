@@ -95,7 +95,6 @@ void TileParser::parseCSV(pugi::xml_node & layer){
 }
 double TileParser::dot(double *a, double *b)
 {
-    //std::cout << "dot:" <<  (a[0]*b[0])+(a[1]*b[1]) << std::endl;
     return (a[0]*b[0])+(a[1]*b[1]);
 }
 double TileParser::distance(double *a, double *b)

@@ -635,7 +635,6 @@ void MainCharacter::characterRender()
     glPopMatrix();
     glBindTexture(GL_TEXTURE_2D, 0);
     glDisable(GL_ALPHA_TEST);
-	//std::cout << "x:" << pos[0] << " and this is y:" << pos[2] << std::endl;
 }
 void MainCharacter::reset()
 {

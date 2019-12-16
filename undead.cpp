@@ -333,7 +333,6 @@ int main()
 void init_opengl(void)
 {
 	//OpenGL initialization
-	//std::cout << gl.xres << " and " << gl.yres << std::endl;
 	glViewport(0, 0, gl.xres, gl.yres);
 	//Initialize matrices
 	glMatrixMode(GL_PROJECTION); glLoadIdentity();
@@ -514,7 +513,6 @@ void check_mouse(XEvent *e)
 	static int savey = 0;
 	//
 	static int ct=0;
-	//std::cout << "m" << std::endl << std::flush;
 	if (e->type == ButtonRelease) {
 		return;
 	}
@@ -555,13 +553,11 @@ void check_mouse(XEvent *e)
 		if (++ct < 10)
 			return;		
 		if (xdiff > 0) {
-			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
 			if (g.trooper.angle >= 360.0f)
 				g.trooper.angle -= 360.0f;
 		}
 		else if (xdiff < 0) {
-			//std::cout << "xdiff: " << xdiff << std::endl << std::flush;
 			g.trooper.angle += 0.05f * (float)xdiff;
 			if (g.trooper.angle < 0.0f)
 				g.trooper.angle += 360.0f;

@@ -418,7 +418,6 @@ void skullAI(Vec enemy_pos, int xres, int yres)
 		dir[1] /= mag;
 		enemy_pos[0] += dir[0]*.3;
 		enemy_pos[1] += dir[1]*.3;
-		//std::cout << "0" << dir[0] << " and 1 " << dir[1] << std::endl;
 
 	}else{
 		enemy_pos[0] += .2*cos(rand());
@@ -514,7 +513,6 @@ void fireCircles(int row, int offset_x, int offset_y)
 {
 	int x = offset_x, y = offset_y, w = 3, h = 3;
 	
-	//std::cout << "offset" << offset_x << "  " << offset_y << std::endl;
 	glColor3ub(gvars::fireColors[row][0], gvars::fireColors[row][1],gvars::fireColors[row][2]);
 	glPushMatrix();
 	glBegin(GL_TRIANGLE_FAN);
@@ -911,7 +909,6 @@ void showHud(){
 }
 bool MainCharacter::isCollide(int * pos, int & life, int decrease){
 	if(true){
-		std::cout << "Collisions worked" << std::endl;
 		damage(decrease);
 		showHud();
 	}
