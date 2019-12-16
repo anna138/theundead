@@ -153,12 +153,6 @@ int main()
 	clock_gettime(CLOCK_REALTIME, &timeStart);
 
 	int done=0;
-	//remove later
-	Rect r3;
-	displayGameOverScore(r3, gl.xres, gl.yres, imageTexture, 
-						rand()%20);
-	//up to here ask manvir for removal
-
 	
 	while (!done) {
 		while (x11.getXPending()) {
