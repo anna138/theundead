@@ -1,6 +1,8 @@
 # Curse of the Undead
 This Game was created by  Anna Poon, Kevin Mitra, Gerardo Martienz, and Manvir Bal
 
+The music is created by Kevin Mitra in order to listen to music run the undeadSound exe file. 
+
 The start menu was designed by Anna Poon and Gerardo Martinez.
 ![StartMenu](./display_images/menu.png)
 
